@@ -7,7 +7,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
-from .routers import projects, parcels, beneficiaries, dashboard, auth
+from .routers import projects, parcels, beneficiaries, dashboard, auth, grievances
 
 # Application instance
 app = FastAPI(title="National Land Acquisition System API", version="1.0.0")
@@ -64,6 +64,7 @@ app.include_router(projects.router, prefix="/api/v1", tags=["projects"])
 app.include_router(parcels.router, prefix="/api/v1", tags=["parcels"])
 app.include_router(beneficiaries.router, prefix="/api/v1", tags=["beneficiaries"])
 app.include_router(dashboard.router, prefix="/api/v1", tags=["dashboard"])
+app.include_router(grievances.router, prefix="/api/v1", tags=["grievances"])
 
 # Initialize database on startup
 @app.on_event("startup")

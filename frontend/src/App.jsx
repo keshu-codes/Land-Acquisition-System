@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AppProvider, AppContext } from './context/AppContext';
 import Navbar from './components/Navbar';
 import SMSSimulator from './components/SMSSimulator';
@@ -7,40 +7,83 @@ import Dashboard from './pages/Dashboard';
 import ProposalWorkflow from './pages/ProposalWorkflow';
 import CompensationPortal from './pages/CompensationPortal';
 import FieldSurvey from './pages/FieldSurvey';
+import SurveyDispatch from './pages/SurveyDispatch';
+import CitizenObjection from './pages/CitizenObjection';
 import Login from './pages/Login';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState('home');
-  const { backendError, isLoading, refreshData, showLoginModal, setShowLoginModal } = useContext(AppContext);
+  const [grievanceToken, setGrievanceToken] = useState(null);
+  const { user, backendError, isLoading, refreshData, showLoginModal, setShowLoginModal } = useContext(AppContext);
 
-  if (backendError) {
+  // Detect ?token= in URL for public grievance access and custom navigation events
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+      setGrievanceToken(token);
+      setActiveTab('objection');
+    }
+
+    const handleNav = (e) => {
+      if (e.detail) {
+        setActiveTab(e.detail);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('navigate-tab', handleNav);
+    return () => window.removeEventListener('navigate-tab', handleNav);
+  }, []);
+
+  // Automatically route to role-tailored landing page upon authentication
+  useEffect(() => {
+    if (user && user.role) {
+      const defaultTab = user.role === 'ministry' ? 'dashboard' 
+        : user.role === 'state' ? 'workflow' 
+        : user.role === 'district' ? 'dispatch' 
+        : user.role === 'surveyor' ? 'survey' 
+        : 'web3';
+      setActiveTab(defaultTab);
+    }
+  }, [user]);
+
+  // Mandatory Login Gate (Unless accessing public grievance link with token)
+  if (!user && !grievanceToken) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-6 text-center select-none font-sans">
-        <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
-          <div className="bg-rose-950/40 border border-rose-500/25 h-12 w-12 rounded-full flex items-center justify-center mx-auto text-rose-400 animate-pulse">
-            <AlertTriangle className="h-6 w-6" />
+      <div className="min-h-screen bg-slate-100 flex flex-col font-sans select-none">
+        <header className="bg-white border-b border-slate-200 shadow-sm">
+          <div className="h-1 w-full flex">
+            <div className="bg-[#FF9933] h-full flex-1" />
+            <div className="bg-[#FFFFFF] h-full flex-1" />
+            <div className="bg-[#138808] h-full flex-1" />
           </div>
-          
-          <div className="space-y-1.5">
-            <h2 className="text-base font-bold text-white tracking-tight">Database Connection Offline</h2>
-            <p className="text-xs text-slate-400 font-medium leading-relaxed">
-              NLAMS is currently configured to read only from the live national registry. The portal cannot load without a live backend connection.
-            </p>
+          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-slate-50 border border-slate-300 flex items-center justify-center text-slate-800 shadow-inner">
+                <span className="font-serif font-bold text-sm text-[#0f2b5c]">IND</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block font-serif">Government of India</span>
+                <span className="font-extrabold text-[#0f2b5c] text-sm tracking-wide block leading-none font-serif mt-0.5">
+                  National Land Acquisition & Management System (NLAMS)
+                </span>
+              </div>
+            </div>
+            <span className="text-[10px] bg-orange-50 border border-orange-200 text-orange-700 font-bold px-3 py-1 rounded-full uppercase">
+              Official Access Gateway
+            </span>
           </div>
+        </header>
 
-          <div className="bg-slate-950/80 rounded-lg p-3 text-[10px] text-rose-400 text-left font-mono break-all border border-slate-800">
-            <strong>Error Details:</strong> {backendError}
-          </div>
+        <main className="flex-1 flex items-center justify-center p-4">
+          <Login isInline={true} />
+        </main>
 
-          <button
-            onClick={() => refreshData()}
-            className="w-full bg-sky-600 hover:bg-sky-500 text-white py-2.5 rounded-lg text-xs font-bold shadow flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-            Reconnect to Database Server
-          </button>
-        </div>
+        <footer className="bg-slate-900 border-t border-slate-800 text-slate-500 py-4 text-center text-xs">
+          <p className="font-semibold text-slate-400">National Land Acquisition & Management System (NLAMS) — SIH 2026</p>
+          <p className="text-[10px] text-slate-500 mt-0.5">Strict Role-Based Access Control enforced for Central, State, and District administrative tiers.</p>
+        </footer>
       </div>
     );
   }
@@ -57,6 +100,10 @@ function AppContent() {
         return <CompensationPortal />;
       case 'survey':
         return <FieldSurvey />;
+      case 'dispatch':
+        return <SurveyDispatch />;
+      case 'objection':
+        return <CitizenObjection token={grievanceToken} />;
       default:
         return <Home setActiveTab={setActiveTab} />;
     }

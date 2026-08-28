@@ -4,7 +4,7 @@ import {
   Shield, Key, User, Building2, Compass, Landmark, Lock, CheckCircle, AlertCircle, ArrowRight, RefreshCw, X
 } from 'lucide-react';
 
-export default function Login({ onClose }) {
+export default function Login({ onClose, isInline = false, onLoginSuccess }) {
   const { login, language, t } = useContext(AppContext);
 
   const [username, setUsername] = useState("");
@@ -25,6 +25,7 @@ export default function Login({ onClose }) {
     const success = await login(username, password);
     setIsSubmitting(false);
     if (success) {
+      if (onLoginSuccess) onLoginSuccess(username);
       if (onClose) onClose();
     } else {
       setErrorMsg("Invalid username or password. Please check your credentials.");
@@ -39,8 +40,9 @@ export default function Login({ onClose }) {
 
     const success = await login(presetUser, presetPass);
     setIsSubmitting(false);
-    if (success && onClose) {
-      onClose();
+    if (success) {
+      if (onLoginSuccess) onLoginSuccess(presetUser);
+      if (onClose) onClose();
     }
   };
 
@@ -97,8 +99,12 @@ export default function Login({ onClose }) {
     }
   ];
 
+  const wrapperClass = isInline 
+    ? "w-full max-w-4xl mx-auto my-6 select-none animate-fadeIn font-sans"
+    : "fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-[100] p-4 select-none animate-fadeIn font-sans";
+
   return (
-    <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-[100] p-4 select-none animate-fadeIn font-sans">
+    <div className={wrapperClass}>
       <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full border border-slate-300 overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
         
         {/* Left Section - Quick Demo Login Cards */}

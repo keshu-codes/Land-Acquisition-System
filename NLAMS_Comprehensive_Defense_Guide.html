@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLAMS - Complete Hackathon Defense Manual & In-Depth Guide (SIH 2026)</title>
+  <style>
+    :root {
+      --primary: #0f2b5c;
+      --primary-dark: #071938;
+      --accent: #ea580c;
+      --success: #059669;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #cbd5e1;
+      --highlight: #fef3c7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 14px;
+      padding: 30px 15px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f2b5c 0%, #1e3a6e 100%);
+      color: #ffffff;
+      padding: 40px;
+      position: relative;
+    }
+    .flag-stripe {
+      height: 5px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+    }
+    .flag-stripe div:nth-child(1) { background: #FF9933; flex: 1; }
+    .flag-stripe div:nth-child(2) { background: #FFFFFF; flex: 1; }
+    .flag-stripe div:nth-child(3) { background: #138808; flex: 1; }
+    .header .tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #93c5fd;
+      font-weight: 700;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-family: Georgia, serif;
+      font-weight: 800;
+      margin-top: 6px;
+      line-height: 1.3;
+    }
+    .header .subtitle {
+      color: #e2e8f0;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .sticky-bar {
+      background: #f1f5f9;
+      padding: 14px 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-print { background: var(--primary); color: #fff; }
+    .btn-print:hover { background: #0c224a; }
+    .btn-dl { background: var(--accent); color: #fff; }
+    .btn-dl:hover { background: #c2410c; }
+    .content { padding: 40px; }
+    
+    h2 {
+      font-size: 22px;
+      color: var(--primary);
+      margin: 40px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      font-family: Georgia, serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2:first-of-type { margin-top: 0; }
+    h3 {
+      font-size: 16px;
+      color: #0f172a;
+      margin: 24px 0 10px;
+      font-weight: 700;
+    }
+    h4 {
+      font-size: 14px;
+      color: var(--accent);
+      margin: 16px 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    p { margin-bottom: 14px; color: #334155; }
+    ul, ol { padding-left: 24px; margin-bottom: 18px; }
+    li { margin-bottom: 8px; color: #334155; }
+    
+    .callout {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+      font-size: 13.5px;
+    }
+    .callout-warning {
+      background: #fffbeb;
+      border-left-color: #f59e0b;
+      color: #92400e;
+    }
+    .callout-success {
+      background: #f0fdf4;
+      border-left-color: #10b981;
+      color: #065f46;
+    }
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .card h4 { margin-top: 0; color: var(--primary); font-size: 14px; }
+    .card p { font-size: 13px; margin-bottom: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    tr:nth-child(even) td { background: #fafafa; }
+    
+    .qa-box {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .qa-question {
+      background: #f8fafc;
+      padding: 14px 18px;
+      font-weight: 700;
+      color: #0f2b5c;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qa-question .q-badge {
+      background: #ea580c;
+      color: #ffffff;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 800;
+    }
+    .qa-answer {
+      padding: 16px 18px;
+      font-size: 13.5px;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+    .qa-answer strong { color: #0f2b5c; }
+    .qa-tip {
+      background: #eff6ff;
+      border-top: 1px solid #dbeafe;
+      padding: 10px 18px;
+      font-size: 12px;
+      color: #1e40af;
+      font-weight: 600;
+    }
+    
+    code {
+      background: #f1f5f9;
+      color: #0f2b5c;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+    pre {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 12px;
+      margin: 16px 0;
+      font-family: Consolas, Monaco, monospace;
+      line-height: 1.5;
+    }
+    
+    .footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 30px 40px;
+      text-align: center;
+      font-size: 12px;
+    }
+    
+    @media print {
+      body { padding: 0; background: #ffffff; }
+      .container { box-shadow: none; border: none; max-width: 100%; }
+      .sticky-bar { display: none; }
+      .qa-box { break-inside: avoid; }
+      h2 { break-before: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="flag-stripe"><div></div><div></div><div></div></div>
+    <div class="tag">Smart India Hackathon (SIH) 2026 | Technical Defense Manual</div>
+    <h1>National Land Acquisition & Management System (NLAMS)</h1>
+    <div class="subtitle">Complete Internal Architecture, Feature Specifications, and Evaluator Cross-Question Defense Guide</div>
+  </div>
+
+  <div class="sticky-bar">
+    <span style="font-size: 13px; font-weight: 700; color: #0f2b5c;">NLAMS Master Project Guide</span>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <a class="btn btn-dl" href="NLAMS_Comprehensive_Defense_Guide.md" download>⬇️ Download Markdown (.md)</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ──────────────── SECTION 1 ──────────────── -->
+    <h2>1. The Big Picture: What is NLAMS & Why Was It Built?</h2>
+    
+    <h3>The Real-World Problem in India:</h3>
+    <p>
+      In India, government infrastructure projects (Highways, High-Speed Rail Corridors, Industrial Corridors, Metro Lines) frequently get delayed by <strong>3 to 7 years</strong> due to bottlenecks in the land acquisition lifecycle under the <strong>RFCTLARR Act, 2013</strong>.
+    </p>
+    <ul>
+      <li><strong>Paper Notice Failures:</strong> Landowners never receive Section 11 notices on time, causing court stays and litigation.</li>
+      <li><strong>Delayed Surveyor Assignment:</strong> No automated way to assign the closest certified land surveyor to measure plot boundaries.</li>
+      <li><strong>Compensation Corruption & Middlemen:</strong> Landowners are deprived of their fair circle rate compensation or face heavy clerical deductions.</li>
+      <li><strong>Counterfeit Title Deeds & Overlaps:</strong> Multiple claimants sell the same plot using forged registry papers.</li>
+    </ul>
+
+    <h3>How NLAMS Solves This (Our Solution):</h3>
+    <p>
+      NLAMS is a <strong>Gov-Official-Only Spatial Platform</strong> coupled with an <strong>External Citizen Objection Gateway</strong> and a <strong>Web3 Spatial Escrow Ledger</strong>:
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>1. Multi-Tier Governance</h4>
+        <p>Enforces strict Role-Based Access Control (RBAC) across Central Ministry, State GIS Officers, District Magistrates, Field Surveyors, and Landowners.</p>
+      </div>
+      <div class="card">
+        <h4>2. Nearest Officer Proximity</h4>
+        <p>Uses the mathematical <strong>Haversine Formula</strong> to compute GPS distances and automatically dispatch the closest available cadastral surveyor.</p>
+      </div>
+      <div class="card">
+        <h4>3. Single-Use Citizen Grievance</h4>
+        <p>Generates 30-day cryptographically signed JWT tokens sent via <strong>TLS 1.3 SMTP email</strong>, giving citizens zero access to internal dashboards.</p>
+      </div>
+      <div class="card">
+        <h4>4. Web3 DBT Escrow</h4>
+        <p>Locks awarded compensation into a digital Smart Escrow with immutable blockchain transaction receipts and client-side SHA-256 deed validation.</p>
+      </div>
+    </div>
+
+    <!-- ──────────────── SECTION 2 ──────────────── -->
+    <h2>2. Complete Technical Stack & Architecture</h2>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Technology Used</th>
+          <th>Exact Role in the Project</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Frontend</strong></td>
+          <td>React 19, Vite 8, Tailwind CSS</td>
+          <td>Fast, responsive UI with role-tailored navigation and real-time state management.</td>
+        </tr>
+        <tr>
+          <td><strong>GIS Mapping</strong></td>
+          <td>React-Leaflet, Google Satellite Tiles</td>
+          <td>Visualizes cadastral polygons, plot boundaries, circle rates, and landowner markers on satellite maps.</td>
+        </tr>
+        <tr>
+          <td><strong>Backend API</strong></td>
+          <td>FastAPI (Python 3.14), Uvicorn</td>
+          <td>High-performance REST API with asynchronous request processing and strict Pydantic v2 schemas.</td>
+        </tr>
+        <tr>
+          <td><strong>Database</strong></td>
+          <td>SQLModel (SQLAlchemy + Pydantic), SQLite</td>
+          <td>Relational storage for Parcels, Projects, Survey Officers, Grievance Tokens, and Objections.</td>
+        </tr>
+        <tr>
+          <td><strong>Email Security</strong></td>
+          <td>Python <code>smtplib</code>, TLS 1.3 SSL, Gmail SMTP</td>
+          <td>Dispatches official government legal notices with SPF, DKIM, and DMARC alignment headers.</td>
+        </tr>
+        <tr>
+          <td><strong>Cryptography</strong></td>
+          <td>PyJWT, PBKDF2-HMAC-SHA256, Web3.js / SHA-256</td>
+          <td>Signed 30-day tokens, hashed passwords, client-side document hashing, and spatial blockchain ledger.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ──────────────── SECTION 3 ──────────────── -->
+    <h2>3. Deep Dive into the 7 Core Modules</h2>
+
+    <h3>Module 1: Mandatory Government Access Gateway & 5-Tier RBAC</h3>
+    <p>
+      <strong>How it works:</strong> Whenever the portal is opened, the system strictly prompts for official authentication. Sessions are never silently restored across device restarts to prevent unauthorized workstation access in government offices.
+    </p>
+    <ul>
+      <li><code>Dr. Rajesh Verma</code> (Central Ministry) ➔ Routes to <strong>Executive Monitoring Dashboard</strong></li>
+      <li><code>Priya Sundaram</code> (State GIS Officer) ➔ Routes to <strong>Case Files & GIS Verification Workflow</strong></li>
+      <li><code>Amitabh Choudhury (IAS)</code> (District Magistrate) ➔ Routes to <strong>Survey Notice Dispatch Console</strong></li>
+      <li><code>Suresh Kumar</code> (Field Surveyor) ➔ Routes to <strong>Cadastral Field Survey Station</strong></li>
+      <li><code>Rameshwar Patel / Anmol</code> (Citizen) ➔ Routes to <strong>Web3 Compensation & Escrow Portal</strong></li>
+    </ul>
+
+    <h3>Module 2: Executive Monitoring Dashboard & GIS Land Registry</h3>
+    <p>
+      <strong>How it works:</strong> Aggregates live acquisition progress (e.g. 13,369 ha notified, ₹6,931 Cr disbursed). Features a <strong>Real-Time Landowner Search Bar</strong>: typing <code>Anmol</code> filters all national plots instantly, centers the satellite map on plot <code>PLOT-OD-2026-9821</code>, and opens the details popup with one-click dispatch.
+    </p>
+
+    <h3>Module 3: Case Files & Multi-Tier Proposal Workflow</h3>
+    <p>
+      <strong>How it works:</strong> Tracks land acquisition proposals through 5 statutory legal stages under the RFCTLARR Act:
+      <code>Proposal Submitted ➔ GIS Verification ➔ Section 11 Notification ➔ Award Declared ➔ Possession Handover</code>.
+    </p>
+
+    <h3>Module 4: Survey Notice & Nearest Officer Dispatch Engine</h3>
+    <p>
+      <strong>How it works:</strong> 
+      When the District Magistrate selects plot <code>PLOT-OD-2026-9821</code> in Bhubaneswar (20.2961° N, 85.8245° E), the backend executes the <strong>Haversine Formula</strong>:
+    </p>
+    <pre><code>d = 2 * R * arcsin(sqrt(sin²(Δlat/2) + cos(lat1)*cos(lat2)*sin²(Δlon/2)))</code></pre>
+    <p>
+      It auto-detects that <strong>Rajesh Mohapatra (SO-774)</strong> is the closest available officer (2.2 km away). The Magistrate authorizes with passcode <code>SIH@12345</code>, generating a 30-day token (<code>GRV-2026-9821-XXX</code>) and dispatching a TLS 1.3 email notice.
+    </p>
+
+    <h3>Module 5: Standalone Public Citizen Objection Portal</h3>
+    <p>
+      <strong>How it works:</strong>
+      When the citizen clicks the button in their email, they access <code>/?token=GRV-...</code>. The server validates the cryptographic token, displays their verified plot details (1.45 Acres, ₹42.5 Lakhs), and allows them to submit a <em>Valuation / Boundary / Title</em> dispute. Once submitted, the token is marked <code>is_used = True</code> so it can never be reused.
+    </p>
+
+    <h3>Module 6: Cadastral Field Survey Node</h3>
+    <p>
+      <strong>How it works:</strong>
+      A mobile-responsive web station designed for field surveyors with GPS boundary capture, soil fertility categorization, structural inventory, and camera photo geotagging.
+    </p>
+
+    <h3>Module 7: Web3 Spatial Ledger & Direct Benefit Transfer (DBT) Escrow</h3>
+    <p>
+      <strong>How it works:</strong>
+      Awarded compensation is locked in smart escrow. The landowner connects their Web3 wallet, claims compensation directly, and receives an official <strong>PFMS Payout Advice Receipt</strong> with a transaction hash (<code>0x7d6e...</code>) and block number (<code>#104502</code>). Documents are verified on-chain via real-time client-side SHA-256 hashing.
+    </p>
+
+    <!-- ──────────────── SECTION 4 ──────────────── -->
+    <h2>4. Winning 3-Minute Presentation Pitch (Say This to the Judges!)</h2>
+    
+    <div class="callout callout-success">
+      <p><strong>"Respected Judges,</strong></p>
+      <p>
+        In India, mega infrastructure projects face an average delay of 4.5 years due to litigation and lack of transparency in land acquisition under the RFCTLARR Act 2013.
+      </p>
+      <p>
+        We present <strong>NLAMS — The National Land Acquisition & Management System</strong>.
+      </p>
+      <p>
+        NLAMS solves this through 3 core technological breakthroughs:
+        <br><strong>1. Automated Geospatial Proximity:</strong> Our Haversine spatial engine detects the nearest available cadastral officer and dispatches Section 11 notices with one click.
+        <br><strong>2. Zero-Trust Citizen Security:</strong> Landowners receive single-use cryptographic grievance tokens via TLS 1.3 encrypted emails, letting them file objections in 30 seconds without accessing sensitive internal government dashboards.
+        <br><strong>3. Web3 Spatial Escrow:</strong> We eliminate middlemen by disbursing compensation directly into verified wallets via Smart Escrow with immutable blockchain audit receipts and SHA-256 title deed validation.
+      </p>
+      <p>
+        Let us show you a live demonstration of a notice being dispatched to a real landowner right now..."
+      </p>
+    </div>
+
+    <!-- ──────────────── SECTION 5 ──────────────── -->
+    <h2>5. Top 20 Judge Cross-Questions & Bulletproof Answers</h2>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q1</span> How do you prevent unauthorized citizens from accessing internal government dashboards?</div>
+      <div class="qa-answer">
+        We implement a strict <strong>Zero-Trust Tokenized Architecture</strong>. The internal portal requires JWT bearer authentication with role-based claims (<code>ministry</code>, <code>state</code>, <code>district</code>, <code>surveyor</code>). Citizens are <em>never</em> given user accounts on the internal dashboard. Instead, when a notice is issued, we generate a <strong>30-day cryptographically signed single-use token (JWT + short code)</strong>. The public grievance endpoint (<code>/api/v1/grievances/validate-token</code>) only exposes that specific landowner's parcel metadata and allows exactly one submission before the token is burned (<code>is_used = True</code>).
+      </div>
+      <div class="qa-tip">💡 Tip: Emphasize that citizens cannot navigate to other routes or view other citizens' data.</div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q2</span> How is the nearest survey officer calculated? What algorithm is used?</div>
+      <div class="qa-answer">
+        We use the <strong>Haversine Great-Circle Distance Formula</strong> in Python. Given the centroid coordinates of the land parcel (e.g., Bhubaneswar: 20.2961° N, 85.8245° E) and the real-time GPS locations of all active survey officers in that district, our algorithm computes the spherical surface distance in kilometers:
+        <br><code>distance = 2 * R * asin(sqrt(sin²(Δlat/2) + cos(lat1)*cos(lat2)*sin²(Δlon/2)))</code>
+        <br>The system filters for officers with <code>status == "Available"</code> and automatically selects the closest candidate (e.g. Officer Rajesh Mohapatra, 2.2 km away).
+      </div>
+      <div class="qa-tip">💡 Tip: Mention that this eliminates manual favoritism and reduces surveyor travel time.</div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q3</span> Why did you use Web3 and Blockchain for land acquisition? Is it just a buzzword?</div>
+      <div class="qa-answer">
+        No, it solves a fundamental legal problem in India: <strong>tamper-proof audit trails and double-selling prevention</strong>. In traditional land registries, local database records can be silently edited or backdated by corrupt officials. In NLAMS:
+        <br>1. Every statutory milestone (Ministry proposal, State GIS clearance, Section 11 Gazette, Award declaration) is signed with the official's cryptographic address and written to an immutable block ledger.
+        <br>2. Compensation is held in a <strong>Smart Contract Escrow</strong>, releasing funds directly to the verified beneficiary upon title vesting, preventing embezzlement.
+        <br>3. Title deeds are hashed with <strong>SHA-256</strong>, allowing instant on-chain authenticity verification.
+      </div>
+      <div class="qa-tip">💡 Tip: Show the live block explorer in the "Web3 Audit & Compensation" tab.</div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q4</span> What happens if a citizen does not have an email or internet access?</div>
+      <div class="qa-answer">
+        NLAMS supports an <strong>Omni-Channel Notification Pipeline</strong>:
+        <br>1. <strong>Digital:</strong> TLS 1.3 encrypted Email with 1-click tokenized objection link.
+        <br>2. <strong>Telecom / SMS:</strong> Short token SMS (e.g., <code>GRV-2026-9821-BA5</code>) sent to their registered mobile number.
+        <br>3. <strong>Common Service Centres (CSC):</strong> Village-level VLEs (Village Level Entrepreneurs) can enter the citizen's short token at any local CSC / Panchayat kiosk to submit objections on their behalf.
+        <br>4. <strong>Physical Notice Tracking:</strong> The system auto-generates Section 11 Form-C PDF notices with official QR codes for registered postal dispatch.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q5</span> How do you ensure email deliverability and prevent phishing or spam flags?</div>
+      <div class="qa-answer">
+        We adhere to enterprise government email security protocols:
+        <br>1. <strong>TLS 1.3 Encryption:</strong> All SMTP connections use SSL/TLS with forced minimum cipher suites.
+        <br>2. <strong>SPF (Sender Policy Framework):</strong> Authorizes our server IP address in the domain DNS.
+        <br>3. <strong>DKIM (DomainKeys Identified Mail):</strong> Embeds a 2048-bit RSA cryptographic signature in the email header.
+        <br>4. <strong>DMARC Alignment (p=reject):</strong> Strict alignment ensuring spoofed emails from scammers are rejected by Gmail/Outlook.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q6</span> How does the system handle concurrent objections and prevent duplicate claims?</div>
+      <div class="qa-answer">
+        At the database level, each token record in <code>grievancetoken</code> maintains an <code>is_used</code> boolean flag. When an objection is submitted to <code>/api/v1/grievances/submit/{token}</code>, the transaction runs inside an atomic database session:
+        <br>1. Checks if <code>db_token.is_used == True</code> (raises HTTP 409 Conflict if already submitted).
+        <br>2. Checks if <code>db_token.expires_at < utcnow()</code> (raises HTTP 410 Gone if expired).
+        <br>3. Inserts the grievance record and sets <code>is_used = True</code> within the same atomic commit.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q7</span> How does your system integrate with existing government platforms like PM GatiShakti and BHOOMI?</div>
+      <div class="qa-answer">
+        NLAMS features an <strong>API-Based Interoperability Gateway</strong> (as displayed on the Executive Dashboard):
+        <br>• <strong>BHOOMI / Bhulekh:</strong> REST/SOAP endpoints fetch state cadastral RoR (Record of Rights) and circle rates.
+        <br>• <strong>Bhunaksha:</strong> Ingests GeoJSON/Shapefile parcel boundaries.
+        <br>• <strong>PM GatiShakti NMP:</strong> Coordinates spatial clearance across multi-modal infrastructure layers (railways, power grids, pipelines).
+        <br>• <strong>PFMS (Public Financial Management System):</strong> Executes direct bank escrow disbursements.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q8</span> What if the survey officer alters the GPS coordinates or boundary polygon during field inspection?</div>
+      <div class="qa-answer">
+        The <strong>Cadastral Field Survey Node</strong> binds captured GPS coordinates to the device hardware timestamp and photo evidence. Any manual change to the polygon vertices triggers a <strong>State GIS Boundary Clearance Review</strong> (handled by Priya Sundaram, State GIS Officer) before the Section 11 Gazette can be published. Furthermore, the coordinate hash is written to the blockchain audit trail, preventing post-facto tampering.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q9</span> Why is password persistence disabled on website reload?</div>
+      <div class="qa-answer">
+        In government and public-sector environments, computers are often shared across shifts. Auto-restoring session credentials from <code>localStorage</code> poses a severe security risk. In NLAMS, every page reload or fresh visit forces an explicit official login, ensuring strict session auditing and zero session hijacking.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-question"><span class="q-badge">Q10</span> What is the scalability and production roadmap for NLAMS?</div>
+      <div class="qa-answer">
+        1. <strong>Database Migration:</strong> Seamless transition from SQLite to enterprise PostgreSQL with PostGIS for spatial polygon intersection queries.
+        <br>2. <strong>Cloud Hosting:</strong> Containerized Docker deployment on National Informatics Centre (NIC) MeghRaj Cloud or AWS GovCloud.
+        <br>3. <strong>Identity Federation:</strong> Integration with DigiLocker and MeriPehchaan for Aadhaar e-KYC Single-Sign-On.
+        <br>4. <strong>Blockchain Mainnet:</strong> Migration to Hyperledger Fabric or Polygon Proof-of-Stake for enterprise high-throughput spatial transactions.
+      </div>
+    </div>
+
+    <!-- ──────────────── SECTION 6 ──────────────── -->
+    <h2>6. Key Technical Terms & Glossary</h2>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Term</th>
+          <th>Definition</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>RFCTLARR Act, 2013</strong></td>
+          <td>The Right to Fair Compensation and Transparency in Land Acquisition, Rehabilitation and Resettlement Act enacted by the Indian Parliament.</td>
+        </tr>
+        <tr>
+          <td><strong>Section 11 Notification</strong></td>
+          <td>The preliminary statutory gazette notification published by the District Collector declaring the government's intent to acquire land for public purpose.</td>
+        </tr>
+        <tr>
+          <td><strong>ULPIN</strong></td>
+          <td>Unique Land Parcel Identification Number — a 14-digit alphanumeric BHOOMI identifier based on longitude and latitude coordinates of the parcel.</td>
+        </tr>
+        <tr>
+          <td><strong>Circle Rate</strong></td>
+          <td>The minimum government-notified threshold price per square meter / acre below which land cannot be registered in a given tehsil/district.</td>
+        </tr>
+        <tr>
+          <td><strong>Haversine Formula</strong></td>
+          <td>An equation giving great-circle distances between two pairs of GPS coordinates on a sphere, used for nearest surveyor routing.</td>
+        </tr>
+        <tr>
+          <td><strong>Direct Benefit Transfer (DBT)</strong></td>
+          <td>Direct electronic transfer of compensation subsidies from government treasury escrow directly into the citizen's bank / wallet account.</td>
+        </tr>
+        <tr>
+          <td><strong>PFMS</strong></td>
+          <td>Public Financial Management System — the central government platform for tracking treasury fund release and DBT subsidies.</td>
+        </tr>
+        <tr>
+          <td><strong>SHA-256</strong></td>
+          <td>A 256-bit cryptographic hash function used to verify digital document integrity and detect unauthorized alterations.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="footer">
+    <p>National Land Acquisition & Management System (NLAMS) — Smart India Hackathon 2026</p>
+    <p style="margin-top: 4px; font-size: 11px; color: #64748b;">Confidential & Proprietary Evaluation Manual | Department of Land Resources & Ministry of Rural Development</p>
+  </div>
+</div>
+
+</body>
+</html>

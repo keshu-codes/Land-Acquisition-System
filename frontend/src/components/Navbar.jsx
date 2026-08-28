@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Wallet, Shield, MapPin, Bell, User, Menu, X, Landmark, FileText, Globe } from 'lucide-react';
+import { Wallet, Shield, MapPin, Bell, User, Menu, X, Landmark, FileText, Globe, Send } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const { 
@@ -32,12 +32,49 @@ export default function Navbar({ activeTab, setActiveTab }) {
 
   const currentRoleObj = roles.find(r => r.value === selectedRole);
 
-  const menuItems = [
-    { id: 'dashboard', label: t('executiveDashboard'), icon: Landmark },
-    { id: 'workflow', label: t('workflows'), icon: FileText },
-    { id: 'web3', label: t('web3Audit'), icon: Shield },
-    { id: 'survey', label: t('surveyorNode'), icon: MapPin }
-  ];
+  const getRoleMenuItems = (role) => {
+    switch (role) {
+      case 'ministry':
+        return [
+          { id: 'dashboard', label: t('executiveDashboard'), icon: Landmark },
+          { id: 'workflow', label: t('workflows'), icon: FileText },
+          { id: 'dispatch', label: language === 'en' ? 'Survey Dispatch' : 'सर्वे प्रेषण', icon: Send },
+          { id: 'web3', label: t('web3Audit'), icon: Shield },
+          { id: 'survey', label: t('surveyorNode'), icon: MapPin }
+        ];
+      case 'state':
+        return [
+          { id: 'workflow', label: language === 'en' ? 'State GIS Verification' : 'राज्य जीआईएस सत्यापन', icon: Compass },
+          { id: 'dashboard', label: t('executiveDashboard'), icon: Landmark },
+          { id: 'survey', label: t('surveyorNode'), icon: MapPin }
+        ];
+      case 'district':
+        return [
+          { id: 'dispatch', label: language === 'en' ? 'Survey Notice Dispatch' : 'सर्वे नोटिस प्रेषण', icon: Send },
+          { id: 'workflow', label: language === 'en' ? 'Gazette & Awards (LARR)' : 'राजपत्र और पंचाट (LARR)', icon: FileText },
+          { id: 'dashboard', label: t('executiveDashboard'), icon: Landmark },
+          { id: 'web3', label: t('web3Audit'), icon: Shield }
+        ];
+      case 'surveyor':
+        return [
+          { id: 'survey', label: language === 'en' ? 'Cadastral Field Survey' : 'भूकर क्षेत्र सर्वेक्षण', icon: MapPin },
+          { id: 'dispatch', label: language === 'en' ? 'Assigned Survey Queue' : 'आवंटित सर्वे कतार', icon: Send },
+          { id: 'workflow', label: language === 'en' ? 'Possession Handover' : 'कब्जा सौंपना', icon: FileText }
+        ];
+      case 'citizen':
+        return [
+          { id: 'web3', label: language === 'en' ? 'Compensation & Escrow Claims' : 'मुआवजा और एस्क्रो दावे', icon: Shield },
+          { id: 'workflow', label: language === 'en' ? 'Acquisition Case Status' : 'भूमि अर्जन केस स्थिति', icon: FileText }
+        ];
+      default:
+        return [
+          { id: 'dashboard', label: t('executiveDashboard'), icon: Landmark },
+          { id: 'workflow', label: t('workflows'), icon: FileText }
+        ];
+    }
+  };
+
+  const menuItems = getRoleMenuItems(user?.role || selectedRole);
 
   return (
     <header className="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm font-sans select-none">

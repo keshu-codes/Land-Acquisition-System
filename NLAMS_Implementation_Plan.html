@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLAMS - Technical Implementation Plan (SIH 2026)</title>
+  <style>
+    :root {
+      --primary: #0f2b5c;
+      --accent: #ea580c;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f2b5c 0%, #1e3a6e 100%);
+      color: #ffffff;
+      padding: 36px 40px;
+      position: relative;
+    }
+    .header .flag-bar {
+      height: 4px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+    }
+    .flag-bar div:nth-child(1) { background: #FF9933; flex: 1; }
+    .flag-bar div:nth-child(2) { background: #FFFFFF; flex: 1; }
+    .flag-bar div:nth-child(3) { background: #138808; flex: 1; }
+    .header h1 { font-size: 26px; font-weight: 800; font-family: Georgia, serif; margin-top: 8px; }
+    .header p { color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+    .actions-bar {
+      background: #f1f5f9;
+      padding: 14px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: #ffffff; border: none; }
+    .btn-primary:hover { background: #0c224a; }
+    .btn-accent { background: var(--accent); color: #ffffff; border: none; }
+    .btn-accent:hover { background: #c2410c; }
+    .content { padding: 40px; }
+    h2 {
+      font-size: 20px;
+      color: var(--primary);
+      margin: 32px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2e8f0;
+      font-family: Georgia, serif;
+    }
+    h3 { font-size: 16px; color: #0f172a; margin: 20px 0 10px; }
+    p, li { font-size: 14px; color: #334155; margin-bottom: 12px; }
+    ul, ol { padding-left: 24px; margin-bottom: 16px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th {
+      background: #f8fafc;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    pre {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 12px;
+      margin: 16px 0;
+      font-family: Consolas, monospace;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+    .footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 24px 40px;
+      text-align: center;
+      font-size: 12px;
+    }
+    @media print {
+      body { padding: 0; background: #ffffff; }
+      .container { box-shadow: none; border: none; }
+      .actions-bar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="flag-bar"><div></div><div></div><div></div></div>
+    <p>Government of India — Smart India Hackathon 2026</p>
+    <h1>National Land Acquisition & Management System (NLAMS)</h1>
+    <div style="font-size: 12px; color: #cbd5e1; margin-top: 6px;">Technical Implementation Plan & Architecture Specification</div>
+  </div>
+
+  <div class="actions-bar">
+    <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Status: Ready for Deployment & Evaluation</span>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <a class="btn btn-accent" href="NLAMS_Implementation_Plan.md" download>⬇️ Download Markdown (.md)</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <h2>1. Executive Summary & Vision</h2>
+    <p>
+      The <strong>National Land Acquisition & Management System (NLAMS)</strong> is an enterprise-grade, Web3-audited geospatial portal built for the <strong>Smart India Hackathon (SIH) 2026</strong>. It digitizes and accelerates the land acquisition lifecycle under the statutory provisions of the <strong>RFCTLARR Act, 2013</strong>.
+    </p>
+    <ul>
+      <li><strong>5-Tier Role-Based Governance:</strong> Central Ministry, State GIS Authorities, District Collectors, Field Surveyors, and Citizens.</li>
+      <li><strong>Nearest Surveyor Assignment:</strong> Haversine proximity routing to assign officers and trigger Section 11 notices.</li>
+      <li><strong>Citizen Objection Security:</strong> Single-use cryptographic tokens dispatched via TLS 1.3 encrypted emails (SPF/DKIM/DMARC compliant).</li>
+      <li><strong>Web3 Spatial Escrow:</strong> On-chain immutable audit logs, PFMS compensation disbursement, and SHA-256 title deed validation.</li>
+    </ul>
+
+    <h2>2. Administrative Hierarchy (RBAC)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Tier / Role</th>
+          <th>Representative Profile</th>
+          <th>Responsibilities</th>
+          <th>Landing View</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Central Ministry</strong></td>
+          <td>Dr. Rajesh Verma</td>
+          <td>National KPI monitoring, mega-corridor proposals, budget approvals</td>
+          <td><span class="badge">Executive Dashboard</span></td>
+        </tr>
+        <tr>
+          <td><strong>State GIS Officer</strong></td>
+          <td>Priya Sundaram</td>
+          <td>Cadastral boundary clearance, overlap validation</td>
+          <td><span class="badge">Case Files & Workflows</span></td>
+        </tr>
+        <tr>
+          <td><strong>District Magistrate</strong></td>
+          <td>Amitabh Choudhury (IAS)</td>
+          <td>Section 11 Gazette issuance, nearest surveyor dispatch, award declaration</td>
+          <td><span class="badge">Survey & Notice Dispatch</span></td>
+        </tr>
+        <tr>
+          <td><strong>Field Surveyor</strong></td>
+          <td>Suresh Kumar</td>
+          <td>GPS boundary capture, soil/crop analysis, photo geotagging</td>
+          <td><span class="badge">Cadastral Survey Node</span></td>
+        </tr>
+        <tr>
+          <td><strong>Citizen / Landowner</strong></td>
+          <td>Anmol / Rameshwar Patel</td>
+          <td>Tokenized objections, Web3 escrow claims, PFMS receipts</td>
+          <td><span class="badge">Web3 Compensation</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. End-to-End Technical Workflows</h2>
+
+    <h3>A. Automated Nearest Surveyor Dispatch & Section 11 Notice</h3>
+    <ol>
+      <li>District Collector selects parcel (e.g. <code>PLOT-OD-2026-9821</code>).</li>
+      <li>Haversine formula computes real-time distance across available district surveyors and auto-selects the closest officer (<code>Rajesh Mohapatra, SO-774</code>, 2.2 km).</li>
+      <li>Collector confirms dispatch with security key (<code>SIH@12345</code>).</li>
+      <li>Generates a 30-day cryptographic single-use JWT token (<code>GRV-2026-9821-XXX</code>).</li>
+      <li>Dispatches official notification email via TLS 1.3 SMTP to <code>anmol78953030@gmail.com</code>.</li>
+    </ol>
+
+    <h3>B. Citizen Objection & Grievance Review</h3>
+    <ol>
+      <li>Landowner clicks <strong>[ File Objection ]</strong> in their email.</li>
+      <li>Public portal validates cryptographic token with zero login credentials required.</li>
+      <li>Landowner submits dispute (Valuation / Boundary / Title).</li>
+      <li>Token is marked as <code>is_used = True</code> (single-use enforced).</li>
+      <li>Dispute appears instantly on the Executive Live Grievance Monitor.</li>
+    </ol>
+
+    <h3>C. Web3 Direct Benefit Transfer (DBT) Escrow & Title Verification</h3>
+    <ol>
+      <li>Awarded compensation is locked in digital Smart Escrow.</li>
+      <li>Landowner connects Web3 wallet and claims compensation.</li>
+      <li>Generates official PFMS cryptographic payout advice receipt with transaction hash and block number.</li>
+      <li>Land deeds are verified via client-side SHA-256 hash matching against the on-chain registry.</li>
+    </ol>
+
+    <h2>4. How to Run Locally</h2>
+    <pre><code># 1. Start Backend Server
+cd backend\home\nitesh\Downloads\M2_LAND_ACQUISITION
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+# 2. Start Frontend Server
+cd frontend
+npm run dev -- --host 127.0.0.1 --port 5173
+
+# 3. Expose Live via Cloudflare Tunnels (Optional)
+npx cloudflared tunnel --url http://127.0.0.1:5173
+npx cloudflared tunnel --url http://127.0.0.1:8000</code></pre>
+
+  </div>
+
+  <div class="footer">
+    <p>National Land Acquisition & Management System (NLAMS) — SIH 2026 Prototype</p>
+    <p style="margin-top: 4px; font-size: 11px;">Protected by Web3 Spatial Ledger, Role-Based Access Control, and Enterprise TLS 1.3 Transport</p>
+  </div>
+</div>
+
+</body>
+</html>

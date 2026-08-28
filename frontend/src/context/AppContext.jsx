@@ -3,7 +3,7 @@ import { translations } from './Translation';
 
 export const AppContext = createContext();
 
-const API_BASE = "https://roberts-why-saw-structure.trycloudflare.com/api/v1";
+const API_BASE = "https://speech-amendments-brisbane-packing.trycloudflare.com/api/v1";
 
 // Helper coordinates map to give projects visual boundaries on the map based on their state/district
 const getFallbackCoordinates = (state, id) => {
@@ -110,16 +110,9 @@ export const AppContextProvider = ({ children }) => {
   const [backendError, setBackendError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Authentication State
-  const [currentUser, setCurrentUser] = useState(() => {
-    try {
-      const saved = localStorage.getItem('nlams_user');
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
-  const [authToken, setAuthToken] = useState(() => localStorage.getItem('nlams_token') || "");
+  // Authentication State — Enforce Mandatory Official Sign-In on every visit
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authToken, setAuthToken] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Synchronize selectedRole with logged-in user role
@@ -130,32 +123,6 @@ export const AppContextProvider = ({ children }) => {
       setSelectedRole("citizen");
     }
   }, [currentUser]);
-
-  // Validate stored JWT token on app startup
-  useEffect(() => {
-    if (!authToken) return;
-    const validateToken = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/auth/me`, {
-          headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-        if (res.ok) {
-          const userData = await res.json();
-          setCurrentUser(userData);
-          localStorage.setItem('nlams_user', JSON.stringify(userData));
-        } else {
-          // Token expired or invalid
-          localStorage.removeItem('nlams_token');
-          localStorage.removeItem('nlams_user');
-          setAuthToken("");
-          setCurrentUser(null);
-        }
-      } catch (e) {
-        console.error("Token verification error:", e);
-      }
-    };
-    validateToken();
-  }, []);
 
   const authHeader = () => {
     const headers = { 'X-NLAMS-API-Key': 'sih_nlams_secret_2026' };
@@ -187,6 +154,15 @@ export const AppContextProvider = ({ children }) => {
       setSelectedRole(user.role);
 
       addNotification(`Authenticated successfully as ${user.full_name} (${user.role.toUpperCase()})`, 'success');
+
+      // Auto-route to tailored dashboard for the user's administrative level
+      const defaultTab = user.role === 'ministry' ? 'dashboard' 
+        : user.role === 'state' ? 'workflow' 
+        : user.role === 'district' ? 'dispatch' 
+        : user.role === 'surveyor' ? 'survey' 
+        : 'web3';
+      
+      window.dispatchEvent(new CustomEvent('navigate-tab', { detail: defaultTab }));
       return true;
     } catch (e) {
       console.error("Login error:", e);
@@ -496,7 +472,9 @@ export const AppContextProvider = ({ children }) => {
       logout,
       showLoginModal,
       setShowLoginModal,
-      authHeader
+      authHeader,
+      addNotification,
+      logBlockchainTx
     }}>
       {children}
     </AppContext.Provider>

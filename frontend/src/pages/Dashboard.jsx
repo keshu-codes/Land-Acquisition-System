@@ -5,11 +5,12 @@ import LandGISMap from '../components/LandGISMap';
 import AnalyticsCharts from '../components/AnalyticsCharts';
 import { 
   Search, Filter, Layers, Users, TrendingUp, AlertCircle, 
-  FileCheck, CheckCircle, Download, Wifi, Database, Activity, Compass, RefreshCw
+  FileCheck, CheckCircle, Download, Wifi, Database, Activity, Compass, RefreshCw,
+  MessageSquareWarning, ShieldAlert, Send
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const { proposals, addNotification, language, t, apiBase } = useContext(AppContext);
+  const { proposals, addNotification, language, t, apiBase, user, authHeader } = useContext(AppContext);
   const [selectedProject, setSelectedProject] = useState(proposals[0]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStateFilter, setSelectedStateFilter] = useState("All States");
@@ -18,6 +19,35 @@ export default function Dashboard() {
   // ML inference states
   const [mlPrediction, setMlPrediction] = useState(null);
   const [mlLoading, setMlLoading] = useState(false);
+
+  // Live Grievance Monitor state
+  const [grievances, setGrievances] = useState([]);
+  const [grievanceLoading, setGrievanceLoading] = useState(false);
+
+  const fetchGrievances = async () => {
+    if (!user || (user.role !== 'ministry' && user.role !== 'district')) return;
+    try {
+      setGrievanceLoading(true);
+      const res = await fetch(`${apiBase}/grievances/monitor`, {
+        headers: authHeader()
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setGrievances(data);
+      }
+    } catch (err) {
+      console.error("Grievance fetch error:", err);
+    } finally {
+      setGrievanceLoading(false);
+    }
+  };
+
+  // Poll grievances every 15 seconds
+  useEffect(() => {
+    fetchGrievances();
+    const interval = setInterval(fetchGrievances, 15000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const states = [language === 'en' ? "All States" : "सभी राज्य", ...new Set(proposals.map(p => p.state))];
   const statuses = [language === 'en' ? "All Statuses" : "सभी स्थितियाँ", ...new Set(proposals.map(p => p.status))];
@@ -429,6 +459,17 @@ export default function Dashboard() {
                   )}
                 </div>
               </div>
+
+              {/* Quick Action: Dispatch Survey Notice */}
+              <button
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('navigate-tab', { detail: 'dispatch' }));
+                }}
+                className="w-full mt-3 bg-[#0f2b5c] hover:bg-[#0c224a] text-white py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+              >
+                <Send className="h-4 w-4 text-[#ea580c]" />
+                <span>{language === 'en' ? 'Dispatch Notice to Nearest Survey Officer' : 'निकटतम सर्वेक्षण अधिकारी को नोटिस भेजें'}</span>
+              </button>
             </div>
           )}
         </div>
@@ -445,6 +486,103 @@ export default function Dashboard() {
         </div>
         <AnalyticsCharts proposals={proposals} />
       </div>
+
+      {/* ── Live Grievance Monitor ── */}
+      {user && (user.role === 'ministry' || user.role === 'district') && (
+        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-rose-50 to-amber-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <ShieldAlert className="h-5 w-5 text-rose-600" />
+                {grievances.filter(g => g.status === 'PENDING').length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-rose-500 rounded-full animate-pulse ring-2 ring-white" />
+                )}
+              </div>
+              <div>
+                <h3 className="font-bold text-[#0f2b5c] text-sm font-serif">
+                  {language === 'en' ? 'Live Citizen Grievance Monitor' : 'लाइव नागरिक शिकायत मॉनिटर'}
+                </h3>
+                <p className="text-[10px] text-slate-500 font-semibold">
+                  {language === 'en' ? 'Real-time objections from secure email notification links' : 'सुरक्षित ईमेल अधिसूचना लिंक से रियल-टाइम आपत्तियाँ'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                Polling every 15s
+              </span>
+              <button
+                onClick={fetchGrievances}
+                disabled={grievanceLoading}
+                className="p-1.5 rounded-lg border border-slate-200 hover:bg-white text-slate-500 hover:text-[#0f2b5c] cursor-pointer transition-all"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 ${grievanceLoading ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
+          </div>
+
+          <div className="p-5">
+            {grievances.length === 0 ? (
+              <div className="text-center py-10 space-y-2">
+                <MessageSquareWarning className="h-10 w-10 text-slate-300 mx-auto" />
+                <p className="text-xs font-bold text-slate-400">
+                  {language === 'en' ? 'No citizen objections received yet' : 'अभी तक कोई नागरिक आपत्ति प्राप्त नहीं हुई'}
+                </p>
+                <p className="text-[10px] text-slate-400">
+                  {language === 'en' 
+                    ? 'When a landowner submits an objection via their secure email link, it will appear here in real-time.'
+                    : 'जब कोई भूस्वामी अपने सुरक्षित ईमेल लिंक से आपत्ति दर्ज करेगा, तो वह यहाँ रियल-टाइम में दिखाई देगी।'
+                  }
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {grievances.map((g, idx) => {
+                  const typeColors = {
+                    'VALUATION': 'bg-amber-50 border-amber-200 text-amber-800',
+                    'BOUNDARY': 'bg-blue-50 border-blue-200 text-blue-800',
+                    'TITLE': 'bg-purple-50 border-purple-200 text-purple-800',
+                    'OTHER': 'bg-slate-50 border-slate-200 text-slate-700'
+                  };
+                  const statusColors = {
+                    'PENDING': 'bg-rose-100 text-rose-700',
+                    'UNDER_REVIEW': 'bg-amber-100 text-amber-700',
+                    'RESOLVED': 'bg-emerald-100 text-emerald-700',
+                    'REJECTED': 'bg-slate-100 text-slate-600'
+                  };
+                  return (
+                    <div key={g.id || idx} className="border border-slate-200 rounded-lg p-4 hover:shadow-sm transition-all">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-extrabold text-[#0f2b5c] font-serif">{g.reference_number}</span>
+                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${typeColors[g.objection_type] || typeColors['OTHER']}`}>
+                              {g.objection_type}
+                            </span>
+                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${statusColors[g.status] || statusColors['PENDING']}`}>
+                              {g.status === 'PENDING' && <span className="h-1.5 w-1.5 bg-rose-500 rounded-full animate-pulse" />}
+                              {g.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[10px] text-slate-500 font-semibold">
+                            <span>Plot: <strong className="text-slate-700">{g.parcel_number}</strong></span>
+                            <span>Landowner: <strong className="text-slate-700">{g.landowner_name}</strong></span>
+                          </div>
+                          <p className="text-[11px] text-slate-600 mt-1 max-w-lg">{(g.description || "").substring(0, 120)}{(g.description || "").length > 120 ? '...' : ''}</p>
+                        </div>
+                        <div className="text-right text-[9px] text-slate-400 font-mono flex-shrink-0 ml-4">
+                          {g.created_at ? new Date(g.created_at).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );
