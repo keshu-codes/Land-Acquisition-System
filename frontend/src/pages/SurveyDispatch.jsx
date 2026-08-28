@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { MapContainer, TileLayer, Polygon, Popup } from 'react-leaflet';
 import { 
   MapPin, Send, User, Shield, CheckCircle, 
-  Copy, Mail, Key, Clock, AlertTriangle, ChevronRight
+  Copy, Mail, Key, Clock, AlertTriangle, ChevronRight, Maximize2, Minimize2
 } from 'lucide-react';
 import { AppContext } from '../context/AppContext';
 
@@ -20,6 +20,18 @@ const SurveyDispatch = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authPasscode, setAuthPasscode] = useState('SIH@12345');
   const [passcodeError, setPasscodeError] = useState('');
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+
+  // Exit fullscreen on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isMapFullscreen) {
+        setIsMapFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMapFullscreen]);
 
   // Map coordinates
   const mapCenter = [20.2961, 85.8245];
@@ -164,10 +176,32 @@ const SurveyDispatch = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left: GIS Map Panel */}
-          <div className="lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[600px] lg:h-auto">
-            <div className="bg-[#0f2b5c] text-white px-4 py-3 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#ea580c]" />
-              <h2 className="font-serif font-semibold text-sm">GIS Map Viewer</h2>
+          <div className={isMapFullscreen 
+            ? "fixed inset-0 z-[99999] bg-white w-screen h-screen flex flex-col p-3 shadow-2xl animate-fadeIn" 
+            : "lg:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[600px] lg:h-auto"
+          }>
+            <div className="bg-[#0f2b5c] text-white px-4 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#ea580c]" />
+                <h2 className="font-serif font-semibold text-sm">GIS Map Viewer</h2>
+              </div>
+              <button
+                onClick={() => setIsMapFullscreen(!isMapFullscreen)}
+                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-all"
+                title={isMapFullscreen ? "Exit Fullscreen (Esc)" : "Maximize Map to Fullscreen"}
+              >
+                {isMapFullscreen ? (
+                  <>
+                    <Minimize2 className="h-3.5 w-3.5 text-rose-300" />
+                    <span className="text-rose-200">Exit Fullscreen (Esc)</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="h-3.5 w-3.5 text-amber-300" />
+                    <span>⛶ Maximize Fullscreen</span>
+                  </>
+                )}
+              </button>
             </div>
             <div className="flex-1 relative z-0">
               <MapContainer 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Polygon, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { MapPin, Globe, Compass, ExternalLink, Satellite, Send, Search, User, X } from 'lucide-react';
+import { MapPin, Globe, Compass, ExternalLink, Satellite, Send, Search, User, X, Maximize2, Minimize2 } from 'lucide-react';
 
 let DefaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -49,6 +49,18 @@ export default function LandGISMap({ proposals, selectedProject, setSelectedProj
   const [mapZoom, setMapZoom] = useState(5);
   const [mapType, setMapType] = useState('satellite'); // 'standard' or 'satellite'
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Exit fullscreen on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -106,11 +118,15 @@ export default function LandGISMap({ proposals, selectedProject, setSelectedProj
     );
   });
 
+  const containerClass = isFullscreen
+    ? "fixed inset-0 z-[99999] bg-white w-screen h-screen flex flex-col lg:flex-row shadow-2xl font-sans select-none p-3 animate-fadeIn"
+    : "bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col lg:flex-row h-[580px] font-sans select-none";
+
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col lg:flex-row h-[580px] font-sans select-none">
+    <div className={containerClass}>
       
       {/* Sidebar - Projects & Landowners Registry */}
-      <div className="w-full lg:w-88 border-r border-slate-200 flex flex-col h-1/3 lg:h-full bg-white z-10">
+      <div className={`border-r border-slate-200 flex flex-col bg-white z-10 ${isFullscreen ? 'w-full lg:w-96 h-1/4 lg:h-full rounded-l-xl' : 'w-full lg:w-88 h-1/3 lg:h-full'}`}>
         
         {/* Header */}
         <div className="p-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
@@ -200,8 +216,27 @@ export default function LandGISMap({ proposals, selectedProject, setSelectedProj
       </div>
 
       {/* Map View */}
-      <div className="flex-1 relative h-2/3 lg:h-full z-0">
+      <div className={`flex-1 relative z-0 ${isFullscreen ? 'h-3/4 lg:h-full rounded-r-xl overflow-hidden' : 'h-2/3 lg:h-full'}`}>
         <div className="absolute top-3 right-3 z-[40] flex gap-2">
+          {/* Maximize / Fullscreen Button */}
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            title={isFullscreen ? "Exit Fullscreen (Esc)" : "Maximize Map to Fullscreen"}
+            className="bg-white/95 border border-slate-250 hover:bg-slate-50 text-slate-850 px-3.5 py-1.5 rounded-lg shadow-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-sm cursor-pointer transition-all hover:text-[#ea580c]"
+          >
+            {isFullscreen ? (
+              <>
+                <Minimize2 className="h-3.5 w-3.5 text-rose-600" />
+                <span className="text-rose-600 font-bold">Exit Fullscreen (Esc)</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="h-3.5 w-3.5 text-[#0f2b5c]" />
+                <span>⛶ Maximize Fullscreen</span>
+              </>
+            )}
+          </button>
+
           {/* Map Layer Switcher */}
           <button
             onClick={() => setMapType(mapType === 'satellite' ? 'standard' : 'satellite')}
@@ -211,7 +246,7 @@ export default function LandGISMap({ proposals, selectedProject, setSelectedProj
             <span>{mapType === 'satellite' ? '🗺️ Map View' : '🛰️ Satellite View'}</span>
           </button>
           
-          <div className="bg-white/95 border border-slate-200 text-slate-850 px-3.5 py-1.5 rounded-lg shadow-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-sm">
+          <div className="bg-white/95 border border-slate-200 text-slate-850 px-3.5 py-1.5 rounded-lg shadow-md text-[10px] font-bold uppercase tracking-wider hidden sm:flex items-center gap-1.5 backdrop-blur-sm">
             <Compass className="h-3.5 w-3.5 text-[#0f2b5c]" />
             Interactive GIS Portal
           </div>
