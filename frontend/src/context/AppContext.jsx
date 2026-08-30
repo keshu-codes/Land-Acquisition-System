@@ -3,9 +3,7 @@ import { translations } from './Translation';
 
 export const AppContext = createContext();
 
-const API_BASE = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? "http://127.0.0.1:8000/api/v1"
-  : "https://beverage-eos-companies-basically.trycloudflare.com/api/v1";
+const API_BASE = "/api/v1";
 
 // Helper coordinates map to give projects visual boundaries on the map based on their state/district
 const getFallbackCoordinates = (state, id) => {

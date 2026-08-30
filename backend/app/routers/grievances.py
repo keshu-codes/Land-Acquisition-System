@@ -137,7 +137,7 @@ def dispatch_notice(
     session.refresh(db_token)
     
     # 6. Build grievance URL with live frontend domain
-    frontend_base = os.getenv("NLAMS_FRONTEND_URL", "https://conditioning-reporter-ears-slip.trycloudflare.com")
+    frontend_base = os.getenv("NLAMS_FRONTEND_URL", "https://escape-president-requirements-apply.trycloudflare.com")
     grievance_url = f"{frontend_base}/?token={jwt_token}"
     
     # 7. Calculate area in acres from sqm
