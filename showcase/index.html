@@ -6,9 +6,6 @@
   <title>NLAMS - National Land Acquisition System (v0.3-alpha Dev Build)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Leaflet Map CSS/JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
     body { font-family: 'Inter', sans-serif; }
@@ -20,7 +17,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col select-none">
 
-  <!-- Live Developer Status Bar (Makes it look 100% like an active sprint build) -->
+  <!-- Live Developer Status Bar -->
   <div class="bg-slate-900 text-slate-300 text-[11px] px-4 py-1.5 flex flex-wrap justify-between items-center border-b border-slate-800 font-mono">
     <div class="flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
@@ -48,7 +45,7 @@
         </div>
       </div>
 
-      <!-- Quick View Switcher (To show different WIP screens) -->
+      <!-- Quick View Switcher -->
       <div class="flex items-center gap-1 bg-black/30 p-1 rounded-lg border border-white/10 text-xs font-semibold">
         <button onclick="showView('view-login')" id="nav-login" class="nav-btn px-2.5 py-1 rounded bg-[#ea580c] text-white">
           <i class="fa-solid fa-lock mr-1"></i> Auth Gateway
@@ -70,7 +67,7 @@
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
 
     <!-- ========================================================================= -->
-    <!-- VIEW 1: AUTH GATEWAY (Early Working Scaffold)                             -->
+    <!-- VIEW 1: AUTH GATEWAY                                                      -->
     <!-- ========================================================================= -->
     <div id="view-login" class="view-panel space-y-5">
       <div class="max-w-2xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
@@ -85,7 +82,7 @@
           </p>
         </div>
 
-        <!-- Role Selectors (WIP) -->
+        <!-- Role Selectors -->
         <div class="space-y-2.5">
           
           <!-- Role 1: Ministry -->
@@ -151,7 +148,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- VIEW 2: DASHBOARD VIEW (Early Working Scaffold)                           -->
+    <!-- VIEW 2: DASHBOARD VIEW (Cadastral Spatial Inspector)                      -->
     <!-- ========================================================================= -->
     <div id="view-dashboard" class="view-panel hidden space-y-5">
       
@@ -195,11 +192,11 @@
         </div>
       </div>
 
-      <!-- Map & Parcel List Grid -->
+      <!-- Spatial Data & Parcel List Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         <!-- Left: Search & Plot List (4 Cols) -->
-        <div class="lg:col-span-4 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs flex flex-col h-[460px]">
+        <div class="lg:col-span-5 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs flex flex-col h-[460px]">
           <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
             <span class="text-xs font-bold text-slate-700 font-serif uppercase tracking-wide">Cadastral Registry</span>
             <span class="text-[10px] font-bold font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border">5 Plots Seeded</span>
@@ -225,21 +222,77 @@
           </div>
         </div>
 
-        <!-- Right: Leaflet Satellite GIS Map (8 Cols) -->
-        <div class="lg:col-span-8 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs flex flex-col h-[460px]">
+        <!-- Right: Cadastral Spatial Data & Valuation Inspector (7 Cols) -->
+        <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs flex flex-col h-[460px]">
           <div class="p-3 bg-[#0f2b5c] text-white flex justify-between items-center text-xs">
             <span class="font-bold font-serif flex items-center gap-1.5">
-              <i class="fa-solid fa-satellite text-orange-400"></i> GIS Cadastral Map View
+              <i class="fa-solid fa-layer-group text-orange-400"></i> Cadastral Spatial Data & Valuation Inspector
             </span>
-            <span class="text-[10px] font-mono text-slate-300">Google Satellite Hybrid Tiles</span>
+            <span class="text-[10px] font-mono text-slate-300">Live Parcel Binding</span>
           </div>
-          <div id="gis-map" class="flex-1 w-full bg-slate-200"></div>
+          
+          <div class="p-5 flex-1 overflow-y-auto space-y-4 bg-slate-50/50 custom-scrollbar">
+            
+            <!-- Active Plot Header Card -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider block" id="inspect-id">PRJ-001</span>
+                  <h3 class="text-sm font-bold text-[#0f2b5c] font-serif" id="inspect-title">Regional Multi-Modal Corridor Expansion</h3>
+                  <span class="text-[11px] font-mono text-slate-600 font-semibold" id="inspect-plot">PLOT-OD-2026-9821</span>
+                </div>
+                <span class="text-[9px] font-bold bg-amber-50 border border-amber-200 text-amber-800 px-2 py-0.5 rounded uppercase" id="inspect-status">Section 11 Pending</span>
+              </div>
+            </div>
+
+            <!-- Spatial Coordinates & Bounding Box -->
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+                <span class="text-[9px] font-bold text-slate-400 uppercase block">GPS Centroid Coordinates</span>
+                <strong class="font-mono text-[#0f2b5c] text-[11px] block" id="inspect-coords">20.2961° N, 85.8245° E</strong>
+                <span class="text-[10px] text-slate-500" id="inspect-state">Khordha District, Odisha</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+                <span class="text-[9px] font-bold text-slate-400 uppercase block">Landowner Entity</span>
+                <strong class="text-slate-800 text-[11px] block" id="inspect-name">Anmol</strong>
+                <span class="text-[10px] text-slate-500" id="inspect-area">1.45 Acres (Semi-Urban)</span>
+              </div>
+            </div>
+
+            <!-- Statutory RFCTLARR Valuation Breakdown -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 space-y-2">
+              <div class="flex justify-between items-center text-xs border-b pb-2">
+                <span class="font-bold text-slate-700 font-serif">Statutory Valuation Breakdown</span>
+                <span class="text-[10px] font-mono text-emerald-700 font-bold" id="inspect-val">₹42,50,000</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                  <span class="text-slate-400 block">Base Circle Rate</span>
+                  <strong class="text-slate-700 font-mono" id="inspect-base-val">₹42.50 L</strong>
+                </div>
+                <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                  <span class="text-slate-400 block">Solatium (100%)</span>
+                  <strong class="text-indigo-700 font-mono" id="inspect-solatium">+ ₹42.50 L</strong>
+                </div>
+                <div class="bg-emerald-50 p-2 rounded-lg border border-emerald-150">
+                  <span class="text-emerald-800 font-bold block">Total Award (Sec 23)</span>
+                  <strong class="text-emerald-700 font-mono font-extrabold" id="inspect-total">₹85.00 L</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sprint-2 Dev Placeholder -->
+            <div class="p-3 bg-indigo-50/70 border border-indigo-150 rounded-xl flex items-center justify-between text-xs text-indigo-900 font-mono">
+              <span><i class="fa-solid fa-satellite text-[#ea580c] mr-1.5"></i> GIS Satellite Vector Layer</span>
+              <span class="text-[10px] bg-white px-2 py-0.5 rounded border border-indigo-200 font-bold text-indigo-700">Sprint-2 Integration</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- ========================================================================= -->
-    <!-- VIEW 3: DISPATCH CONSOLE (Early Working Scaffold)                         -->
+    <!-- VIEW 3: DISPATCH CONSOLE                                                  -->
     <!-- ========================================================================= -->
     <div id="view-dispatch" class="view-panel hidden space-y-5">
       <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center">
@@ -323,7 +376,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- VIEW 4: CITIZEN PORTAL (Early Working Scaffold)                           -->
+    <!-- VIEW 4: CITIZEN PORTAL                                                    -->
     <!-- ========================================================================= -->
     <div id="view-citizen" class="view-panel hidden space-y-5">
       <div class="max-w-xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
@@ -373,49 +426,19 @@
   <script>
     // Sample plots data
     const plotsData = [
-      { id: "PRJ-001", name: "Anmol", plot: "PLOT-OD-2026-9821", area: "1.45 Acres", val: "₹42,50,000", lat: 20.2961, lng: 85.8245, state: "Odisha" },
-      { id: "PRJ-002", name: "Rameshwar Patel", plot: "PLOT-MH-2026-1044", area: "2.80 Acres", val: "₹65,00,000", lat: 19.0760, lng: 72.8777, state: "Maharashtra" },
-      { id: "PRJ-003", name: "M. Selvakumar", plot: "PLOT-TN-2026-2082", area: "3.20 Acres", val: "₹78,00,000", lat: 13.0827, lng: 80.2707, state: "Tamil Nadu" },
-      { id: "PRJ-004", name: "Harishankar Sharma", plot: "PLOT-UP-2026-3055", area: "1.90 Acres", val: "₹48,00,000", lat: 26.8467, lng: 80.9462, state: "Uttar Pradesh" },
-      { id: "PRJ-005", name: "Debabrata Banerjee", plot: "PLOT-WB-2026-4012", area: "2.10 Acres", val: "₹52,00,000", lat: 22.5726, lng: 88.3639, state: "West Bengal" }
+      { id: "PRJ-001", name: "Anmol", title: "Regional Multi-Modal Corridor Expansion", plot: "PLOT-OD-2026-9821", area: "1.45 Acres (Semi-Urban)", val: "₹42,50,000", baseVal: "₹42.50 L", solatium: "+ ₹42.50 L", total: "₹85.00 L", coords: "20.2961° N, 85.8245° E", state: "Khordha District, Odisha", status: "Section 11 Pending" },
+      { id: "PRJ-002", name: "Rameshwar Patel", title: "Mumbai-Ahmedabad High-Speed Rail Section 2", plot: "PLOT-MH-2026-1044", area: "2.80 Acres (Agricultural)", val: "₹65,00,000", baseVal: "₹65.00 L", solatium: "+ ₹65.00 L", total: "₹130.00 L", coords: "19.0760° N, 72.8777° E", state: "Thane District, Maharashtra", status: "Possession Handover" },
+      { id: "PRJ-003", name: "M. Selvakumar", title: "Chennai Industrial Logistics Corridor", plot: "PLOT-TN-2026-2082", area: "3.20 Acres (Commercial)", val: "₹78,00,000", baseVal: "₹78.00 L", solatium: "+ ₹78.00 L", total: "₹156.00 L", coords: "13.0827° N, 80.2707° E", state: "Kanchipuram, Tamil Nadu", status: "GIS Verification" },
+      { id: "PRJ-004", name: "Harishankar Sharma", title: "Purulia Renewable Wind Grid Phase 1", plot: "PLOT-UP-2026-3055", area: "1.90 Acres (Rural)", val: "₹48,00,000", baseVal: "₹48.00 L", solatium: "+ ₹48.00 L", total: "₹96.00 L", coords: "26.8467° N, 80.9462° E", state: "Lucknow, Uttar Pradesh", status: "Section 11 Pending" },
+      { id: "PRJ-005", name: "Debabrata Banerjee", title: "Dedicated East-West Freight Link", plot: "PLOT-WB-2026-4012", area: "2.10 Acres (Semi-Urban)", val: "₹52,00,000", baseVal: "₹52.00 L", solatium: "+ ₹52.00 L", total: "₹104.00 L", coords: "22.5726° N, 88.3639° E", state: "Howrah, West Bengal", status: "Award Declared" }
     ];
 
-    let map, activeMarker, activePolygon;
-
-    function initMap() {
-      if (map) return;
-      map = L.map('gis-map').setView([20.2961, 85.8245], 14);
-      L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-        maxZoom: 19,
-        attribution: 'Google Hybrid Satellite'
-      }).addTo(map);
-
-      renderPlot(plotsData[0]);
-    }
-
-    function renderPlot(p) {
-      if (!map) return;
-      if (activeMarker) map.removeLayer(activeMarker);
-      if (activePolygon) map.removeLayer(activePolygon);
-
-      map.flyTo([p.lat, p.lng], 14, { duration: 1.2 });
-
-      activeMarker = L.marker([p.lat, p.lng]).addTo(map)
-        .bindPopup(`<b>${p.plot}</b><br>Owner: ${p.name}<br>Valuation: ${p.val}`).openPopup();
-
-      const delta = 0.003;
-      activePolygon = L.polygon([
-        [p.lat - delta, p.lng - delta],
-        [p.lat - delta, p.lng + delta],
-        [p.lat + delta, p.lng + delta],
-        [p.lat + delta, p.lng - delta]
-      ], { color: 'red', fillColor: '#f87171', fillOpacity: 0.35 }).addTo(map);
-    }
+    let selectedPlotId = "PRJ-001";
 
     function renderPlotsList(items) {
       const container = document.getElementById('plot-list');
       container.innerHTML = items.map(p => `
-        <div onclick="selectPlot('${p.id}')" class="p-2.5 bg-slate-50 hover:bg-indigo-50/50 border border-slate-200 hover:border-[#0f2b5c] rounded-lg cursor-pointer transition-all text-xs">
+        <div onclick="selectPlot('${p.id}')" class="p-2.5 ${selectedPlotId === p.id ? 'bg-indigo-50 border-[#0f2b5c] ring-1 ring-[#0f2b5c]/20' : 'bg-slate-50 hover:bg-slate-100 border-slate-200'} border rounded-lg cursor-pointer transition-all text-xs">
           <div class="flex justify-between items-center">
             <strong class="text-slate-800">${p.name}</strong>
             <span class="text-[9px] font-mono text-slate-400">${p.id}</span>
@@ -430,8 +453,23 @@
     }
 
     function selectPlot(id) {
+      selectedPlotId = id;
       const p = plotsData.find(x => x.id === id);
-      if (p) renderPlot(p);
+      if (p) {
+        document.getElementById('inspect-id').innerText = p.id;
+        document.getElementById('inspect-title').innerText = p.title;
+        document.getElementById('inspect-plot').innerText = p.plot;
+        document.getElementById('inspect-status').innerText = p.status;
+        document.getElementById('inspect-coords').innerText = p.coords;
+        document.getElementById('inspect-state').innerText = p.state;
+        document.getElementById('inspect-name').innerText = p.name;
+        document.getElementById('inspect-area').innerText = p.area;
+        document.getElementById('inspect-val').innerText = p.val;
+        document.getElementById('inspect-base-val').innerText = p.baseVal;
+        document.getElementById('inspect-solatium').innerText = p.solatium;
+        document.getElementById('inspect-total').innerText = p.total;
+      }
+      renderPlotsList(plotsData);
     }
 
     function filterPlots(query) {
@@ -442,7 +480,7 @@
         p.state.toLowerCase().includes(q)
       );
       renderPlotsList(filtered);
-      if (filtered.length > 0) renderPlot(filtered[0]);
+      if (filtered.length > 0) selectPlot(filtered[0].id);
     }
 
     function showView(viewId) {
@@ -459,13 +497,6 @@
       if (activeBtn) {
         activeBtn.classList.add('bg-[#ea580c]', 'text-white');
         activeBtn.classList.remove('text-slate-300');
-      }
-
-      if (viewId === 'view-dashboard') {
-        setTimeout(() => {
-          initMap();
-          map.invalidateSize();
-        }, 150);
       }
     }
 
@@ -499,6 +530,7 @@
 
     // Init
     renderPlotsList(plotsData);
+    selectPlot("PRJ-001");
   </script>
 </body>
 </html>
