@@ -315,70 +315,53 @@ export default function Dashboard() {
           />
         </div>
 
-        {/* Selected Project Details Pane */}
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+        {/* Selected Project Details Pane (Official Government Cadastral Dossier) */}
+        <div className="bg-white border border-slate-300 rounded-md p-4 space-y-3 flex flex-col justify-between select-none">
           <div>
-            <div className="flex justify-between items-start border-b border-slate-100 pb-3">
-              <div className="pr-1">
-                <span className="text-[9px] font-bold text-slate-400 tracking-wider block">{activeSelectedProject?.id}</span>
-                <h3 className="font-bold text-slate-800 text-sm leading-snug mt-0.5 font-serif">{activeSelectedProject?.title}</h3>
-                <span className="text-[10px] text-[#0f2b5c] font-bold block mt-1">{activeSelectedProject?.agency}</span>
+            {/* Dossier Header */}
+            <div className="flex justify-between items-start border-b border-slate-200 pb-3">
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded border border-slate-200">
+                    {activeSelectedProject?.id}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                    {activeSelectedProject?.state}
+                  </span>
+                </div>
+                <h3 className="font-bold text-[#0f2b5c] text-sm leading-snug font-serif">{activeSelectedProject?.title}</h3>
+                <span className="text-[11px] text-slate-600 font-medium block mt-0.5">{activeSelectedProject?.agency}</span>
               </div>
-              {activeSelectedProject && getStatusBadge(activeSelectedProject.status)}
+              <div>{activeSelectedProject && getStatusBadge(activeSelectedProject.status)}</div>
             </div>
 
             {activeSelectedProject ? (
-              <div className="mt-4 space-y-3.5">
-                {/* Metrics Grid */}
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[8px] uppercase font-bold tracking-wider mb-0.5">{t('reqArea')}</span>
-                    <strong className="text-slate-700 text-xs font-extrabold">{activeSelectedProject.areaRequired} ha</strong>
+              <div className="mt-3 space-y-3">
+                {/* Official Specification Ledger Table */}
+                <div className="border border-slate-200 rounded text-xs divide-y divide-slate-200">
+                  <div className="flex justify-between p-2 bg-slate-50/70">
+                    <span className="text-slate-500 font-medium">{t('reqArea')}</span>
+                    <strong className="text-slate-800 font-serif">{activeSelectedProject.areaRequired} ha</strong>
                   </div>
-                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[8px] uppercase font-bold tracking-wider mb-0.5">{t('acqProgress')}</span>
-                    <strong className="text-emerald-700 text-xs font-extrabold">{activeSelectedProject.areaAcquired} ha</strong>
+                  <div className="flex justify-between p-2">
+                    <span className="text-slate-500 font-medium">{t('acqProgress')}</span>
+                    <strong className="text-emerald-700 font-serif font-bold">{activeSelectedProject.areaAcquired} ha</strong>
                   </div>
-                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[8px] uppercase font-bold tracking-wider mb-0.5">{t('assessedBudget')}</span>
-                    <strong className="text-slate-700 text-xs font-extrabold">₹{activeSelectedProject.budgetAssessed} Cr</strong>
+                  <div className="flex justify-between p-2 bg-slate-50/70">
+                    <span className="text-slate-500 font-medium">{t('assessedBudget')}</span>
+                    <strong className="text-slate-800 font-serif">₹{activeSelectedProject.budgetAssessed} Cr</strong>
                   </div>
-                  <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[8px] uppercase font-bold tracking-wider mb-0.5">{t('paidComp')}</span>
-                    <strong className="text-slate-700 text-xs font-extrabold">₹{activeSelectedProject.budgetDisbursed} Cr</strong>
+                  <div className="flex justify-between p-2">
+                    <span className="text-slate-500 font-medium">{t('paidComp')}</span>
+                    <strong className="text-[#0f2b5c] font-serif font-bold">₹{activeSelectedProject.budgetDisbursed} Cr</strong>
                   </div>
-                </div>
-
-                {/* Families Affected */}
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-slate-450" />
-                    <div>
-                      <span className="text-slate-700 font-bold text-xs block">{t('affectedFamilies')}</span>
-                      <span className="text-[9px] text-slate-400 font-bold">{t('affectedFamiliesSub')}</span>
-                    </div>
+                  <div className="flex justify-between p-2 bg-slate-50/70">
+                    <span className="text-slate-500 font-medium">{t('affectedFamilies')}</span>
+                    <span className="text-slate-700 font-bold">{activeSelectedProject.affectedFamilies} Families</span>
                   </div>
-                  <span className="font-extrabold text-slate-800 text-xs">{activeSelectedProject.affectedFamilies}</span>
-                </div>
-
-                {/* Rehabilitation & Resettlement Progress */}
-                <div className="border border-slate-200 rounded-lg p-3 space-y-2 bg-slate-50/20">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-700 font-bold flex items-center gap-1.5 font-serif">
-                      <TrendingUp className="h-3.5 w-3.5 text-orange-600" />
-                      {t('rrProgressTitle')}
-                    </span>
-                    <strong className="text-orange-700">{activeSelectedProject.rrProgress}%</strong>
-                  </div>
-                  <div className="w-full bg-slate-200 rounded-full h-1.5">
-                    <div 
-                      className="bg-orange-500 h-1.5 rounded-full transition-all duration-500" 
-                      style={{ width: `${activeSelectedProject.rrProgress}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
-                    <span>{t('displacedLabel')}: {activeSelectedProject.displacedFamilies}</span>
-                    <span>{t('rrStatusLabel')}: {activeSelectedProject.rrProgress === 100 ? (language === 'en' ? "Completed" : "पूर्ण") : (language === 'en' ? "In Progress" : "प्रगति पर")}</span>
+                  <div className="flex justify-between p-2">
+                    <span className="text-slate-500 font-medium">{t('rrProgressTitle')}</span>
+                    <span className="text-orange-700 font-bold">{activeSelectedProject.rrProgress}% Resettled</span>
                   </div>
                 </div>
 

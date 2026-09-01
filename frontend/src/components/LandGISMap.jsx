@@ -215,40 +215,44 @@ export default function LandGISMap({ proposals, selectedProject, setSelectedProj
         </div>
       </div>
 
-      {/* Map View */}
-      <div className={`flex-1 relative z-0 ${isFullscreen ? 'h-3/4 lg:h-full rounded-r-xl overflow-hidden' : 'h-2/3 lg:h-full'}`}>
-        <div className="absolute top-3 right-3 z-[40] flex gap-2">
-          {/* Maximize / Fullscreen Button */}
-          <button
-            onClick={() => setIsFullscreen(!isFullscreen)}
-            title={isFullscreen ? "Exit Fullscreen (Esc)" : "Maximize Map to Fullscreen"}
-            className="bg-white/95 border border-slate-250 hover:bg-slate-50 text-slate-850 px-3.5 py-1.5 rounded-lg shadow-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-sm cursor-pointer transition-all hover:text-[#ea580c]"
-          >
-            {isFullscreen ? (
-              <>
-                <Minimize2 className="h-3.5 w-3.5 text-rose-600" />
-                <span className="text-rose-600 font-bold">Exit Fullscreen (Esc)</span>
-              </>
-            ) : (
-              <>
-                <Maximize2 className="h-3.5 w-3.5 text-[#0f2b5c]" />
-                <span>⛶ Maximize Fullscreen</span>
-              </>
-            )}
-          </button>
+      {/* Right Column: Integrated GIS Map Container */}
+      <div className={`lg:col-span-8 bg-white border border-slate-300 rounded-md overflow-hidden flex flex-col relative ${isFullscreen ? '!fixed !inset-0 !z-[9999] !h-screen !w-screen !rounded-none !border-0' : 'h-[520px]'}`}>
+        
+        {/* Solid Top Map Control Bar */}
+        <div className="bg-[#0f2b5c] text-white px-3.5 py-2 flex items-center justify-between text-xs border-b border-[#0c224a] z-10 select-none">
+          <div className="flex items-center gap-2">
+            <Globe className="h-4 w-4 text-[#ea580c]" />
+            <span className="font-bold font-serif tracking-wide">
+              Cadastral GIS Visualizer <span className="text-slate-300 text-[10px] font-sans font-normal hidden sm:inline">| National Satellite Layer</span>
+            </span>
+          </div>
 
-          {/* Map Layer Switcher */}
-          <button
-            onClick={() => setMapType(mapType === 'satellite' ? 'standard' : 'satellite')}
-            className="bg-white/95 border border-slate-250 hover:bg-slate-50 text-slate-850 px-3.5 py-1.5 rounded-lg shadow-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-sm cursor-pointer transition-all"
-          >
-            <Globe className="h-3.5 w-3.5 text-[#ea580c]" />
-            <span>{mapType === 'satellite' ? '🗺️ Map View' : '🛰️ Satellite View'}</span>
-          </button>
-          
-          <div className="bg-white/95 border border-slate-200 text-slate-850 px-3.5 py-1.5 rounded-lg shadow-md text-[10px] font-bold uppercase tracking-wider hidden sm:flex items-center gap-1.5 backdrop-blur-sm">
-            <Compass className="h-3.5 w-3.5 text-[#0f2b5c]" />
-            Interactive GIS Portal
+          <div className="flex items-center gap-2">
+            {/* Map Layer Switcher */}
+            <button
+              onClick={() => setMapType(mapType === 'satellite' ? 'standard' : 'satellite')}
+              className="bg-white/10 hover:bg-white/20 text-white px-2.5 py-1 rounded border border-white/20 text-[10.5px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <span>{mapType === 'satellite' ? '🗺️ Road View' : '🛰️ Satellite View'}</span>
+            </button>
+
+            {/* Maximize Fullscreen Toggle */}
+            <button
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              className="bg-[#ea580c] hover:bg-orange-700 text-white px-2.5 py-1 rounded text-[10.5px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+            >
+              {isFullscreen ? (
+                <>
+                  <Minimize2 className="h-3.5 w-3.5" />
+                  <span>Exit Fullscreen (Esc)</span>
+                </>
+              ) : (
+                <>
+                  <Maximize2 className="h-3.5 w-3.5" />
+                  <span>Fullscreen</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
         
