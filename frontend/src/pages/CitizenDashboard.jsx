@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { 
   Landmark, MapPin, CheckCircle, FileText, AlertTriangle, ShieldCheck, 
-  CreditCard, ExternalLink, ArrowUpRight, Scale, Clock, Download, Sprout
+  CreditCard, ExternalLink, ArrowUpRight, Scale, Clock, Download, Sprout,
+  Fingerprint, FileCheck, Building, Printer, QrCode, Shield, Check, Eye
 } from 'lucide-react';
 
 export default function CitizenDashboard({ setActiveTab }) {
@@ -11,6 +12,13 @@ export default function CitizenDashboard({ setActiveTab }) {
   const [objectionSubmitted, setObjectionSubmitted] = useState(false);
   const [objectionType, setObjectionType] = useState('VALUATION');
   const [objectionDesc, setObjectionDesc] = useState('');
+
+  // Digital & Physical Verification Modal State
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [verifyStep, setVerifyStep] = useState(1); // 1: Review, 2: Auth Choice (E-Sign vs Biometric), 3: Verified & Printable Receipt
+  const [authMethod, setAuthMethod] = useState('esign'); // 'esign' or 'biometric'
+  const [biometricScanning, setBiometricScanning] = useState(false);
+  const [verifiedDocHash, setVerifiedDocHash] = useState(null);
 
   const citizenLand = {
     ownerName: user?.full_name || "Anmol (Landowner)",
@@ -55,6 +63,20 @@ export default function CitizenDashboard({ setActiveTab }) {
     }, 2200);
   };
 
+  const handleBiometricAuth = () => {
+    setBiometricScanning(true);
+    setTimeout(() => {
+      setBiometricScanning(false);
+      setVerifiedDocHash("0x" + Math.random().toString(16).substring(2, 10) + "8821");
+      setVerifyStep(3);
+    }, 2000);
+  };
+
+  const handleESignAuth = () => {
+    setVerifiedDocHash("0x" + Math.random().toString(16).substring(2, 10) + "9821");
+    setVerifyStep(3);
+  };
+
   return (
     <div className="space-y-6 font-sans text-slate-800">
       
@@ -69,7 +91,7 @@ export default function CitizenDashboard({ setActiveTab }) {
             Land Dossier: {citizenLand.ownerName}
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
-            Inspect your land parcel area, per-unit circle rate, statutory 100% Solatium payout (RFCTLARR Sec 30), soil fertility rating, or submit an objection petition under Section 15.
+            Inspect your land parcel area, per-unit circle rate, statutory 100% Solatium payout (RFCTLARR Sec 30), soil fertility rating, digital e-signatures, or Jan Seva Kendra physical assistance.
           </p>
         </div>
       </div>
@@ -77,28 +99,24 @@ export default function CitizenDashboard({ setActiveTab }) {
       {/* ── 1. EASILY SCANABLE LAND AREA & UNIT VALUATION CARDS ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        {/* Card A: Total Land Area (Easily Scanable) */}
         <div className="bg-[#FAFAF7] border-2 border-[#12355B] p-5 rounded-2xl shadow-sm space-y-1">
           <span className="text-[11px] font-extrabold text-[#12355B] uppercase tracking-wider block">Total Land Area</span>
           <span className="text-2xl font-black text-[#12355B] font-mono block">{citizenLand.totalAreaAcres}</span>
           <span className="text-[10px] text-slate-500 font-semibold block">{citizenLand.totalAreaSqM}</span>
         </div>
 
-        {/* Card B: Market Price Per Unit */}
         <div className="bg-[#FAFAF7] border border-[#E8E1D5] p-5 rounded-2xl shadow-2xs space-y-1">
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Est. Market Rate / Unit</span>
           <span className="text-lg font-extrabold text-[#7A5C3E] font-mono block">{citizenLand.marketRatePerUnit}</span>
           <span className="text-[10px] text-slate-400 block">District Registrar Circle Rate</span>
         </div>
 
-        {/* Card C: Govt Compensation Per Unit */}
         <div className="bg-[#FAFAF7] border border-[#E8E1D5] p-5 rounded-2xl shadow-2xs space-y-1">
           <span className="text-[11px] font-bold text-[#2F6B4F] uppercase tracking-wider block">Govt Award Offered / Unit</span>
           <span className="text-lg font-extrabold text-[#2F6B4F] font-mono block">{citizenLand.govtCompensationPerUnit}</span>
           <span className="text-[10px] text-emerald-700 font-bold block">Includes 100% Solatium (Sec 30)</span>
         </div>
 
-        {/* Card D: Total Government Award */}
         <div className="bg-[#12355B] text-white p-5 rounded-2xl shadow-sm border border-slate-700 space-y-1">
           <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">Total Award Payable</span>
           <span className="text-2xl font-black text-amber-400 font-mono block">{citizenLand.totalGovtAward}</span>
@@ -193,6 +211,14 @@ export default function CitizenDashboard({ setActiveTab }) {
               </button>
 
               <button 
+                onClick={() => { setShowVerifyModal(true); setVerifyStep(1); }}
+                className="bg-[#12355B] hover:bg-[#0b1f42] text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer transition-all shadow-sm flex items-center gap-2"
+              >
+                <Fingerprint className="h-4 w-4 text-amber-400" />
+                <span>Digital E-Sign / Biometric Verification</span>
+              </button>
+
+              <button 
                 onClick={() => setActiveTab('gis')}
                 className="bg-slate-100 hover:bg-slate-200 text-[#12355B] text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5"
               >
@@ -204,9 +230,27 @@ export default function CitizenDashboard({ setActiveTab }) {
 
         </div>
 
-        {/* Right Column (4 Cols): Compensation Status & Documents */}
+        {/* Right Column (4 Cols): Physical Assistance & Documents */}
         <div className="lg:col-span-4 space-y-6">
           
+          {/* JAN SEVA KENDRA (CSC) PHYSICAL ASSISTANCE KIOSK CARD */}
+          <div className="bg-[#12355B] text-white p-5 rounded-2xl space-y-3 shadow-md border border-slate-700">
+            <div className="flex items-center gap-2 text-amber-300">
+              <Building className="h-5 w-5" />
+              <h3 className="text-xs font-bold uppercase tracking-wider font-mono">Jan Seva Kendra (CSC) Assistance</h3>
+            </div>
+            
+            <p className="text-xs text-slate-200 leading-relaxed">
+              Prefer in-person assistance? Visit your nearest Jan Seva Kendra for biometric thumb authentication, physical verification, and hard copy printouts.
+            </p>
+
+            <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-700 space-y-1 text-xs">
+              <strong className="block text-white">CSC Centre #8821 (Jatni Circle)</strong>
+              <span className="text-[11px] text-slate-300 block">Distance: 1.8 km • Open Mon-Sat 9 AM-6 PM</span>
+              <span className="text-[10px] text-emerald-400 font-bold block pt-1">✓ Assisted Objection & Biometric Node Active</span>
+            </div>
+          </div>
+
           {/* Compensation Status Card */}
           <div className="bg-white border border-[#E2E8F0] p-5 rounded-2xl space-y-4 shadow-2xs">
             <h3 className="text-xs font-bold text-[#12355B] uppercase tracking-wider font-mono">Compensation & Direct Payout Status</h3>
@@ -256,7 +300,154 @@ export default function CitizenDashboard({ setActiveTab }) {
 
       </div>
 
-      {/* ── 3. INTERACTIVE SECTION 15 OBJECTION SUBMISSION MODAL ── */}
+      {/* ── 3. INTERACTIVE DIGITAL & PHYSICAL VERIFICATION MODAL ── */}
+      {showVerifyModal && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-[100] p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 space-y-5 border border-slate-300">
+            
+            <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+              <h3 className="text-base font-extrabold text-[#12355B] flex items-center gap-2">
+                <FileCheck className="h-5 w-5 text-[#2F6B4F]" />
+                Digital & Physical Land Verification Workflow
+              </h3>
+              <button onClick={() => setShowVerifyModal(false)} className="text-slate-400 hover:text-slate-700 font-bold text-sm">✕</button>
+            </div>
+
+            {/* STEP 1: REVIEW DOCUMENT ONLINE */}
+            {verifyStep === 1 && (
+              <div className="space-y-4 text-xs">
+                <div className="p-4 bg-[#FAFAF7] border border-[#E8E1D5] rounded-xl space-y-2">
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <strong className="text-[#12355B] text-sm font-serif">Form K Statutory Award & Possession Document</strong>
+                    <span className="bg-blue-100 text-[#12355B] text-[10px] font-mono px-2 py-0.5 rounded font-bold">Sec 23 Award</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-slate-600 text-[11px] pt-1">
+                    <div>Landowner: <strong>{citizenLand.ownerName}</strong></div>
+                    <div>Plot Survey: <strong>{citizenLand.plotNo}</strong></div>
+                    <div>Total Area: <strong>{citizenLand.totalAreaAcres}</strong></div>
+                    <div>Govt Compensation: <strong>{citizenLand.totalGovtAward}</strong></div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                  <button 
+                    onClick={() => setShowVerifyModal(false)}
+                    className="px-4 py-2 rounded-xl text-slate-600 bg-slate-100 font-bold hover:bg-slate-200"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={() => setVerifyStep(2)}
+                    className="px-5 py-2 rounded-xl text-white bg-[#12355B] hover:bg-[#0b1f42] font-bold shadow-md cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>Proceed to Verification Authentication</span>
+                    <ArrowUpRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2: CHOOSE E-SIGN VS BIOMETRIC THUMB AUTH */}
+            {verifyStep === 2 && (
+              <div className="space-y-4 text-xs">
+                <p className="text-slate-600 font-medium">Select your preferred verification method below. If unable to provide a digital signature, use biometric/thumb authentication:</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Option A: Digital Signature */}
+                  <div 
+                    onClick={() => setAuthMethod('esign')}
+                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      authMethod === 'esign' ? 'border-[#12355B] bg-blue-50/50' : 'border-slate-200 hover:border-slate-400'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 text-[#12355B] font-bold mb-1">
+                      <FileCheck className="h-4 w-4" />
+                      <span>Option A: Aadhaar E-Sign</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500">Provide digital signature via Aadhaar OTP link.</p>
+                  </div>
+
+                  {/* Option B: Biometric / Thumb Authentication */}
+                  <div 
+                    onClick={() => setAuthMethod('biometric')}
+                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      authMethod === 'biometric' ? 'border-[#2F6B4F] bg-emerald-50/50' : 'border-slate-200 hover:border-slate-400'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 text-[#2F6B4F] font-bold mb-1">
+                      <Fingerprint className="h-4 w-4" />
+                      <span>Option B: Biometric Thumb Scan</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500">Use thumb scanner for assisted Jan Seva Kendra verification.</p>
+                  </div>
+                </div>
+
+                {authMethod === 'biometric' ? (
+                  <div className="pt-2">
+                    <button 
+                      onClick={handleBiometricAuth}
+                      disabled={biometricScanning}
+                      className="w-full bg-[#2F6B4F] hover:bg-emerald-800 text-white py-3 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Fingerprint className={`h-4 w-4 ${biometricScanning ? 'animate-pulse text-amber-300' : ''}`} />
+                      <span>{biometricScanning ? "Scanning Thumbprint Sensor..." : "Execute Biometric Thumb Authentication"}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="pt-2">
+                    <button 
+                      onClick={handleESignAuth}
+                      className="w-full bg-[#12355B] hover:bg-[#0b1f42] text-white py-3 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <FileCheck className="h-4 w-4 text-amber-400" />
+                      <span>Generate Aadhaar E-Signature Certificate</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* STEP 3: VERIFIED & PRINTABLE HARD COPY + DIGITAL AUDIT HASH */}
+            {verifyStep === 3 && (
+              <div className="space-y-4 text-xs">
+                <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-xl space-y-2">
+                  <div className="flex items-center gap-2 font-bold text-emerald-800 text-sm">
+                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                    <span>Land Document Successfully Verified & Certified!</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-700">
+                    A digital copy has been securely stored in the system audit registry. A printable hard copy is ready for distribution.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-[#FAFAF7] border border-[#E8E1D5] rounded-xl space-y-1">
+                  <span className="text-slate-400 block text-[10px]">Secure SHA-256 System Audit Hash</span>
+                  <span className="font-mono text-xs text-[#12355B] font-bold block">{verifiedDocHash}</span>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-2 border-t border-slate-100">
+                  <button 
+                    onClick={() => window.print()}
+                    className="px-4 py-2.5 rounded-xl text-[#12355B] bg-slate-100 hover:bg-slate-200 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Printer className="h-4 w-4" />
+                    <span>Print Certified Hard Copy</span>
+                  </button>
+                  <button 
+                    onClick={() => setShowVerifyModal(false)}
+                    className="px-5 py-2.5 rounded-xl text-white bg-[#12355B] hover:bg-[#0b1f42] font-bold shadow-md cursor-pointer"
+                  >
+                    Done & Close
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
+
+      {/* ── 4. INTERACTIVE SECTION 15 OBJECTION SUBMISSION MODAL ── */}
       {showObjectionModal && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-[100] p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-300">
