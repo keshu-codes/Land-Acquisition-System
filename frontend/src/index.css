@@ -6,6 +6,12 @@
 
 @layer base {
   :root {
+    --gov-blue: #12355B;
+    --land-green: #2F6B4F;
+    --soil-brown: #7A5C3E;
+    --map-sand: #E8E1D5;
+    --paper-white: #FAFAF7;
+    --alert-amber: #C98B2E;
     --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
     --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   }
@@ -13,7 +19,7 @@
   body {
     margin: 0;
     font-family: var(--font-body);
-    background-color: #f7f9fb;
+    background-color: var(--paper-white);
     color: #191c1e;
     -webkit-font-smoothing: antialiased;
   }
@@ -21,6 +27,12 @@
   h1, h2, h3, h4, h5, h6, .font-heading {
     font-family: var(--font-heading);
   }
+}
+
+/* Cadastral Map Pattern Overlay for Command Center Headers */
+.cadastral-grid-pattern {
+  background-image: radial-gradient(rgba(18, 53, 91, 0.12) 1px, transparent 0);
+  background-size: 16px 16px;
 }
 
 .material-symbols-outlined {

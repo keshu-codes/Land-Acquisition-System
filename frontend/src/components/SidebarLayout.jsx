@@ -3,7 +3,8 @@ import { AppContext } from '../context/AppContext';
 import { 
   Landmark, Search, Bell, User, Globe, Radio, Shield, 
   Calculator, Layers, BookOpen, Scale, FileText, Send, Compass, MapPin, 
-  ChevronRight, Menu, X, ChevronDown, Sparkles, HelpCircle, Phone, ArrowRight, CheckCircle2
+  ChevronRight, Menu, X, ChevronDown, Sparkles, HelpCircle, Phone, ArrowRight, CheckCircle2,
+  UserCheck, Building2
 } from 'lucide-react';
 
 export default function SidebarLayout({ activeTab, setActiveTab, children }) {
@@ -28,6 +29,7 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
 
   const roles = [
     { id: 'citizen', label: 'Landowner / Citizen', desc: 'Check Plot & Solatium', badge: 'Public' },
+    { id: 'agency', label: 'Registered Agency / Developer', desc: 'Auctions & Tenders', badge: 'Partner' },
     { id: 'ministry', label: 'Ministry Secretariat', desc: 'Central LARR Overseer', badge: 'HQ' },
     { id: 'state', label: 'State Collectorate', desc: 'GIS & Cadastral Ledger', badge: 'State' },
     { id: 'district', label: 'District Competent Authority', desc: 'Gazette & Notice Dispatch', badge: 'District' },
@@ -42,6 +44,8 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
       : roleId === 'state' ? 'workflow' 
       : roleId === 'district' ? 'dispatch' 
       : roleId === 'surveyor' ? 'survey' 
+      : roleId === 'citizen' ? 'citizen-dashboard'
+      : roleId === 'agency' ? 'agency-dashboard'
       : 'home';
     setActiveTab(defaultTab);
   };
@@ -49,7 +53,9 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
   const getNavigationItems = (role) => {
     return [
       { id: 'home', label: 'Portal Overview', icon: Landmark },
-      { id: 'dashboard', label: 'Executive Dashboard', icon: Landmark, badge: 'Analytics' },
+      { id: 'citizen-dashboard', label: 'Citizen Land Dashboard', icon: UserCheck, badge: 'Landowner' },
+      { id: 'agency-dashboard', label: 'Agency Tenders & Bids', icon: Building2, badge: 'Partner' },
+      { id: 'dashboard', label: 'Authority Command Centre', icon: Landmark, badge: 'Analytics' },
       { id: 'workflow', label: 'LARR Case Workflows', icon: FileText },
       { id: 'dispatch', label: 'Notice Dispatch', icon: Send },
       { id: 'web3', label: 'Web3 Audit & DBT', icon: Shield },
