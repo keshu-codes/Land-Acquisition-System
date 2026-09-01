@@ -152,6 +152,7 @@ export const AppContextProvider = ({ children }) => {
       setAuthToken(token);
       setCurrentUser(user);
       setSelectedRole(user.role);
+      setShowLoginModal(false);
 
       addNotification(`Authenticated successfully as ${user.full_name} (${user.role.toUpperCase()})`, 'success');
 

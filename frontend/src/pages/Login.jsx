@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 export default function Login({ onClose, isInline = false, onLoginSuccess }) {
-  const { login, language, t } = useContext(AppContext);
+  const { login, language, t, setShowLoginModal } = useContext(AppContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +25,7 @@ export default function Login({ onClose, isInline = false, onLoginSuccess }) {
     const success = await login(username, password);
     setIsSubmitting(false);
     if (success) {
+      setShowLoginModal(false);
       if (onLoginSuccess) onLoginSuccess(username);
       if (onClose) onClose();
     } else {
@@ -41,6 +42,7 @@ export default function Login({ onClose, isInline = false, onLoginSuccess }) {
     const success = await login(presetUser, presetPass);
     setIsSubmitting(false);
     if (success) {
+      setShowLoginModal(false);
       if (onLoginSuccess) onLoginSuccess(presetUser);
       if (onClose) onClose();
     }
