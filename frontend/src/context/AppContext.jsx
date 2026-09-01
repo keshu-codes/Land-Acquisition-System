@@ -177,6 +177,7 @@ export const AppContextProvider = ({ children }) => {
     setCurrentUser(null);
     setSelectedRole("ministry");
     addNotification("Logged out from system session.", "info");
+    window.dispatchEvent(new CustomEvent('navigate-tab', { detail: 'home' }));
   };
 
   // Feature A: Multi-Lingual Support

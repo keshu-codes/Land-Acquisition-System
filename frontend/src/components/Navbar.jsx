@@ -175,7 +175,13 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   <span className="text-xs font-bold text-slate-800 leading-none">{user.full_name}</span>
                   <span className="text-[9px] text-slate-500 font-bold uppercase mt-0.5">{user.role}</span>
                 </div>
-                <button onClick={logout} className="text-rose-600 hover:underline font-bold text-[10px] ml-1">
+                <button 
+                  onClick={() => {
+                    logout();
+                    setActiveTab('home');
+                  }} 
+                  className="text-rose-600 hover:underline font-bold text-[10px] ml-1 cursor-pointer"
+                >
                   Logout
                 </button>
               </div>
