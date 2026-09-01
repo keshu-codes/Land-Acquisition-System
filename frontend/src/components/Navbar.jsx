@@ -74,6 +74,44 @@ export default function Navbar({ activeTab, setActiveTab }) {
     }
   };
 
+  const tabTooltips = {
+    dashboard: {
+      title: language === 'en' ? 'Executive Monitoring Dashboard' : 'कार्यकारी निगरानी डैशबोर्ड',
+      desc: language === 'en' 
+        ? 'National macro-level KPIs, real-time conversion rates, and live interoperability hub syncing BHOOMI, Bhunaksha, PM GatiShakti & PFMS.' 
+        : 'राष्ट्रीय स्तर के प्रमुख संकेतक, वास्तविक समय रूपांतरण दरें और भूमि, भू-नक्शा, गति-शक्ति और पीएफएमएस इंटरऑपरेबिलिटी हब।',
+      tag: language === 'en' ? 'Statutory Sections 4 & 11 Oversight' : 'धारा 4 एवं 11 की निगरानी'
+    },
+    workflow: {
+      title: language === 'en' ? 'Statutory LARR Workflow Engine' : 'एलएआरआर विधिक कार्यप्रवाह इंजन',
+      desc: language === 'en'
+        ? 'Enforces sequential RFCTLARR Act milestones: Proposal formulation, State GIS validation, Gazette Notifications, Public Hearings, and Award finalization.'
+        : 'धारा 11 अधिसूचना, आपत्तियां, जनसुनवाई और धारा 23 पंचाट घोषणा के क्रमिक कानूनी चरणों का प्रबंधन।',
+      tag: language === 'en' ? 'RFCTLARR Act 2013 Compliance' : 'भूमि अधिग्रहण अधिनियम 2013 अनुपालन'
+    },
+    dispatch: {
+      title: language === 'en' ? 'Notice Dispatch & Haversine Locator' : 'नोटिस प्रेषण एवं निकटतम सर्वेयर चयन',
+      desc: language === 'en'
+        ? 'Computes nearest certified surveyor via Haversine distance formula, validates 2FA credentials (SIH@12345), and issues 30-day TLS 1.3 tokenized notices.'
+        : 'हैवरसाइन सूत्र द्वारा निकटतम सर्वेयर का चयन, 2FA प्रमाणीकरण और 30-दिवसीय सुरक्षित टोकनयुक्त नोटिस प्रेषण।',
+      tag: language === 'en' ? 'Section 11 Notice • GIS Proximity' : 'धारा 11 नोटिस • जीआईएस निकटता'
+    },
+    web3: {
+      title: language === 'en' ? 'Web3 Escrow Audit & Direct Benefit Transfer' : 'वेब3 एस्क्रो ऑडिट और प्रत्यक्ष लाभ हस्तांतरण',
+      desc: language === 'en'
+        ? 'Smart contract escrow disbursement to landowner bank accounts, SHA-256 title deed hashing, on-chain immutable audit logs, and PFMS payment advice slips.'
+        : 'स्मार्ट अनुबंध एस्क्रो भुगतान, विलेख का एसएचए-256 हैशिंग और पीएफएमएस सत्यापन रसीदें।',
+      tag: language === 'en' ? 'Section 23/31 Solatium • Cryptographic Escrow' : 'धारा 23/31 सोलेशियम • सुरक्षित एस्क्रो'
+    },
+    survey: {
+      title: language === 'en' ? 'Cadastral Mobile Survey Node' : 'भूकर मोबाइल सर्वेक्षण नोड',
+      desc: language === 'en'
+        ? 'Tablet-ready terminal for field officers: capture high-accuracy GPS polygon boundaries, upload geotagged site inspection photos, and log soil fertility profiles.'
+        : 'फील्ड अधिकारियों हेतु जीपीएस सीमा निर्धारण, भू-टैग की गई तस्वीरें और मृदा उर्वरता रिपोर्ट।',
+      tag: language === 'en' ? 'Section 12 Field Inspection • Real-time GPS' : 'धारा 12 स्थल निरीक्षण • जीपीएस जीयो-फेंसिंग'
+    }
+  };
+
   const menuItems = getRoleMenuItems(user?.role || selectedRole);
 
   return (
@@ -103,23 +141,48 @@ export default function Navbar({ activeTab, setActiveTab }) {
             </div>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links with Rich Hover Info Tooltips */}
           <div className="hidden xl:flex space-x-1.5 ml-8">
             {menuItems.map(item => {
               const Icon = item.icon;
+              const tooltip = tabTooltips[item.id];
               return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                    activeTab === item.id 
-                      ? 'bg-[#0f2b5c] text-white shadow-sm' 
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </button>
+                <div key={item.id} className="relative group">
+                  <button
+                    onClick={() => setActiveTab(item.id)}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                      activeTab === item.id 
+                        ? 'bg-[#0f2b5c] text-white shadow-sm' 
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                  </button>
+
+                  {/* Rich Government Information Hover Tooltip */}
+                  {tooltip && (
+                    <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none z-50 transform group-hover:translate-y-0 translate-y-1">
+                      {/* Top Pointer Arrow */}
+                      <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-900 border-t border-l border-slate-700 rotate-45"></div>
+                      
+                      <div className="relative z-10 space-y-1">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                          <span className="text-[11px] font-bold text-amber-400 font-serif leading-tight">
+                            {tooltip.title}
+                          </span>
+                        </div>
+                        <p className="text-[10.5px] text-slate-300 font-normal leading-relaxed">
+                          {tooltip.desc}
+                        </p>
+                        <div className="pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-[9px] text-slate-400 font-mono">
+                          <span className="text-emerald-400 font-semibold">{tooltip.tag}</span>
+                          <span className="text-slate-500">Official Portal Info</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
