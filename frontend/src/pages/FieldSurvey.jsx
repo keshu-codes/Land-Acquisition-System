@@ -26,17 +26,46 @@ export default function FieldSurvey() {
 
   const detectLocation = () => {
     setIsCapturingGPS(true);
-    setTimeout(() => {
-      const baseLat = activeProj?.coordinates[0]?.lat || 22.9734;
-      const baseLng = activeProj?.coordinates[0]?.lng || 78.6569;
-      
-      setGpsCoords({
-        lat: parseFloat((baseLat + (Math.random() - 0.5) * 0.005).toFixed(6)),
-        lng: parseFloat((baseLng + (Math.random() - 0.5) * 0.005).toFixed(6)),
-        accuracy: Math.floor(Math.random() * 5) + 2
-      });
-      setIsCapturingGPS(false);
-    }, 1500);
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setGpsCoords({
+            lat: parseFloat(position.coords.latitude.toFixed(6)),
+            lng: parseFloat(position.coords.longitude.toFixed(6)),
+            accuracy: Math.round(position.coords.accuracy) || 3
+          });
+          setIsCapturingGPS(false);
+        },
+        (error) => {
+          console.warn("Browser GPS permission denied or timeout, using simulated parcel anchor:", error);
+          // Fallback to active project coordinates or NIST Berhampur anchor
+          const baseLat = activeProj?.coordinates?.[0]?.lat || 19.1843;
+          const baseLng = activeProj?.coordinates?.[0]?.lng || 84.8524;
+          
+          setTimeout(() => {
+            setGpsCoords({
+              lat: parseFloat((baseLat + (Math.random() - 0.5) * 0.003).toFixed(6)),
+              lng: parseFloat((baseLng + (Math.random() - 0.5) * 0.003).toFixed(6)),
+              accuracy: Math.floor(Math.random() * 4) + 2
+            });
+            setIsCapturingGPS(false);
+          }, 800);
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+      );
+    } else {
+      const baseLat = activeProj?.coordinates?.[0]?.lat || 19.1843;
+      const baseLng = activeProj?.coordinates?.[0]?.lng || 84.8524;
+      setTimeout(() => {
+        setGpsCoords({
+          lat: parseFloat((baseLat + (Math.random() - 0.5) * 0.003).toFixed(6)),
+          lng: parseFloat((baseLng + (Math.random() - 0.5) * 0.003).toFixed(6)),
+          accuracy: 3
+        });
+        setIsCapturingGPS(false);
+      }, 1000);
+    }
   };
 
   const handleSurveySubmit = (e) => {
