@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLAMS - Tech Stack & Work Flow Diagram</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@700;900&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .font-serif { font-family: 'Merriweather', serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 p-4 sm:p-8 min-h-screen flex flex-col justify-center items-center">
+
+  <!-- Main Slide Container (16:9 Presentation Aspect Ratio) -->
+  <div class="max-w-7xl w-full bg-white border-2 border-slate-300 rounded-2xl shadow-xl overflow-hidden p-6 sm:p-10 space-y-8">
+    
+    <!-- Top Header -->
+    <div class="flex justify-between items-center border-b-2 border-slate-200 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#0f2b5c] text-amber-400 flex items-center justify-center text-xl shadow-sm">
+          <i class="fa-solid fa-landmark"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold tracking-widest text-[#ea580c] block font-mono">Smart India Hackathon 2026 • SIH-NLAMS</span>
+          <h1 class="text-xl sm:text-2xl font-black font-serif text-[#0f2b5c]">National Land Acquisition & Management System</h1>
+        </div>
+      </div>
+      <div class="text-right hidden sm:block">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block font-mono">System Blueprint</span>
+        <span class="text-sm font-extrabold text-emerald-700 font-mono">RFCTLARR Act 2013</span>
+      </div>
+    </div>
+
+    <!-- Two-Column Grid: Tech Stack (Left) & Workflow (Right) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- ========================================================================= -->
+      <!-- LEFT COLUMN: TECH STACK USED TABLE (5 Cols)                               -->
+      <!-- ========================================================================= -->
+      <div class="lg:col-span-5 space-y-4">
+        <h2 class="text-xl font-black font-serif text-slate-900 tracking-tight text-center lg:text-left underline decoration-[#ea580c] decoration-4 underline-offset-8">
+          TECH STACK USED
+        </h2>
+
+        <div class="border-2 border-slate-800 rounded-xl overflow-hidden shadow-xs divide-y-2 divide-slate-800 text-xs">
+          
+          <!-- Row 1: React 19 -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-brands fa-react text-sky-500 text-base"></i>
+              <span class="font-mono text-slate-900">React 19</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>React.js</strong> to build responsive, role-tailored single-page UI views.
+            </div>
+          </div>
+
+          <!-- Row 2: Vite -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-bolt text-amber-500 text-base"></i>
+              <span class="font-mono text-slate-900">Vite 8</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>Vite</strong> for lightning-fast build bundling and Hot Module Replacement.
+            </div>
+          </div>
+
+          <!-- Row 3: Tailwind CSS -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-brands fa-css3-alt text-cyan-500 text-base"></i>
+              <span class="font-mono text-slate-900">Tailwind</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>Tailwind CSS</strong> for an official Government of India design system.
+            </div>
+          </div>
+
+          <!-- Row 4: Leaflet GIS -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-earth-americas text-emerald-600 text-base"></i>
+              <span class="font-mono text-slate-900">Leaflet GIS</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>Leaflet + Google Satellite</strong> to plot cadastral parcels & boundaries.
+            </div>
+          </div>
+
+          <!-- Row 5: FastAPI -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-server text-teal-600 text-base"></i>
+              <span class="font-mono text-slate-900">FastAPI</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>FastAPI (Python)</strong> for high-speed, asynchronous REST API services.
+            </div>
+          </div>
+
+          <!-- Row 6: SQLModel / SQLite -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-database text-indigo-600 text-base"></i>
+              <span class="font-mono text-slate-900">SQLModel</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>SQLModel</strong> (SQLAlchemy + Pydantic) for typed relational DB schemas.
+            </div>
+          </div>
+
+          <!-- Row 7: TLS 1.3 SMTP -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-envelope-shield text-rose-600 text-base"></i>
+              <span class="font-mono text-slate-900">SMTP SSL</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>Python SMTPLib (TLS 1.3)</strong> for secure legal notice email dispatch.
+            </div>
+          </div>
+
+          <!-- Row 8: PyJWT (Security) -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-key text-amber-600 text-base"></i>
+              <span class="font-mono text-slate-900">PyJWT</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>PyJWT</strong> for 5-tier session auth and 30-day single-use grievance tokens.
+            </div>
+          </div>
+
+          <!-- Row 9: Web3 & SHA-256 -->
+          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
+            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
+              <i class="fa-solid fa-cubes text-purple-600 text-base"></i>
+              <span class="font-mono text-slate-900">Web3 / SHA</span>
+            </div>
+            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
+              Using <strong>Web3 Escrow</strong> for direct payouts and <strong>SHA-256</strong> for title deed verification.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- RIGHT COLUMN: WORK FLOW DIAGRAM (7 Cols)                                  -->
+      <!-- ========================================================================= -->
+      <div class="lg:col-span-7 space-y-4">
+        <h2 class="text-xl font-black font-serif text-slate-900 tracking-tight text-center lg:text-left underline decoration-[#0f2b5c] decoration-4 underline-offset-8">
+          WORK FLOW
+        </h2>
+
+        <!-- Flowchart Container -->
+        <div class="bg-slate-50 border-2 border-slate-300 rounded-2xl p-4 sm:p-6 flex flex-col items-center space-y-5">
+          
+          <!-- Level 1: Root User / Stakeholders Bubble -->
+          <div class="bg-purple-100 border-2 border-purple-400 text-purple-900 font-bold px-6 py-2 rounded-full text-sm shadow-sm flex items-center gap-2">
+            <i class="fa-solid fa-users text-purple-600"></i>
+            <span>Stakeholders / Users</span>
+          </div>
+
+          <!-- Connecting Line -->
+          <div class="w-0.5 h-4 bg-slate-400"></div>
+
+          <!-- Level 2: 4 Primary Role Channels (Horizontal Branching) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full text-center">
+            
+            <!-- Channel 1: Ministry -->
+            <div class="bg-cyan-100 border-2 border-cyan-400 text-cyan-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
+              <i class="fa-solid fa-landmark text-cyan-700 text-sm mb-1"></i>
+              <span>Central Ministry</span>
+            </div>
+
+            <!-- Channel 2: District Collector -->
+            <div class="bg-amber-100 border-2 border-amber-400 text-amber-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
+              <i class="fa-solid fa-building-columns text-amber-700 text-sm mb-1"></i>
+              <span>District Collector</span>
+            </div>
+
+            <!-- Channel 3: Field Surveyor -->
+            <div class="bg-sky-100 border-2 border-sky-400 text-sky-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
+              <i class="fa-solid fa-location-crosshairs text-sky-700 text-sm mb-1"></i>
+              <span>Field Surveyor</span>
+            </div>
+
+            <!-- Channel 4: Citizen -->
+            <div class="bg-emerald-100 border-2 border-emerald-400 text-emerald-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
+              <i class="fa-solid fa-user text-emerald-700 text-sm mb-1"></i>
+              <span>Citizen / Landowner</span>
+            </div>
+          </div>
+
+          <!-- Connecting Lines -->
+          <div class="w-full flex justify-around px-8">
+            <div class="w-0.5 h-4 bg-slate-300"></div>
+            <div class="w-0.5 h-4 bg-slate-300"></div>
+            <div class="w-0.5 h-4 bg-slate-300"></div>
+            <div class="w-0.5 h-4 bg-slate-300"></div>
+          </div>
+
+          <!-- Level 3: Action Sub-Modules -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full text-[11px] text-slate-700 font-semibold">
+            
+            <!-- Col 1: Ministry Actions -->
+            <div class="space-y-1.5 flex flex-col items-center">
+              <div class="w-full bg-white border border-cyan-300 p-2 rounded-lg text-center shadow-xs">
+                Executive Dashboard
+              </div>
+              <div class="w-full bg-cyan-50 border border-cyan-200 p-1.5 rounded-md text-[10px] text-cyan-800 text-center">
+                National KPIs & MIS
+              </div>
+            </div>
+
+            <!-- Col 2: Collector Actions -->
+            <div class="space-y-1.5 flex flex-col items-center">
+              <div class="w-full bg-white border border-amber-300 p-2 rounded-lg text-center shadow-xs">
+                Notice Dispatch
+              </div>
+              <div class="w-full bg-amber-50 border border-amber-200 p-1.5 rounded-md text-[10px] text-amber-800 text-center">
+                Haversine Proximity Match
+              </div>
+              <div class="w-full bg-amber-100/60 border border-amber-300 p-1.5 rounded-md text-[10px] text-amber-900 text-center font-bold">
+                SIH@12345 2FA Auth
+              </div>
+            </div>
+
+            <!-- Col 3: Surveyor Actions -->
+            <div class="space-y-1.5 flex flex-col items-center">
+              <div class="w-full bg-white border border-sky-300 p-2 rounded-lg text-center shadow-xs">
+                Mobile Node
+              </div>
+              <div class="w-full bg-sky-50 border border-sky-200 p-1.5 rounded-md text-[10px] text-sky-800 text-center">
+                GPS Coordinate Capture
+              </div>
+              <div class="w-full bg-sky-50 border border-sky-200 p-1.5 rounded-md text-[10px] text-sky-800 text-center">
+                Geotagged Evidence
+              </div>
+            </div>
+
+            <!-- Col 4: Citizen Actions -->
+            <div class="space-y-1.5 flex flex-col items-center">
+              <div class="w-full bg-white border border-emerald-300 p-2 rounded-lg text-center shadow-xs">
+                Public Portal Link
+              </div>
+              <div class="w-full bg-emerald-50 border border-emerald-200 p-1.5 rounded-md text-[10px] text-emerald-800 text-center">
+                Single-Use Token (30d)
+              </div>
+              <div class="w-full bg-emerald-100/60 border border-emerald-300 p-1.5 rounded-md text-[10px] text-emerald-900 text-center font-bold">
+                Submit & Burn Token
+              </div>
+            </div>
+          </div>
+
+          <!-- Connecting Bottom Convergence -->
+          <div class="w-0.5 h-4 bg-slate-400"></div>
+
+          <!-- Level 4: Core Engine Outcomes (Bottom Convergence) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+            <div class="bg-indigo-50 border-2 border-indigo-300 p-2.5 rounded-xl text-center shadow-xs">
+              <span class="text-[10px] font-bold text-indigo-900 uppercase block font-mono">1. Real-Time Dispute Resolution</span>
+              <strong class="text-xs text-[#0f2b5c]">Live Grievance Monitor (15s Polling)</strong>
+            </div>
+            <div class="bg-emerald-50 border-2 border-emerald-300 p-2.5 rounded-xl text-center shadow-xs">
+              <span class="text-[10px] font-bold text-emerald-900 uppercase block font-mono">2. Direct Benefit Transfer</span>
+              <strong class="text-xs text-emerald-800">Web3 Smart Escrow & PFMS Receipts</strong>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Slide Footer -->
+    <div class="flex justify-between items-center text-xs text-slate-400 border-t pt-3 font-mono">
+      <span>NLAMS Architecture Blueprint</span>
+      <span>Compliant with RFCTLARR Act, 2013</span>
+    </div>
+
+  </div>
+
+</body>
+</html>
