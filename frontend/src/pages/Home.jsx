@@ -1,300 +1,432 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { 
   Landmark, MapPin, ChevronRight, FileText, 
   Users, Lock, Shield, CheckCircle, Search, ExternalLink,
-  Scale, BookOpen, Building, Phone, AlertCircle, ArrowRight, Download
+  Scale, BookOpen, Building, Phone, AlertCircle, ArrowRight, Download,
+  HelpCircle, ArrowUpRight, Check, Sparkles
 } from 'lucide-react';
 
 export default function Home({ setActiveTab }) {
-  const { t, language, proposals, setShowLoginModal } = useContext(AppContext);
+  const { t, language, proposals, setShowLoginModal, login } = useContext(AppContext);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchedPlot, setSearchedPlot] = useState(null);
+  const [activeFaq, setActiveFaq] = useState(null);
 
   const totalRequired = proposals.reduce((sum, p) => sum + p.areaRequired, 0);
   const totalAcquired = proposals.reduce((sum, p) => sum + p.areaAcquired, 0);
   const totalDisbursed = proposals.reduce((sum, p) => sum + p.budgetDisbursed, 0);
 
-  const coreServices = [
+  // Sample parcel database for instant search
+  const allPlots = [
     {
-      id: 'dashboard',
-      title: language === 'en' ? 'National Land MIS Dashboard' : 'राष्ट्रीय भूमि एमआईएस डैशबोर्ड',
-      desc: language === 'en' ? 'Real-time project tracking, state possession status, and macro analytics.' : 'वास्तविक समय परियोजना ट्रैकिंग और राज्यवार विश्लेषण।',
-      icon: Landmark,
-      badge: 'MoRD Central'
+      name: "Anmol",
+      plot: "PLOT-OD-2026-9821",
+      survey: "SN-9821",
+      project: "Regional Multi-Modal Corridor Expansion",
+      district: "Khordha, Odisha",
+      area: "1.45 Acres (Semi-Urban)",
+      valuation: "₹42,50,000",
+      solatium: "₹42,50,000 (100% Solatium)",
+      totalAward: "₹85,00,000",
+      status: "Section 11 (1) Notice Published",
+      officer: "Suresh Kumar (Station #04)",
+      tabTarget: "dispatch"
     },
     {
-      id: 'workflow',
-      title: language === 'en' ? 'RFCTLARR Statutory Cases' : 'विधिक भूमि अर्जन मामले',
-      desc: language === 'en' ? 'Sequential lifecycle from Section 4 SIA to Section 23 Award Declarations.' : 'धारा 4 से धारा 23 पंचाट घोषणा तक क्रमिक कानूनी प्रक्रिया।',
-      icon: Scale,
-      badge: 'Statutory 2013'
+      name: "Rameshwar Patel",
+      plot: "PLOT-MH-2026-1044",
+      survey: "SN-1044",
+      project: "Indore Metro Rail Corridor Line 2",
+      district: "Sambalpur / Nagpur",
+      area: "2.8 Acres (Agricultural)",
+      valuation: "₹65,00,000",
+      solatium: "₹65,00,000 (100% Solatium)",
+      totalAward: "₹1,30,00,000",
+      status: "Possession Handover Complete",
+      officer: "Station Officer #02",
+      tabTarget: "web3"
     },
     {
-      id: 'dispatch',
-      title: language === 'en' ? 'Section 11 Notice Dispatch' : 'धारा 11 नोटिस प्रेषण',
-      desc: language === 'en' ? 'Haversine surveyor assignment and cryptographic 30-day tokenized links.' : 'निकटतम सर्वेयर चयन और सुरक्षित नागरिक नोटिस प्रेषण।',
-      icon: FileText,
-      badge: 'District Magistrate'
-    },
-    {
-      id: 'web3',
-      title: language === 'en' ? 'Direct Benefit Transfer (DBT)' : 'प्रत्यक्ष लाभ हस्तांतरण (DBT)',
-      desc: language === 'en' ? 'Smart contract escrow disbursement with 100% Solatium calculation.' : '100% सोलेशियम गणना सहित बैंक खातों में प्रत्यक्ष मुआवजा।',
-      icon: Shield,
-      badge: 'PFMS Handshake'
-    },
-    {
-      id: 'survey',
-      title: language === 'en' ? 'Mobile Cadastral GPS Node' : 'मोबाइल भूकर जीपीएस नोड',
-      desc: language === 'en' ? 'Field officer tablet station for sub-3m boundary geo-fencing.' : 'फील्ड अधिकारियों हेतु ऑन-साइट सैटेलाइट जीपीएस सीमा निर्धारण।',
-      icon: MapPin,
-      badge: 'Section 12 Field'
-    },
-    {
-      id: 'workflow',
-      title: language === 'en' ? 'Gazette Publication Archive' : 'राजपत्र प्रकाशन अभिलेखागार',
-      desc: language === 'en' ? 'Official Gazette notifications and 60-day public hearing registers.' : 'आधिकारिक राजपत्र अधिसूचनाएं और जनसुनवाई रजिस्टर।',
-      icon: BookOpen,
-      badge: 'Public Records'
+      name: "M. Selvakumar",
+      plot: "PLOT-TN-2026-2082",
+      survey: "SN-2082",
+      project: "Chennai Industrial Link Corridor",
+      district: "Kanchipuram, Tamil Nadu",
+      area: "3.2 Acres (Commercial)",
+      valuation: "₹78,00,000",
+      solatium: "₹78,00,000 (100% Solatium)",
+      totalAward: "₹1,56,00,000",
+      status: "Award Declared (PFMS Ready)",
+      officer: "Station Officer #01",
+      tabTarget: "dashboard"
     }
   ];
 
-  const quickStats = [
-    { label: language === 'en' ? 'Total Notified Land' : 'कुल अधिसूचित भूमि', value: `${totalRequired.toLocaleString()} ha` },
-    { label: language === 'en' ? 'Possession Completed' : 'कब्जा पूर्ण', value: `${totalAcquired.toLocaleString()} ha` },
-    { label: language === 'en' ? 'Compensation Released' : 'मुआवजा जारी', value: `₹${totalDisbursed.toLocaleString()} Cr` },
-    { label: language === 'en' ? 'Interoperable Registries' : 'संबद्ध रजिस्ट्रियां', value: 'BHOOMI • PFMS' }
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    const q = searchQuery.toLowerCase().trim();
+    const found = allPlots.find(p => 
+      p.name.toLowerCase().includes(q) || 
+      p.plot.toLowerCase().includes(q) || 
+      p.survey.toLowerCase().includes(q) ||
+      p.project.toLowerCase().includes(q) ||
+      p.district.toLowerCase().includes(q)
+    );
+    setSearchedPlot(found || "NOT_FOUND");
+  };
+
+  const quickPersonaLogin = async (userRole) => {
+    if (userRole === 'citizen') {
+      await login('citizen', 'nlams2026');
+      setActiveTab('web3');
+    } else if (userRole === 'collector') {
+      await login('collector', 'nlams2026');
+      setActiveTab('dispatch');
+    } else if (userRole === 'surveyor') {
+      await login('surveyor', 'nlams2026');
+      setActiveTab('survey');
+    } else {
+      await login('ministry', 'nlams2026');
+      setActiveTab('dashboard');
+    }
+  };
+
+  const faqs = [
+    {
+      q: language === 'en' ? "How is land compensation calculated under RFCTLARR Act 2013?" : "RFCTLARR अधिनियम 2013 के तहत मुआवजे की गणना कैसे की जाती है?",
+      a: language === 'en'
+        ? "Compensation is calculated as: Base Circle Rate Market Value + 100% Mandatory Solatium (Section 30) + 12% Annual Interest from Section 11 notice date + Structural/Crop valuation."
+        : "मुआवजे की गणना: आधार सर्किल दर बाजार मूल्य + 100% अनिवार्य सोलेशियम (धारा 30) + 12% वार्षिक ब्याज + संरचना/फसल का मूल्यांकन।"
+    },
+    {
+      q: language === 'en' ? "How do I file an objection if my land area or valuation is incorrect?" : "यदि मेरी भूमि का क्षेत्रफल या मूल्यांकन गलत है तो मैं आपत्ति कैसे दर्ज करूँ?",
+      a: language === 'en'
+        ? "Within 60 days of Section 11 notice publication, click 'File Objection / Dispute' on your land record or use the secure single-use email token to submit your objection directly to the District Collector."
+        : "धारा 11 अधिसूचना के 60 दिनों के भीतर, अपने भूमि रिकॉर्ड पर 'आपत्ति दर्ज करें' पर क्लिक करें या सीधे जिला मजिस्ट्रेट को आपत्ति प्रस्तुत करें।"
+    },
+    {
+      q: language === 'en' ? "How do field surveyors verify GPS coordinates on ground?" : "फील्ड सर्वेयर जमीन पर जीपीएस निर्देशांक कैसे सत्यापित करते हैं?",
+      a: language === 'en'
+        ? "Under Section 12, authorized surveyors visit the plot and use the Mobile Cadastral GPS Node to capture live satellite boundary coordinates within ±3 meters accuracy with geotagged site photographs."
+        : "धारा 12 के तहत, अधिकृत सर्वेयर मौके पर जाकर सब-3 मीटर सटीकता के साथ लाइव उपग्रह जीपीएस निर्देशांक और भू-टैग की गई तस्वीरें रिकॉर्ड करते हैं।"
+    }
   ];
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen font-sans text-slate-800 select-none">
+    <div className="bg-[#f8fafc] min-h-screen font-sans text-slate-800 select-none pb-12">
       
-      {/* ── Official Ministry Hero Banner ── */}
-      <div className="bg-white border-b border-slate-300 py-10 px-4 sm:px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      {/* ── Top Hero: Easy 1-Click Search & Quick Actions ── */}
+      <div className="bg-[#0f2b5c] text-white py-12 px-4 sm:px-8 border-b-4 border-[#ea580c]">
+        <div className="max-w-6xl mx-auto space-y-6">
           
-          {/* Left Hero Content */}
-          <div className="lg:col-span-8 space-y-4">
-            <div className="inline-flex items-center gap-2 bg-slate-100 border border-slate-300 px-3 py-1 rounded text-xs font-bold text-[#0f2b5c] font-serif">
-              <span className="w-2 h-2 rounded-full bg-[#ea580c]" />
-              {language === 'en' ? 'Digital India Land Records Modernization Mission' : 'डिजिटल इंडिया भूमि अभिलेख आधुनिकीकरण मिशन'}
-            </div>
-
-            <h1 className="text-2xl sm:text-4xl font-bold text-[#0f2b5c] font-serif tracking-tight leading-tight">
-              {language === 'en' 
-                ? 'Unified National Land Acquisition & Management Information System' 
-                : 'एकीकृत राष्ट्रीय भूमि अधिग्रहण एवं प्रबंधन सूचना प्रणाली'}
+          <div className="text-center space-y-2">
+            <span className="bg-white/10 text-amber-400 border border-white/20 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider font-serif inline-block">
+              {language === 'en' ? 'Single-Window Public Land Portal' : 'एकल खिड़की सार्वजनिक भूमि पोर्टल'}
+            </span>
+            <h1 className="text-2xl sm:text-4xl font-bold font-serif tracking-tight">
+              {language === 'en' ? 'Search Your Land Record & Compensation Status' : 'अपना भूमि रिकॉर्ड और मुआवजा स्थिति खोजें'}
             </h1>
-
-            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-3xl">
-              {language === 'en'
-                ? 'A single-window national digital infrastructure enforcing the Right to Fair Compensation and Transparency in Land Acquisition, Rehabilitation and Resettlement Act, 2013 (RFCTLARR). Direct integration with BHOOMI, Bhunaksha, PM GatiShakti NMP, and PFMS.'
-                : 'भूमि अधिग्रहण, पुनर्वास और पुनर्व्यवस्थापन में उचित मुआवजा और पारदर्शिता का अधिकार अधिनियम, 2013 (RFCTLARR) के प्रभावी क्रियान्वयन हेतु एकल खिड़की राष्ट्रीय डिजिटल पोर्टल।'}
+            <p className="text-slate-300 text-xs sm:text-sm max-w-2xl mx-auto font-medium">
+              {language === 'en' 
+                ? 'No complicated steps or tutorials needed. Enter your Name, Plot Number, or Survey Number below to instantly check your official notice, valuation, and bank payment advice.'
+                : 'सरल एवं त्वरित खोज। अपना नाम या प्लॉट नंबर दर्ज करें और तुरंत अपनी नोटिस, मूल्यांकन और मुआवजा स्थिति देखें।'}
             </p>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                onClick={() => setActiveTab('dashboard')}
-                className="bg-[#0f2b5c] hover:bg-[#0c224a] text-white px-5 py-2.5 rounded text-xs font-bold font-serif flex items-center gap-2 shadow-xs transition-colors cursor-pointer"
-              >
-                <span>{language === 'en' ? 'Launch National MIS Dashboard' : 'राष्ट्रीय एमआईएस डैशबोर्ड'}</span>
-                <ChevronRight className="h-4 w-4" />
-              </button>
-
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 px-5 py-2.5 rounded text-xs font-bold font-serif transition-colors cursor-pointer"
-              >
-                {language === 'en' ? 'Official Stakeholder Login' : 'अधिकारी / नागरिक लॉगिन'}
-              </button>
-            </div>
           </div>
 
-          {/* Right: National Portal At-A-Glance Card */}
-          <div className="lg:col-span-4 bg-[#0f2b5c] text-white p-5 rounded-md border-t-4 border-[#ea580c] shadow-sm space-y-4">
-            <div className="border-b border-white/20 pb-2">
-              <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block font-serif">National Overview</span>
-              <h3 className="text-sm font-bold font-serif">Acquisition Status (FY 2026-27)</h3>
-            </div>
-
-            <div className="space-y-2.5 divide-y divide-white/10 text-xs">
-              {quickStats.map((stat, idx) => (
-                <div key={idx} className="flex justify-between items-center pt-2">
-                  <span className="text-slate-300 text-[11px]">{stat.label}</span>
-                  <strong className="text-white font-serif font-bold">{stat.value}</strong>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-2 border-t border-white/20 text-[10px] text-slate-300 flex items-center justify-between">
-              <span>Security: SHA-256 JWT Signed</span>
-              <span className="text-emerald-400 font-bold">100% Compliant</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* ── Core Government Services Grid ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10 space-y-6">
-        <div>
-          <span className="text-[10px] font-bold text-[#ea580c] uppercase tracking-wider block font-serif">Official Services</span>
-          <h2 className="text-xl font-bold text-[#0f2b5c] font-serif">
-            {language === 'en' ? 'Integrated Land Acquisition Service Modules' : 'एकीकृत भूमि अधिग्रहण सेवा मॉड्यूल'}
-          </h2>
-          <p className="text-xs text-slate-500 font-medium">Select an authorized module to access statutory workflows, cadastral GIS data, or dispute resolution:</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {coreServices.map((srv, idx) => {
-            const Icon = srv.icon;
-            return (
-              <div
-                key={idx}
-                onClick={() => setActiveTab(srv.id)}
-                className="bg-white border border-slate-300 p-5 rounded-md hover:border-[#0f2b5c] hover:shadow-sm transition-all cursor-pointer flex flex-col justify-between group"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="h-9 w-9 rounded bg-slate-100 border border-slate-200 text-[#0f2b5c] flex items-center justify-center group-hover:bg-[#0f2b5c] group-hover:text-white transition-colors">
-                      <Icon className="h-4.5 w-4.5" />
-                    </div>
-                    <span className="text-[9.5px] font-bold font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200">
-                      {srv.badge}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="font-bold text-slate-800 text-sm font-serif group-hover:text-[#0f2b5c] transition-colors">
-                      {srv.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 font-normal leading-relaxed mt-1">
-                      {srv.desc}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-150 mt-4 flex items-center justify-between text-xs font-bold text-[#0f2b5c] group-hover:text-[#ea580c]">
-                  <span>Access Module</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </div>
+          {/* 🔍 Easy Search Box */}
+          <div className="max-w-3xl mx-auto bg-white rounded-md p-2 shadow-lg border border-slate-200">
+            <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
+              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-slate-800">
+                <Search className="h-5 w-5 text-[#ea580c] flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder={language === 'en' ? "Type Name (e.g. Anmol), Plot No. (e.g. PLOT-OD-2026-9821), or District..." : "नाम या प्लॉट नंबर दर्ज करें..."}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full text-xs sm:text-sm font-semibold outline-none text-slate-800 placeholder:text-slate-400"
+                />
               </div>
-            );
-          })}
-        </div>
-      </div>
+              <button
+                type="submit"
+                className="bg-[#ea580c] hover:bg-orange-700 text-white px-6 py-2.5 rounded text-xs sm:text-sm font-bold font-serif transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+              >
+                <span>{language === 'en' ? 'Track My Land' : 'खोजें'}</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </form>
+          </div>
 
-      {/* ── National Projects Master Ledger (Tabular View) ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 pb-12">
-        <div className="bg-white border border-slate-300 rounded-md overflow-hidden">
-          
-          <div className="bg-[#0f2b5c] text-white px-5 py-3.5 flex flex-wrap justify-between items-center gap-3">
-            <div>
-              <h3 className="font-bold text-sm font-serif">Active Notified Projects (RFCTLARR Act)</h3>
-              <p className="text-[10.5px] text-slate-300">National Master Registry of notified public infrastructure corridors</p>
-            </div>
+          {/* Quick Demo Search Chips */}
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
+            <span className="text-slate-300 text-[11px] font-medium">Try clicking an example:</span>
             <button
-              onClick={() => setActiveTab('dashboard')}
-              className="bg-[#ea580c] hover:bg-orange-700 text-white px-3 py-1 rounded text-xs font-bold font-serif flex items-center gap-1 cursor-pointer"
+              onClick={() => { setSearchQuery("Anmol"); setSearchedPlot(allPlots[0]); }}
+              className="bg-white/10 hover:bg-white/20 text-amber-300 px-2.5 py-1 rounded text-[11px] font-bold border border-white/20 transition-colors cursor-pointer"
             >
-              <span>View Full GIS Map</span>
-              <ChevronRight className="h-3.5 w-3.5" />
+              📍 Anmol (PLOT-OD-2026-9821, Odisha)
+            </button>
+            <button
+              onClick={() => { setSearchQuery("Rameshwar Patel"); setSearchedPlot(allPlots[1]); }}
+              className="bg-white/10 hover:bg-white/20 text-slate-200 px-2.5 py-1 rounded text-[11px] font-bold border border-white/20 transition-colors cursor-pointer"
+            >
+              📍 Rameshwar Patel (PLOT-MH-2026-1044)
+            </button>
+            <button
+              onClick={() => { setSearchQuery("Chennai"); setSearchedPlot(allPlots[2]); }}
+              className="bg-white/10 hover:bg-white/20 text-slate-200 px-2.5 py-1 rounded text-[11px] font-bold border border-white/20 transition-colors cursor-pointer"
+            >
+              📍 Chennai Industrial Corridor
             </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-slate-100 border-b border-slate-200 text-slate-600 font-serif text-[11px] font-bold">
-                  <th className="p-3">Project ID</th>
-                  <th className="p-3">Infrastructure Project Title</th>
-                  <th className="p-3">Acquiring Agency</th>
-                  <th className="p-3">State</th>
-                  <th className="p-3">Notified Area</th>
-                  <th className="p-3">Possession (ha)</th>
-                  <th className="p-3">Budget Awarded</th>
-                  <th className="p-3">Statutory Stage</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200 text-slate-700">
-                {proposals.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="p-3 font-mono font-bold text-[#0f2b5c]">{p.id}</td>
-                    <td className="p-3 font-bold text-slate-800">{p.title}</td>
-                    <td className="p-3 text-slate-600">{p.agency}</td>
-                    <td className="p-3 text-slate-600">{p.state}</td>
-                    <td className="p-3 font-serif">{p.areaRequired} ha</td>
-                    <td className="p-3 font-serif font-bold text-emerald-700">{p.areaAcquired} ha</td>
-                    <td className="p-3 font-serif">₹{p.budgetAssessed} Cr</td>
-                    <td className="p-3">
-                      <span className="text-[10px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">
-                        {p.status}
+          {/* 🎯 Instant Search Result Card */}
+          {searchedPlot && (
+            <div className="max-w-3xl mx-auto mt-4 animate-fadeIn">
+              {searchedPlot === "NOT_FOUND" ? (
+                <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded text-xs font-semibold flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-rose-600 flex-shrink-0" />
+                  <div>
+                    <strong className="block font-serif">No Record Found for "{searchQuery}"</strong>
+                    <span className="text-[11px] text-rose-700">Please check your plot number or click one of the preset example buttons above.</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white border-2 border-amber-400 rounded-md p-5 text-slate-800 shadow-xl space-y-4">
+                  <div className="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
+                    <div>
+                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded uppercase font-mono">
+                        Official Land Record Verified
                       </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <h3 className="text-lg font-bold text-[#0f2b5c] font-serif mt-1">
+                        {searchedPlot.name} — {searchedPlot.plot}
+                      </h3>
+                      <span className="text-xs text-slate-500 font-medium">{searchedPlot.project} ({searchedPlot.district})</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Total Award (with 100% Solatium)</span>
+                      <strong className="text-xl font-bold text-emerald-700 font-serif">{searchedPlot.totalAward}</strong>
+                    </div>
+                  </div>
+
+                  {/* Specification Table */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border border-slate-200 rounded p-3 bg-slate-50">
+                    <div>
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Area</span>
+                      <strong className="text-slate-800">{searchedPlot.area}</strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Base Circle Rate</span>
+                      <strong className="text-slate-800 font-serif">{searchedPlot.valuation}</strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Statutory Solatium</span>
+                      <strong className="text-emerald-700 font-serif">{searchedPlot.solatium}</strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Current Stage</span>
+                      <strong className="text-[#0f2b5c] text-[11px]">{searchedPlot.status}</strong>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap gap-2.5 pt-1">
+                    <button
+                      onClick={() => setActiveTab('web3')}
+                      className="flex-1 bg-[#0f2b5c] hover:bg-[#0c224a] text-white px-4 py-2 rounded text-xs font-bold font-serif flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                    >
+                      <span>💰 View Compensation & Bank DBT</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('dispatch')}
+                      className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded text-xs font-bold font-serif flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                    >
+                      <span>⚖️ File Objection / Dispute</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('dashboard')}
+                      className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 px-4 py-2 rounded text-xs font-bold font-serif flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <span>🗺️ View on Satellite GIS</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      {/* ── 3-Step Simple Guide ("How It Works") ── */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-10">
+        <div className="text-center space-y-1 mb-8">
+          <span className="text-[10px] font-bold text-[#ea580c] uppercase tracking-wider font-serif">Easy Walkthrough</span>
+          <h2 className="text-xl font-bold text-[#0f2b5c] font-serif">
+            {language === 'en' ? 'How to Track & Claim Your Compensation in 3 Steps' : '3 आसान चरणों में अपनी मुआवजा स्थिति जानें'}
+          </h2>
+          <p className="text-xs text-slate-500 max-w-lg mx-auto">Zero technical knowledge required. The entire legal acquisition process is fully automated:</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {/* Step 1 */}
+          <div className="bg-white border border-slate-300 rounded-md p-5 space-y-3 relative">
+            <div className="h-8 w-8 rounded-full bg-[#0f2b5c] text-white flex items-center justify-center font-bold text-xs font-serif">
+              1
+            </div>
+            <h3 className="font-bold text-slate-800 text-sm font-serif">Search Your Land Parcel</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Enter your Name or Plot Survey Number in the search box above to view your officially notified boundary, circle rate, and project details.
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="bg-white border border-slate-300 rounded-md p-5 space-y-3 relative">
+            <div className="h-8 w-8 rounded-full bg-[#ea580c] text-white flex items-center justify-center font-bold text-xs font-serif">
+              2
+            </div>
+            <h3 className="font-bold text-slate-800 text-sm font-serif">Inspect Section 11 Notice & Award</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Check your fair valuation including the mandatory <strong>100% Solatium</strong> bonus under Section 30 of the RFCTLARR Act 2013.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="bg-white border border-slate-300 rounded-md p-5 space-y-3 relative">
+            <div className="h-8 w-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs font-serif">
+              3
+            </div>
+            <h3 className="font-bold text-slate-800 text-sm font-serif">Receive DBT or File Objection</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              If satisfied, compensation is disbursed directly to your bank account via PFMS. If you dispute the area, click 'File Objection' within 60 days.
+            </p>
           </div>
 
         </div>
       </div>
 
-      {/* ── Official Government Footer ── */}
-      <footer className="bg-[#0b1d3a] text-white border-t-4 border-[#ea580c] pt-10 pb-6 px-4 sm:px-8 text-xs font-sans">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-white/10">
-          
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Landmark className="h-5 w-5 text-amber-400" />
-              <span className="font-bold text-sm font-serif">NLAMS Portal</span>
+      {/* ── 1-Click Role Access Portal ("Who Are You?") ── */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6">
+        <div className="bg-white border border-slate-300 rounded-md p-6 space-y-5">
+          <div className="border-b border-slate-200 pb-3">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-serif">Fast Access Gateways</span>
+            <h2 className="text-lg font-bold text-[#0f2b5c] font-serif">
+              {language === 'en' ? 'Select Your Role for 1-Click Instant Access' : '1-क्लिक त्वरित पहुंच हेतु अपना पद चुनें'}
+            </h2>
+            <p className="text-xs text-slate-500">Click any card below to launch the respective workspace immediately:</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            {/* Citizen Persona */}
+            <div 
+              onClick={() => quickPersonaLogin('citizen')}
+              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xl">🌾</span>
+                <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">Landowner</span>
+              </div>
+              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Citizen / Landowner</strong>
+              <p className="text-[11px] text-slate-500 leading-normal">
+                Check compensation, view title deed SHA-256 hash, and monitor PFMS bank transfer advice.
+              </p>
+              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
+                Launch Portal <ArrowRight className="h-3 w-3" />
+              </span>
             </div>
-            <p className="text-slate-400 text-[11px] leading-relaxed">
-              Designed, developed and hosted by the <strong>National Informatics Centre (NIC)</strong> for the Department of Land Resources, Ministry of Rural Development, Government of India.
-            </p>
-          </div>
 
-          <div className="space-y-2">
-            <h4 className="font-bold font-serif text-amber-400 text-xs uppercase tracking-wider">Statutory Acts & Guidelines</h4>
-            <ul className="space-y-1.5 text-slate-300 text-[11px]">
-              <li>• RFCTLARR Act, 2013</li>
-              <li>• Section 11 Preliminary Notification</li>
-              <li>• Section 19 Declaration of Acquisition</li>
-              <li>• Section 30 Solatium Mandate (100%)</li>
-            </ul>
-          </div>
+            {/* Collector Persona */}
+            <div 
+              onClick={() => quickPersonaLogin('collector')}
+              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xl">🏢</span>
+                <span className="text-[9px] font-bold bg-sky-100 text-sky-800 px-1.5 py-0.5 rounded">District Collector</span>
+              </div>
+              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Amitabh Choudhury (IAS)</strong>
+              <p className="text-[11px] text-slate-500 leading-normal">
+                Issue Section 11 notices, calculate nearest surveyor via Haversine formula, and handle hearings.
+              </p>
+              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
+                Launch Dispatch <ArrowRight className="h-3 w-3" />
+              </span>
+            </div>
 
-          <div className="space-y-2">
-            <h4 className="font-bold font-serif text-amber-400 text-xs uppercase tracking-wider">Interoperable National Portals</h4>
-            <ul className="space-y-1.5 text-slate-300 text-[11px]">
-              <li>• PM GatiShakti National Master Plan</li>
-              <li>• Digital India Land Records (DILRMP)</li>
-              <li>• BHOOMI State Land Records</li>
-              <li>• Public Financial Management System (PFMS)</li>
-            </ul>
-          </div>
+            {/* Surveyor Persona */}
+            <div 
+              onClick={() => quickPersonaLogin('surveyor')}
+              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xl">📍</span>
+                <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Field Officer</span>
+              </div>
+              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Suresh Kumar</strong>
+              <p className="text-[11px] text-slate-500 leading-normal">
+                Detect real-time device GPS coordinates, inspect soil structures, and upload ground photos.
+              </p>
+              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
+                Launch GPS Station <ArrowRight className="h-3 w-3" />
+              </span>
+            </div>
 
-          <div className="space-y-2">
-            <h4 className="font-bold font-serif text-amber-400 text-xs uppercase tracking-wider">Helpdesk & Support</h4>
-            <p className="text-slate-300 text-[11px]">Toll-Free Helpline: <strong>1800-11-2026</strong></p>
-            <p className="text-slate-400 text-[10.5px]">Email: support-nlams@nic.in</p>
-            <p className="text-slate-400 text-[10.5px]">Krishi Bhawan, Dr. Rajendra Prasad Road, New Delhi - 110001</p>
-          </div>
+            {/* Ministry Persona */}
+            <div 
+              onClick={() => quickPersonaLogin('ministry')}
+              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xl">🏛️</span>
+                <span className="text-[9px] font-bold bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded">Central MoRD</span>
+              </div>
+              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Dr. Rajesh Verma</strong>
+              <p className="text-[11px] text-slate-500 leading-normal">
+                National macro-level KPIs, GIS visualizer, and live interoperability hub syncing BHOOMI & GatiShakti.
+              </p>
+              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
+                Launch MIS <ArrowRight className="h-3 w-3" />
+              </span>
+            </div>
 
+          </div>
         </div>
+      </div>
 
-        <div className="max-w-7xl mx-auto pt-6 flex flex-wrap justify-between items-center text-[10.5px] text-slate-400 gap-3">
-          <div>
-            © 2026 Department of Land Resources, Government of India. All Rights Reserved.
+      {/* ── Frequently Asked Questions (Self-Service Helpdesk) ── */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6">
+        <div className="bg-white border border-slate-300 rounded-md p-6 space-y-4">
+          <div className="border-b border-slate-200 pb-2">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-serif">Need Help?</span>
+            <h2 className="text-lg font-bold text-[#0f2b5c] font-serif">
+              Frequently Asked Questions (Citizen Guidance)
+            </h2>
           </div>
-          <div className="flex gap-4">
-            <span>Website Policies</span>
-            <span>Terms of Use</span>
-            <span>Accessibility Statement</span>
-            <span>STQC Certified</span>
+
+          <div className="space-y-3">
+            {faqs.map((faq, idx) => (
+              <div key={idx} className="border border-slate-200 rounded overflow-hidden">
+                <button
+                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
+                  className="w-full text-left p-3.5 bg-slate-50 hover:bg-slate-100 font-bold text-xs text-slate-800 flex justify-between items-center transition-colors cursor-pointer"
+                >
+                  <span className="font-serif">{faq.q}</span>
+                  <span className="text-slate-400 text-sm font-mono">{activeFaq === idx ? '−' : '+'}</span>
+                </button>
+                {activeFaq === idx && (
+                  <div className="p-3.5 bg-white text-xs text-slate-600 leading-relaxed border-t border-slate-200 font-medium">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      </footer>
+      </div>
 
     </div>
   );
