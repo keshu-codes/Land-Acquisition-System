@@ -1,7 +1,4 @@
-"""
-Grievance & Citizen Objection Router
-Handles secure token generation, email dispatch, public objection submission, and grievance monitoring.
-"""
+# handles notice email dispatch, single-use JWT grievance tokens, and public objections
 
 import os
 import secrets
@@ -26,21 +23,20 @@ from ..email_service import send_grievance_notification
 
 router = APIRouter()
 
-# Dedicated secret for grievance tokens (separate from user auth tokens)
+# separate secret key for 30-day citizen objection links
 GRIEVANCE_SECRET_KEY = "nlams_grievance_token_secret_2026_sih"
 GRIEVANCE_TOKEN_EXPIRY_DAYS = 30
 
 
 def _generate_short_token(parcel_number: str) -> str:
-    """Generate a human-readable grievance token like GRV-2026-9821-X7K"""
+    # generate a clean readable code like GRV-2026-9821-X7K
     suffix = secrets.token_hex(2).upper()[:3]
-    # Extract numeric part from parcel number
     num_part = ''.join(filter(str.isdigit, parcel_number))[-4:] or "0000"
     return f"GRV-2026-{num_part}-{suffix}"
 
 
 def _generate_grievance_jwt(parcel_id: int, parcel_number: str, owner_name: str, ref_number: str) -> str:
-    """Generate a JWT-signed grievance token with 30-day expiry."""
+    # sign payload into a 30-day JWT
     payload = {
         "parcel_id": parcel_id,
         "parcel_number": parcel_number,
@@ -53,13 +49,13 @@ def _generate_grievance_jwt(parcel_id: int, parcel_number: str, owner_name: str,
 
 
 def _generate_reference_number() -> str:
-    """Generate an official-looking reference number."""
+    # official style reference format
     seq = secrets.randbelow(9000) + 1000
     return f"LAO/DIST/2026/{seq:04d}"
 
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    """Calculate distance between two GPS points in kilometers."""
+    # spherical distance formula to find closest surveyor
     R = 6371.0
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
@@ -67,21 +63,13 @@ def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
-# ─── Endpoint 1: Dispatch Survey Notice ──────────────────────────────
+# endpoint: dispatch section 11 notice and assign closest surveyor
 @router.post("/grievances/dispatch-notice")
 def dispatch_notice(
     req: models.DispatchNoticeRequest,
     session: Session = Depends(get_session),
     user: models.User = Depends(require_role(["ministry", "district", "surveyor"]))
 ):
-    """
-    Dispatches a formal survey notice to a landowner:
-    1. Looks up parcel details
-    2. Generates a cryptographic grievance token (JWT + short code)
-    3. Sends an email notification with the secure objection link
-    4. Returns dispatch confirmation
-    """
-    # 1. Fetch parcel
     parcel = session.get(models.Parcel, req.parcel_id)
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found in land registry database.")
