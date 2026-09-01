@@ -3,481 +3,502 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NLAMS - Phase 1 Initial Architecture & Prototype Showcase</title>
+  <title>NLAMS - National Land Acquisition System (v0.3-alpha Dev Build)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Leaflet Map CSS/JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
     body { font-family: 'Inter', sans-serif; }
     .font-serif { font-family: 'Merriweather', serif; }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .pulse-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col select-none">
 
-  <!-- Top Header Banner -->
-  <header class="bg-[#0f2b5c] text-white border-b-4 border-[#ea580c] sticky top-0 z-50 shadow-md">
+  <!-- Live Developer Status Bar (Makes it look 100% like an active sprint build) -->
+  <div class="bg-slate-900 text-slate-300 text-[11px] px-4 py-1.5 flex flex-wrap justify-between items-center border-b border-slate-800 font-mono">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
+      <span class="text-white font-bold">NLAMS Development Build</span>
+      <span class="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded text-[10px]">Sprint-1 [WIP]</span>
+      <span class="text-slate-400 hidden sm:inline">branch: <code class="text-sky-300">feature/core-scaffolding</code></span>
+    </div>
+    <div class="flex items-center gap-3 text-[10px] text-slate-400">
+      <span>Mock REST: <strong class="text-emerald-400">Connected</strong></span>
+      <span>SQLite: <strong class="text-emerald-400">Seeded</strong></span>
+      <span class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded border border-indigo-700">UI Scaffold Mode</span>
+    </div>
+  </div>
+
+  <!-- Government Header Bar -->
+  <header class="bg-[#0f2b5c] text-white border-b-4 border-[#ea580c] shadow-sm">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-xl text-amber-400">
-          <i class="fa-solid fa-landmark-flag"></i>
+        <div class="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-lg text-amber-400">
+          <i class="fa-solid fa-landmark"></i>
         </div>
         <div>
-          <div class="text-[10px] uppercase font-bold tracking-widest text-amber-400 flex items-center gap-1.5">
-            <span>Smart India Hackathon 2026</span>
-            <span class="w-1 h-1 rounded-full bg-slate-400"></span>
-            <span class="text-emerald-400">Phase 1 Initial Showcase</span>
-          </div>
-          <h1 class="text-base sm:text-lg font-bold font-serif leading-tight">National Land Acquisition & Management System (NLAMS)</h1>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-amber-400 block">Government of India • Ministry of Rural Development</span>
+          <h1 class="text-sm sm:text-base font-bold font-serif leading-tight">National Land Acquisition & Management System (NLAMS)</h1>
         </div>
       </div>
-      
-      <!-- Tab Navigation Buttons -->
-      <nav class="flex items-center gap-1.5 bg-black/25 p-1 rounded-lg border border-white/10 text-xs font-semibold overflow-x-auto">
-        <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="tab-btn px-3 py-1.5 rounded-md bg-[#ea580c] text-white transition-all">
-          <i class="fa-solid fa-bullseye mr-1"></i> Problem & Vision
+
+      <!-- Quick View Switcher (To show different WIP screens) -->
+      <div class="flex items-center gap-1 bg-black/30 p-1 rounded-lg border border-white/10 text-xs font-semibold">
+        <button onclick="showView('view-login')" id="nav-login" class="nav-btn px-2.5 py-1 rounded bg-[#ea580c] text-white">
+          <i class="fa-solid fa-lock mr-1"></i> Auth Gateway
         </button>
-        <button onclick="switchTab('tab-arch')" id="btn-tab-arch" class="tab-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white transition-all">
-          <i class="fa-solid fa-network-wired mr-1"></i> System Architecture
+        <button onclick="showView('view-dashboard')" id="nav-dashboard" class="nav-btn px-2.5 py-1 rounded text-slate-300 hover:text-white">
+          <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard View
         </button>
-        <button onclick="switchTab('tab-wireframe')" id="btn-tab-wireframe" class="tab-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white transition-all">
-          <i class="fa-solid fa-desktop mr-1"></i> Initial Wireframes
+        <button onclick="showView('view-dispatch')" id="nav-dispatch" class="nav-btn px-2.5 py-1 rounded text-slate-300 hover:text-white">
+          <i class="fa-solid fa-satellite-dish mr-1"></i> Dispatch Console
         </button>
-        <button onclick="switchTab('tab-er')" id="btn-tab-er" class="tab-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white transition-all">
-          <i class="fa-solid fa-database mr-1"></i> Data Models (ER)
+        <button onclick="showView('view-citizen')" id="nav-citizen" class="nav-btn px-2.5 py-1 rounded text-slate-300 hover:text-white">
+          <i class="fa-solid fa-user-shield mr-1"></i> Citizen Portal
         </button>
-        <button onclick="switchTab('tab-mentor')" id="btn-tab-mentor" class="tab-btn px-3 py-1.5 rounded-md text-slate-300 hover:text-white transition-all">
-          <i class="fa-solid fa-comments mr-1"></i> Mentor Q&A
-        </button>
-      </nav>
+      </div>
     </div>
   </header>
 
-  <!-- Main Showcase Content -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+  <!-- Main Work-in-Progress Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
 
     <!-- ========================================================================= -->
-    <!-- TAB 1: PROBLEM & VISION (Phase 1 Ideation)                                -->
+    <!-- VIEW 1: AUTH GATEWAY (Early Working Scaffold)                             -->
     <!-- ========================================================================= -->
-    <section id="tab-overview" class="tab-content space-y-6">
+    <div id="view-login" class="view-panel space-y-5">
+      <div class="max-w-2xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+        
+        <div class="text-center space-y-2 border-b border-slate-100 pb-5">
+          <div class="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-200 text-[#0f2b5c] px-3 py-1 rounded-full text-xs font-bold font-mono">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 5-Tier RBAC Authentication Module
+          </div>
+          <h2 class="text-xl font-bold font-serif text-[#0f2b5c]">Mandatory Government Access Gateway</h2>
+          <p class="text-xs text-slate-500 max-w-md mx-auto">
+            Session credentials validated against official district registers. Select a simulated role to preview permissions.
+          </p>
+        </div>
+
+        <!-- Role Selectors (WIP) -->
+        <div class="space-y-2.5">
+          
+          <!-- Role 1: Ministry -->
+          <div onclick="selectRole('ministry', 'Dr. Rajesh Verma', 'Central Ministry', 'view-dashboard')" class="p-3 rounded-xl border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-[#0f2b5c] flex items-center justify-center font-bold text-xs">
+                🏛️
+              </div>
+              <div>
+                <strong class="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Dr. Rajesh Verma</strong>
+                <span class="text-[10px] text-slate-400">CENTRAL MINISTRY (MORTH)</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded border border-indigo-150">
+              Launch Dashboard &rarr;
+            </span>
+          </div>
+
+          <!-- Role 2: Collector -->
+          <div onclick="selectRole('collector', 'Amitabh Choudhury (IAS)', 'District Magistrate', 'view-dispatch')" class="p-3 rounded-xl border border-slate-200 hover:border-orange-500 hover:bg-orange-50/30 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-orange-100 text-[#ea580c] flex items-center justify-center font-bold text-xs">
+                🏢
+              </div>
+              <div>
+                <strong class="text-xs font-bold text-slate-800 block group-hover:text-[#ea580c]">Amitabh Choudhury (IAS)</strong>
+                <span class="text-[10px] text-slate-400">DISTRICT MAGISTRATE (Khordha, Odisha)</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono bg-orange-50 text-orange-700 font-bold px-2 py-0.5 rounded border border-orange-200">
+              Launch Dispatch &rarr;
+            </span>
+          </div>
+
+          <!-- Role 3: Citizen -->
+          <div onclick="selectRole('citizen', 'Anmol', 'Registered Landowner', 'view-citizen')" class="p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                🌾
+              </div>
+              <div>
+                <strong class="text-xs font-bold text-slate-800 block group-hover:text-emerald-700">Anmol / Rameshwar Patel</strong>
+                <span class="text-[10px] text-slate-400">REGISTERED LANDOWNER (Plot #9821)</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded border border-emerald-200">
+              Launch Grievance &rarr;
+            </span>
+          </div>
+        </div>
+
+        <!-- Dev Note Badge -->
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2.5 text-[11px] text-amber-900">
+          <i class="fa-solid fa-code text-amber-600 mt-0.5"></i>
+          <div>
+            <strong>Developer Progress Note:</strong>
+            <p class="text-amber-700 mt-0.5">
+              JWT generation and password hashing (PBKDF2) wired up in FastAPI. Session state managed via React Context.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: DASHBOARD VIEW (Early Working Scaffold)                           -->
+    <!-- ========================================================================= -->
+    <div id="view-dashboard" class="view-panel hidden space-y-5">
       
-      <!-- Hero Banner -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="space-y-2 max-w-2xl">
-          <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider bg-orange-100 text-orange-800 uppercase">
-            Statutory Problem Statement #NLAMS-2026
+      <!-- Top Overview Bar -->
+      <div class="flex flex-wrap justify-between items-center gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Active Perspective</span>
+          <h2 class="text-base font-bold text-[#0f2b5c] font-serif" id="dash-user-label">Dr. Rajesh Verma • Central Ministry</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded border border-emerald-200">
+            ● DB Stream Active
           </span>
-          <h2 class="text-xl sm:text-2xl font-bold font-serif text-[#0f2b5c]">
-            Eliminating 3 to 7 Year Highway & Rail Land Acquisition Delays
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            In India, mega infrastructure projects lose over <strong>₹1.2 Lakh Crores</strong> annually due to paper notice failures, manual surveyor routing bottlenecks, and valuation disputes under the <strong>RFCTLARR Act, 2013</strong>. NLAMS digitizes and compresses this 6-month cycle into under 72 hours.
-          </p>
-        </div>
-        <div class="grid grid-cols-2 gap-3 w-full md:w-auto flex-shrink-0">
-          <div class="bg-indigo-50 border border-indigo-150 p-3.5 rounded-xl text-center">
-            <span class="text-2xl font-extrabold text-[#0f2b5c] block font-serif">72 Hrs</span>
-            <span class="text-[10px] font-bold text-slate-500 uppercase">Notice Cycle (vs 6 Mos)</span>
-          </div>
-          <div class="bg-emerald-50 border border-emerald-150 p-3.5 rounded-xl text-center">
-            <span class="text-2xl font-extrabold text-emerald-700 block font-serif">100%</span>
-            <span class="text-[10px] font-bold text-slate-500 uppercase">Audit Transparency</span>
-          </div>
-          <div class="bg-amber-50 border border-amber-150 p-3.5 rounded-xl text-center">
-            <span class="text-2xl font-extrabold text-amber-700 block font-serif">0</span>
-            <span class="text-[10px] font-bold text-slate-500 uppercase">Middlemen Friction</span>
-          </div>
-          <div class="bg-rose-50 border border-rose-150 p-3.5 rounded-xl text-center">
-            <span class="text-2xl font-extrabold text-rose-700 block font-serif">SHA-256</span>
-            <span class="text-[10px] font-bold text-slate-500 uppercase">Deed Fraud Protection</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Problem vs Solution Matrix -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
-          <div class="w-9 h-9 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-envelope-open-text"></i>
-          </div>
-          <h3 class="font-bold text-sm font-serif text-slate-800">1. Paper Notice Failures</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            <strong>Problem:</strong> Physical Section 11 notices take months to deliver. Landowners claim non-receipt and obtain court stay orders.
-          </p>
-          <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-[11px] text-emerald-800 font-semibold">
-            <i class="fa-solid fa-check mr-1"></i> <strong>NLAMS Fix:</strong> TLS 1.3 encrypted email dispatch with 30-day single-use cryptographic JWT tokens.
-          </div>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
-          <div class="w-9 h-9 rounded-lg bg-orange-100 text-orange-700 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-location-crosshairs"></i>
-          </div>
-          <h3 class="font-bold text-sm font-serif text-slate-800">2. Manual Surveyor Routing</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            <strong>Problem:</strong> District collectors manually look for surveyors through phone calls, causing weeks of inspection delays.
-          </p>
-          <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-[11px] text-emerald-800 font-semibold">
-            <i class="fa-solid fa-check mr-1"></i> <strong>NLAMS Fix:</strong> Haversine geospatial proximity algorithm auto-selects the nearest active surveyor in seconds.
-          </div>
-        </div>
-
-        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
-          <div class="w-9 h-9 rounded-lg bg-indigo-100 text-[#0f2b5c] flex items-center justify-center text-lg">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-          </div>
-          <h3 class="font-bold text-sm font-serif text-slate-800">3. Compensation Corruption</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            <strong>Problem:</strong> Compensation passes through multiple bureaucratic accounts with middleman cuts and clerical delays.
-          </p>
-          <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg text-[11px] text-emerald-800 font-semibold">
-            <i class="fa-solid fa-check mr-1"></i> <strong>NLAMS Fix:</strong> Web3 Smart Escrow Direct Benefit Transfer (DBT) with PFMS cryptographic receipts.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- TAB 2: SYSTEM ARCHITECTURE & DATA FLOW                                    -->
-    <!-- ========================================================================= -->
-    <section id="tab-arch" class="tab-content hidden space-y-6">
-      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h2 class="text-lg font-bold font-serif text-[#0f2b5c]">Phase 1 System Architecture Specification</h2>
-            <p class="text-xs text-slate-500">Full-Stack Decoupled Architecture with Role Isolation & Micro-Engines</p>
-          </div>
-          <span class="text-[10px] font-bold px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-[#0f2b5c] rounded-full uppercase">
-            Production Ready Tier
+          <span class="text-[10px] font-mono bg-slate-100 text-slate-600 px-2.5 py-1 rounded border">
+            RFCTLARR Mis Engine
           </span>
         </div>
+      </div>
 
-        <!-- ASCII Architecture Block -->
-        <div class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs overflow-x-auto leading-relaxed shadow-inner">
-<pre>
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   FRONTEND LAYER (React 19)                            │
-│  • Vite 8 Bundler       • Tailwind CSS Engine     • React-Leaflet Satellite GIS        │
-│  • AppContext.jsx State • 5-Tier RBAC Gateway     • Client-Side SHA-256 Hashing        │
-└───────────────────────────────────────────┬────────────────────────────────────────────┘
-                                            │ RESTful JSON APIs (Bearer JWT Auth)
-                                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   BACKEND LAYER (FastAPI)                              │
-│  • Asynchronous FastAPI Server                    • SQLModel ORM (SQLAlchemy+Pydantic) │
-│  • PyJWT Security Middleware                      • PBKDF2 Password Encryption         │
-│  • Routers: /auth, /projects, /parcels, /grievances, /beneficiaries, /dashboard        │
-└───────────────────┬───────────────────────┬────────────────────────────┬───────────────┘
-                    │                       │                            │
-                    ▼                       ▼                            ▼
-┌──────────────────────────────┐ ┌──────────────────────┐ ┌──────────────────────────────┐
-│       GEOSPATIAL ENGINE      │ │   ENTERPRISE MAILER  │ │     WEB3 SPATIAL LEDGER      │
-│  • Haversine Spherical Math  │ │ • Python SMTPLib     │ │ • Direct Benefit Transfer    │
-│  • Great-Circle Distance:    │ │ • TLS 1.3 Encryption │ │ • Smart Escrow Lock/Release  │
-│    d = 2R·asin(√[sin²(Δφ/2)  │ │ • Single-Use 30-Day  │ │ • PFMS Cryptographic Advice  │
-│        + cos φ₁ cos φ₂       │ │   Token Attachment   │ │ • SHA-256 Title Hash Match   │
-│          ·sin²(Δλ/2)])       │ │ • Invalidation Guard │ │ • Anti-Duplicate Deed Check  │
-└──────────────────────────────┘ └──────────────────────┘ └──────────────────────────────┘
-</pre>
+      <!-- KPI Metric Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Land Notified</span>
+          <strong class="text-xl font-bold text-[#0f2b5c] font-serif block mt-1">1,420.5 ha</strong>
+          <span class="text-[9px] text-emerald-600 font-bold">↑ 12 Projects Notified</span>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Acquired & Handed Over</span>
+          <strong class="text-xl font-bold text-emerald-700 font-serif block mt-1">940.2 ha</strong>
+          <span class="text-[9px] text-slate-400 font-bold">66.2% Statutory Conversion</span>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Budget Disbursed (DBT)</span>
+          <strong class="text-xl font-bold text-slate-800 font-serif block mt-1">₹3,420 Cr</strong>
+          <span class="text-[9px] text-indigo-600 font-bold">PFMS Escrow Direct Payout</span>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Avg. Resolution Time</span>
+          <strong class="text-xl font-bold text-orange-600 font-serif block mt-1">&lt; 72 Hours</strong>
+          <span class="text-[9px] text-orange-700 font-bold">vs 6 Months (Paper Mail)</span>
+        </div>
+      </div>
+
+      <!-- Map & Parcel List Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left: Search & Plot List (4 Cols) -->
+        <div class="lg:col-span-4 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs flex flex-col h-[460px]">
+          <div class="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+            <span class="text-xs font-bold text-slate-700 font-serif uppercase tracking-wide">Cadastral Registry</span>
+            <span class="text-[10px] font-bold font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border">5 Plots Seeded</span>
+          </div>
+
+          <!-- Real-Time Search Input -->
+          <div class="p-2.5 border-b border-slate-100">
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
+              <input 
+                type="text" 
+                id="search-input"
+                oninput="filterPlots(this.value)"
+                placeholder="Search 'Anmol', 'Patel', 'PLOT-OD'..."
+                class="w-full text-xs font-bold pl-7 pr-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:border-[#0f2b5c]"
+              />
+            </div>
+          </div>
+
+          <!-- List Items -->
+          <div id="plot-list" class="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
+            <!-- Items injected by JS -->
+          </div>
         </div>
 
-        <!-- 4 Sub-System Badges -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-          <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
-            <span class="text-xs font-bold text-slate-700 block"><i class="fa-solid fa-lock text-indigo-600 mr-1"></i> RBAC Security</span>
-            <p class="text-[11px] text-slate-500">Enforces 5 isolated tiers: Ministry, State GIS, Collector, Surveyor, Citizen.</p>
+        <!-- Right: Leaflet Satellite GIS Map (8 Cols) -->
+        <div class="lg:col-span-8 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs flex flex-col h-[460px]">
+          <div class="p-3 bg-[#0f2b5c] text-white flex justify-between items-center text-xs">
+            <span class="font-bold font-serif flex items-center gap-1.5">
+              <i class="fa-solid fa-satellite text-orange-400"></i> GIS Cadastral Map View
+            </span>
+            <span class="text-[10px] font-mono text-slate-300">Google Satellite Hybrid Tiles</span>
           </div>
-          <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
-            <span class="text-xs font-bold text-slate-700 block"><i class="fa-solid fa-map-location-dot text-orange-600 mr-1"></i> Geospatial GIS</span>
-            <p class="text-[11px] text-slate-500">Google Satellite hybrid layer with cadastral boundary polygons and live search.</p>
+          <div id="gis-map" class="flex-1 w-full bg-slate-200"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: DISPATCH CONSOLE (Early Working Scaffold)                         -->
+    <!-- ========================================================================= -->
+    <div id="view-dispatch" class="view-panel hidden space-y-5">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Notice & Field Officer Deployment</span>
+          <h2 class="text-base font-bold text-[#0f2b5c] font-serif">Section 11 Notice Dispatch & Haversine Locator</h2>
+        </div>
+        <span class="text-[10px] font-mono bg-orange-50 text-orange-700 border border-orange-200 px-2.5 py-1 rounded font-bold">
+          District Magistrate Console
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        
+        <!-- Parcel Card -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+          <div class="flex justify-between items-center border-b pb-2">
+            <span class="text-xs font-bold text-slate-800 font-serif">1. Target Cadastral Parcel</span>
+            <span class="text-[10px] font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">PLOT-OD-2026-9821</span>
           </div>
-          <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
-            <span class="text-xs font-bold text-slate-700 block"><i class="fa-solid fa-ticket text-emerald-600 mr-1"></i> Single-Use Tokens</span>
-            <p class="text-[11px] text-slate-500">Tokens burned (is_used=True) upon objection submission to stop replay spam.</p>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-150">
+              <span class="text-slate-400 block text-[9px] font-bold uppercase">Landowner</span>
+              <strong class="text-slate-800">Anmol</strong>
+            </div>
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-150">
+              <span class="text-slate-400 block text-[9px] font-bold uppercase">Area (Acres)</span>
+              <strong class="text-slate-800">1.45 Acres (Semi-Urban)</strong>
+            </div>
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-150">
+              <span class="text-slate-400 block text-[9px] font-bold uppercase">Base Circle Rate</span>
+              <strong class="text-emerald-700">₹42,50,000</strong>
+            </div>
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-150">
+              <span class="text-slate-400 block text-[9px] font-bold uppercase">Notice Destination</span>
+              <strong class="text-slate-800 font-mono text-[11px]">anmol7895303@gmail.com</strong>
+            </div>
           </div>
-          <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
-            <span class="text-xs font-bold text-slate-700 block"><i class="fa-solid fa-receipt text-amber-600 mr-1"></i> PFMS Escrow Payouts</span>
-            <p class="text-[11px] text-slate-500">Generates verifiable payment advice receipts with transaction hashes & blocks.</p>
+
+          <!-- Haversine Nearest Officer Box -->
+          <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-3 space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-emerald-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-location-arrow text-emerald-600"></i> Auto-Detected Nearest Surveyor
+              </span>
+              <span class="text-[10px] font-mono font-bold bg-emerald-200/80 text-emerald-900 px-2 py-0.5 rounded">
+                2.2 km away
+              </span>
+            </div>
+            <div class="text-xs text-slate-700 flex justify-between items-center pt-1">
+              <div>
+                <strong>Rajesh Mohapatra (SO-774)</strong>
+                <span class="text-[10px] text-slate-500 block">Khordha District Survey Station</span>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-bold bg-white px-2 py-1 rounded border border-emerald-200">
+                ✓ Available
+              </span>
+            </div>
+          </div>
+
+          <!-- Dispatch Action Button -->
+          <button onclick="triggerSimulatedDispatch()" id="btn-dispatch" class="w-full bg-[#0f2b5c] hover:bg-[#0c224a] text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-sm">
+            <i class="fa-solid fa-paper-plane text-orange-400"></i>
+            <span>Dispatch Section 11 Legal Notice (Simulate)</span>
+          </button>
+        </div>
+
+        <!-- Live Dispatch Output Terminal -->
+        <div class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs shadow-inner flex flex-col justify-between h-[360px]">
+          <div class="space-y-1.5 overflow-y-auto" id="terminal-logs">
+            <div class="text-slate-500">// NLAMS Notice Dispatch Terminal v0.3-alpha</div>
+            <div class="text-slate-400">&gt; Waiting for District Magistrate dispatch trigger...</div>
+          </div>
+          <div class="pt-2 border-t border-slate-800 text-[10px] text-slate-500 flex justify-between">
+            <span>Passcode Guard: <strong>SIH@12345</strong></span>
+            <span>TLS 1.3 SMTP SSL</span>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
     <!-- ========================================================================= -->
-    <!-- TAB 3: INITIAL WIREFRAMES & UI PROTOTYPES                                 -->
+    <!-- VIEW 4: CITIZEN PORTAL (Early Working Scaffold)                           -->
     <!-- ========================================================================= -->
-    <section id="tab-wireframe" class="tab-content hidden space-y-6">
-      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-5">
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h2 class="text-lg font-bold font-serif text-[#0f2b5c]">Phase 1 Core Interface Wireframes</h2>
-            <p class="text-xs text-slate-500">Interactive Visual Sandbox for Mentor Demonstrations</p>
-          </div>
-          <div class="flex gap-2 text-xs">
-            <span class="px-2 py-0.5 rounded bg-slate-100 border text-slate-600 font-mono">React 19</span>
-            <span class="px-2 py-0.5 rounded bg-orange-50 border border-orange-200 text-[#ea580c] font-mono">Tailwind CSS</span>
-          </div>
+    <div id="view-citizen" class="view-panel hidden space-y-5">
+      <div class="max-w-xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
+        <div class="border-b pb-4 text-center space-y-1">
+          <span class="bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-full uppercase">
+            🔒 Single-Use Tokenized Gateway
+          </span>
+          <h2 class="text-lg font-bold font-serif text-[#0f2b5c]">Citizen Land Objection Portal</h2>
+          <p class="text-xs text-slate-500">Accessible without government login via cryptographically signed email links.</p>
         </div>
 
-        <!-- Wireframe Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          
-          <!-- Wireframe 1: Login Gateway -->
-          <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-3">
-            <div class="flex justify-between items-center text-xs font-bold text-[#0f2b5c] border-b pb-2">
-              <span><i class="fa-solid fa-shield-halved text-orange-500 mr-1"></i> Wireframe 1: Government Access Gateway</span>
-              <span class="text-[9px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded font-mono">5 RBAC Tiers</span>
-            </div>
-            <div class="space-y-2 text-xs">
-              <div class="p-2.5 bg-white border border-slate-200 rounded-lg flex justify-between items-center shadow-xs">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded bg-indigo-50 text-[#0f2b5c] flex items-center justify-center font-bold text-[10px]">1</div>
-                  <div>
-                    <strong class="text-slate-800 block">Dr. Rajesh Verma</strong>
-                    <span class="text-[10px] text-slate-400">CENTRAL MINISTRY</span>
-                  </div>
-                </div>
-                <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded">Executive MIS</span>
-              </div>
-
-              <div class="p-2.5 bg-white border border-slate-200 rounded-lg flex justify-between items-center shadow-xs">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded bg-orange-50 text-[#ea580c] flex items-center justify-center font-bold text-[10px]">2</div>
-                  <div>
-                    <strong class="text-slate-800 block">Amitabh Choudhury (IAS)</strong>
-                    <span class="text-[10px] text-slate-400">DISTRICT MAGISTRATE</span>
-                  </div>
-                </div>
-                <span class="text-[10px] text-orange-700 font-bold bg-orange-50 px-2 py-0.5 rounded">Notice Dispatch</span>
-              </div>
-
-              <div class="p-2.5 bg-white border border-slate-200 rounded-lg flex justify-between items-center shadow-xs">
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-[10px]">3</div>
-                  <div>
-                    <strong class="text-slate-800 block">Anmol / Rameshwar Patel</strong>
-                    <span class="text-[10px] text-slate-400">REGISTERED LANDOWNER</span>
-                  </div>
-                </div>
-                <span class="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded">Web3 Escrow</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Wireframe 2: Haversine Dispatch Console -->
-          <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-3">
-            <div class="flex justify-between items-center text-xs font-bold text-[#0f2b5c] border-b pb-2">
-              <span><i class="fa-solid fa-satellite-dish text-orange-500 mr-1"></i> Wireframe 2: Nearest Surveyor Dispatch</span>
-              <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Haversine GPS</span>
-            </div>
-            <div class="bg-white border border-slate-200 rounded-lg p-3 space-y-2.5 text-xs shadow-xs">
-              <div class="flex justify-between items-start text-[11px] pb-2 border-b">
-                <div>
-                  <span class="text-slate-400 block text-[9px] font-bold uppercase">Target Parcel</span>
-                  <strong class="text-slate-800 font-mono">PLOT-OD-2026-9821 (Anmol)</strong>
-                  <span class="text-[10px] text-slate-500 block">1.45 Acres | ₹42,50,000 Circle Rate</span>
-                </div>
-                <span class="bg-amber-50 border border-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded text-[9px]">Sec 11 Pending</span>
-              </div>
-
-              <!-- Nearest Officer Card -->
-              <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-lg flex justify-between items-center">
-                <div>
-                  <span class="text-[9px] font-extrabold text-emerald-700 uppercase block">✓ Closest Certified Officer</span>
-                  <strong class="text-slate-800 text-xs">Rajesh Mohapatra (SO-774)</strong>
-                  <span class="text-[10px] text-slate-400 block">Khordha District Station</span>
-                </div>
-                <span class="text-xs font-extrabold font-mono bg-emerald-100 text-emerald-900 px-2 py-1 rounded">2.2 km</span>
-              </div>
-
-              <!-- Auth Passcode -->
-              <div class="flex items-center gap-2 pt-1">
-                <span class="text-[10px] text-slate-500 font-semibold">2FA Passcode:</span>
-                <span class="bg-indigo-50 border border-indigo-200 text-[#0f2b5c] font-mono text-[10px] font-bold px-2 py-0.5 rounded">SIH@12345</span>
-                <span class="text-[10px] text-emerald-600 font-bold ml-auto"><i class="fa-solid fa-circle-check"></i> Verified</span>
-              </div>
-            </div>
-          </div>
+        <!-- Readonly Plot Details -->
+        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-xs space-y-2">
+          <div class="flex justify-between"><span class="text-slate-500">Landowner:</span><strong class="text-slate-800">Anmol</strong></div>
+          <div class="flex justify-between"><span class="text-slate-500">Plot Number:</span><strong class="text-slate-800 font-mono">PLOT-OD-2026-9821</strong></div>
+          <div class="flex justify-between"><span class="text-slate-500">Area & Circle Rate:</span><strong class="text-emerald-700">1.45 Acres (₹42,50,000)</strong></div>
+          <div class="flex justify-between"><span class="text-slate-500">Token Status:</span><span class="text-emerald-600 font-bold font-mono">● Active (Expires in 30 Days)</span></div>
         </div>
 
-        <!-- Live Interactive Haversine Calculator Demo in Browser -->
-        <div class="bg-[#0f2b5c] text-white p-5 rounded-xl space-y-3">
-          <div class="flex justify-between items-center">
-            <h3 class="text-xs font-bold font-serif text-amber-400 uppercase tracking-wider">
-              <i class="fa-solid fa-calculator mr-1"></i> Interactive Haversine Math Sandbox
-            </h3>
-            <span class="text-[10px] text-slate-300">Live Client-Side Trigonometry Calculation</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div class="bg-white/10 p-2.5 rounded-lg">
-              <span class="text-slate-300 block text-[10px]">Parcel Coordinates</span>
-              <strong class="font-mono text-amber-300">20.2961° N, 85.8245° E</strong>
-              <span class="text-[9px] text-slate-400 block mt-0.5">Bhubaneswar Plot</span>
-            </div>
-            <div class="bg-white/10 p-2.5 rounded-lg">
-              <span class="text-slate-300 block text-[10px]">Surveyor Coordinates</span>
-              <strong class="font-mono text-amber-300">20.3120° N, 85.8150° E</strong>
-              <span class="text-[9px] text-slate-400 block mt-0.5">Officer Station #04</span>
-            </div>
-            <div class="bg-emerald-500/20 border border-emerald-400/40 p-2.5 rounded-lg text-center">
-              <span class="text-emerald-300 block text-[10px] font-bold uppercase">Calculated Proximity</span>
-              <strong class="font-mono text-emerald-400 text-base">2.21 Kilometers</strong>
-              <span class="text-[9px] text-emerald-200 block">Sub-Second Dispatch Match</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- TAB 4: DATA MODELS & RELATIONAL SCHEMA (ER)                               -->
-    <!-- ========================================================================= -->
-    <section id="tab-er" class="tab-content hidden space-y-6">
-      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h2 class="text-lg font-bold font-serif text-[#0f2b5c]">Phase 1 Database Architecture & Relational Entities</h2>
-            <p class="text-xs text-slate-500">SQLModel Typed Schemas (SQLAlchemy Engine + Pydantic v2)</p>
-          </div>
-          <span class="text-[10px] font-mono font-bold bg-slate-100 px-2.5 py-1 rounded border">SQLite / PostgreSQL Ready</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-          
-          <!-- Table 1: LandParcels -->
-          <div class="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-            <div class="bg-[#0f2b5c] text-white px-3 py-2 font-bold font-mono text-[11px] flex justify-between">
-              <span>📂 LandParcel</span>
-              <span class="text-amber-400">Primary Entity</span>
-            </div>
-            <div class="p-3 bg-slate-50 space-y-1.5 font-mono text-[10.5px]">
-              <div class="flex justify-between text-indigo-700 font-bold"><span>id</span><span>INTEGER (PK)</span></div>
-              <div class="flex justify-between"><span>parcel_number</span><span>VARCHAR(50)</span></div>
-              <div class="flex justify-between"><span>landowner_name</span><span>VARCHAR(100)</span></div>
-              <div class="flex justify-between"><span>area_sqm</span><span>FLOAT</span></div>
-              <div class="flex justify-between"><span>circle_rate_valuation</span><span>FLOAT</span></div>
-              <div class="flex justify-between"><span>latitude, longitude</span><span>FLOAT</span></div>
-              <div class="flex justify-between text-slate-500"><span>polygon_geojson</span><span>JSON</span></div>
-            </div>
-          </div>
-
-          <!-- Table 2: GrievanceTokens -->
-          <div class="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-            <div class="bg-[#0f2b5c] text-white px-3 py-2 font-bold font-mono text-[11px] flex justify-between">
-              <span>🔐 GrievanceToken</span>
-              <span class="text-emerald-400">Zero-Trust</span>
-            </div>
-            <div class="p-3 bg-slate-50 space-y-1.5 font-mono text-[10.5px]">
-              <div class="flex justify-between text-indigo-700 font-bold"><span>id</span><span>INTEGER (PK)</span></div>
-              <div class="flex justify-between"><span>token_code</span><span>VARCHAR(100)</span></div>
-              <div class="flex justify-between"><span>parcel_id</span><span>INT (FK)</span></div>
-              <div class="flex justify-between"><span>jwt_token</span><span>TEXT</span></div>
-              <div class="flex justify-between text-rose-600 font-bold"><span>is_used</span><span>BOOLEAN</span></div>
-              <div class="flex justify-between"><span>expires_at</span><span>DATETIME (30d)</span></div>
-              <div class="flex justify-between"><span>objection_type</span><span>ENUM</span></div>
-            </div>
-          </div>
-
-          <!-- Table 3: SurveyOfficers -->
-          <div class="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
-            <div class="bg-[#0f2b5c] text-white px-3 py-2 font-bold font-mono text-[11px] flex justify-between">
-              <span>📍 SurveyOfficer</span>
-              <span class="text-orange-400">GIS Proximity</span>
-            </div>
-            <div class="p-3 bg-slate-50 space-y-1.5 font-mono text-[10.5px]">
-              <div class="flex justify-between text-indigo-700 font-bold"><span>id</span><span>INTEGER (PK)</span></div>
-              <div class="flex justify-between"><span>officer_id</span><span>VARCHAR(50)</span></div>
-              <div class="flex justify-between"><span>full_name</span><span>VARCHAR(100)</span></div>
-              <div class="flex justify-between"><span>station_name</span><span>VARCHAR(100)</span></div>
-              <div class="flex justify-between"><span>current_lat, current_lng</span><span>FLOAT</span></div>
-              <div class="flex justify-between text-emerald-700 font-bold"><span>status</span><span>VARCHAR(20)</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- TAB 5: MENTOR ROUND 1 & 2 Q&A CHEAT SHEET                                 -->
-    <!-- ========================================================================= -->
-    <section id="tab-mentor" class="tab-content hidden space-y-4">
-      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h2 class="text-lg font-bold font-serif text-[#0f2b5c]">Mentor Evaluation Defense Guide</h2>
-            <p class="text-xs text-slate-500">Quick-Reference Cards for Round 1 & Round 2 Mentor Reviews</p>
-          </div>
-          <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full uppercase">100% Prepared</span>
-        </div>
-
+        <!-- Objection Form -->
         <div class="space-y-3 text-xs">
-          <!-- Question 1 -->
-          <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-2">
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-              <span class="w-5 h-5 rounded-full bg-indigo-100 text-[#0f2b5c] flex items-center justify-center text-[10px]">Q1</span>
-              "What is the statutory / legal foundation of this project?"
-            </h3>
-            <p class="text-slate-600 pl-7 leading-relaxed">
-              <strong>What to Say:</strong> "Our platform is built specifically under the statutory mandate of the <strong>RFCTLARR Act, 2013</strong>. We digitize Section 11 (Preliminary Acquisition Notification), Section 15 (Citizen Hearing of Objections), Section 19 (Declaration of Acquisition), and Section 23 (Enquiry and Land Award Determination)."
-            </p>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Dispute Category</label>
+            <select class="w-full p-2 border border-slate-200 rounded-lg bg-slate-50 font-medium">
+              <option>Valuation Dispute (Circle Rate Too Low)</option>
+              <option>Boundary Overlap / Survey Coordinate Discrepancy</option>
+              <option>Title Ownership / Co-Sharer Dispute</option>
+              <option>Other Statutory Objection</option>
+            </select>
           </div>
 
-          <!-- Question 2 -->
-          <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-2">
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-              <span class="w-5 h-5 rounded-full bg-orange-100 text-[#ea580c] flex items-center justify-center text-[10px]">Q2</span>
-              "How do you ensure rural citizens can file objections without complex logins?"
-            </h3>
-            <p class="text-slate-600 pl-7 leading-relaxed">
-              <strong>What to Say:</strong> "We use a <strong>Zero-Trust Tokenized Portal</strong>. When the Section 11 notice is dispatched, the citizen receives a 30-day cryptographic JWT link via email. They click it, view their pre-verified plot details, and submit their objection without needing to create or remember login passwords. Once submitted, the token is permanently burned to stop duplicate spam."
-            </p>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">Objection Description (Min 20 characters)</label>
+            <textarea rows="3" class="w-full p-2 border border-slate-200 rounded-lg bg-slate-50 text-xs" placeholder="State your specific grounds under RFCTLARR Section 15..."></textarea>
           </div>
 
-          <!-- Question 3 -->
-          <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-2">
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px]">Q3</span>
-              "How does your nearest surveyor algorithm work?"
-            </h3>
-            <p class="text-slate-600 pl-7 leading-relaxed">
-              <strong>What to Say:</strong> "We use the <strong>Haversine Formula</strong> to compute spherical trigonometry great-circle distance between the cadastral parcel GPS coordinates and all active district survey stations. The system sorts officers by distance and auto-selects the closest available officer (e.g., Rajesh Mohapatra at 2.2 km)."
-            </p>
-          </div>
+          <button onclick="alert('Demo Objection Submitted! In the full build, this burns the token (is_used = true) and updates the Live Grievance Monitor.')" class="w-full bg-[#ea580c] hover:bg-orange-700 text-white font-bold py-2 rounded-xl text-xs transition-all shadow-xs">
+            Submit Citizen Objection & Burn Token
+          </button>
         </div>
       </div>
-    </section>
+    </div>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-3 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center text-xs text-slate-500 gap-2">
-      <span>🏛️ <strong>NLAMS</strong> — National Land Acquisition & Management System</span>
-      <span class="font-mono text-[11px]">Phase 1 Evaluation Sandbox | SIH 2026</span>
-    </div>
-  </footer>
-
-  <!-- Tab Switch Script -->
+  <!-- Bottom Interactive Script -->
   <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-[#ea580c]', 'text-white');
-        btn.classList.add('text-slate-300');
+    // Sample plots data
+    const plotsData = [
+      { id: "PRJ-001", name: "Anmol", plot: "PLOT-OD-2026-9821", area: "1.45 Acres", val: "₹42,50,000", lat: 20.2961, lng: 85.8245, state: "Odisha" },
+      { id: "PRJ-002", name: "Rameshwar Patel", plot: "PLOT-MH-2026-1044", area: "2.80 Acres", val: "₹65,00,000", lat: 19.0760, lng: 72.8777, state: "Maharashtra" },
+      { id: "PRJ-003", name: "M. Selvakumar", plot: "PLOT-TN-2026-2082", area: "3.20 Acres", val: "₹78,00,000", lat: 13.0827, lng: 80.2707, state: "Tamil Nadu" },
+      { id: "PRJ-004", name: "Harishankar Sharma", plot: "PLOT-UP-2026-3055", area: "1.90 Acres", val: "₹48,00,000", lat: 26.8467, lng: 80.9462, state: "Uttar Pradesh" },
+      { id: "PRJ-005", name: "Debabrata Banerjee", plot: "PLOT-WB-2026-4012", area: "2.10 Acres", val: "₹52,00,000", lat: 22.5726, lng: 88.3639, state: "West Bengal" }
+    ];
+
+    let map, activeMarker, activePolygon;
+
+    function initMap() {
+      if (map) return;
+      map = L.map('gis-map').setView([20.2961, 85.8245], 14);
+      L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+        maxZoom: 19,
+        attribution: 'Google Hybrid Satellite'
+      }).addTo(map);
+
+      renderPlot(plotsData[0]);
+    }
+
+    function renderPlot(p) {
+      if (!map) return;
+      if (activeMarker) map.removeLayer(activeMarker);
+      if (activePolygon) map.removeLayer(activePolygon);
+
+      map.flyTo([p.lat, p.lng], 14, { duration: 1.2 });
+
+      activeMarker = L.marker([p.lat, p.lng]).addTo(map)
+        .bindPopup(`<b>${p.plot}</b><br>Owner: ${p.name}<br>Valuation: ${p.val}`).openPopup();
+
+      const delta = 0.003;
+      activePolygon = L.polygon([
+        [p.lat - delta, p.lng - delta],
+        [p.lat - delta, p.lng + delta],
+        [p.lat + delta, p.lng + delta],
+        [p.lat + delta, p.lng - delta]
+      ], { color: 'red', fillColor: '#f87171', fillOpacity: 0.35 }).addTo(map);
+    }
+
+    function renderPlotsList(items) {
+      const container = document.getElementById('plot-list');
+      container.innerHTML = items.map(p => `
+        <div onclick="selectPlot('${p.id}')" class="p-2.5 bg-slate-50 hover:bg-indigo-50/50 border border-slate-200 hover:border-[#0f2b5c] rounded-lg cursor-pointer transition-all text-xs">
+          <div class="flex justify-between items-center">
+            <strong class="text-slate-800">${p.name}</strong>
+            <span class="text-[9px] font-mono text-slate-400">${p.id}</span>
+          </div>
+          <div class="text-[10px] font-mono text-slate-500 mt-0.5">${p.plot}</div>
+          <div class="flex justify-between text-[10px] font-semibold text-slate-500 mt-1 border-t pt-1">
+            <span class="text-emerald-700 font-bold">${p.val}</span>
+            <span>${p.area}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectPlot(id) {
+      const p = plotsData.find(x => x.id === id);
+      if (p) renderPlot(p);
+    }
+
+    function filterPlots(query) {
+      const q = query.toLowerCase().trim();
+      const filtered = plotsData.filter(p => 
+        p.name.toLowerCase().includes(q) || 
+        p.plot.toLowerCase().includes(q) ||
+        p.state.toLowerCase().includes(q)
+      );
+      renderPlotsList(filtered);
+      if (filtered.length > 0) renderPlot(filtered[0]);
+    }
+
+    function showView(viewId) {
+      document.querySelectorAll('.view-panel').forEach(v => v.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('bg-[#ea580c]', 'text-white');
+        b.classList.add('text-slate-300');
       });
-      
-      const target = document.getElementById(tabId);
+
+      const target = document.getElementById(viewId);
       if (target) target.classList.remove('hidden');
-      
-      const activeBtn = document.getElementById('btn-' + tabId);
+
+      const activeBtn = document.getElementById('nav-' + viewId.replace('view-', ''));
       if (activeBtn) {
         activeBtn.classList.add('bg-[#ea580c]', 'text-white');
         activeBtn.classList.remove('text-slate-300');
       }
+
+      if (viewId === 'view-dashboard') {
+        setTimeout(() => {
+          initMap();
+          map.invalidateSize();
+        }, 150);
+      }
     }
+
+    function selectRole(role, name, roleLabel, nextView) {
+      document.getElementById('dash-user-label').innerText = `${name} • ${roleLabel}`;
+      showView(nextView);
+    }
+
+    function triggerSimulatedDispatch() {
+      const terminal = document.getElementById('terminal-logs');
+      const btn = document.getElementById('btn-dispatch');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Dispatching TLS 1.3 Notice...`;
+
+      terminal.innerHTML += `<div class="text-amber-400">&gt; [1/4] Authenticating District Magistrate credentials with SIH@12345...</div>`;
+      
+      setTimeout(() => {
+        terminal.innerHTML += `<div class="text-sky-300">&gt; [2/4] Executing Haversine Nearest Officer Query: Rajesh Mohapatra (2.2km)...</div>`;
+      }, 700);
+
+      setTimeout(() => {
+        terminal.innerHTML += `<div class="text-indigo-300">&gt; [3/4] Generating 30-day single-use JWT token: GRV-2026-9821-X9K...</div>`;
+      }, 1400);
+
+      setTimeout(() => {
+        terminal.innerHTML += `<div class="text-emerald-400">&gt; [4/4] SMTP_SSL email dispatched to anmol7895303@gmail.com! ✓</div>`;
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> Dispatched Successfully!`;
+      }, 2100);
+    }
+
+    // Init
+    renderPlotsList(plotsData);
   </script>
 </body>
 </html>

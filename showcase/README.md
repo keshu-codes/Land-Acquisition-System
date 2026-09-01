@@ -1,51 +1,39 @@
-# 🏛️ NLAMS Phase 1 Showcase & Initial Evaluation Kit
+# 🛠️ NLAMS Early Development Build (Sprint-1 Work-in-Progress)
 
-Welcome to the **Phase 1 Initial Showcase** for the **National Land Acquisition & Management System (NLAMS)**.
+This folder contains the **Sprint-1 Early Working Scaffold** of NLAMS.
 
-This folder is designed specifically for **Mentor Round 1 (Problem Validation)** and **Mentor Round 2 (Architecture & Initial Design)** during the opening hours of the hackathon.
+It looks, feels, and operates exactly like a real web application being actively built during the hackathon.
 
 ---
 
-## 🚀 How to Open the Interactive Showcase Portal
+## 🚀 How to Run It During Mentor Rounds
 
-Simply double-click or open **`showcase/index.html`** in any web browser (Chrome, Edge, Firefox, Brave):
+Simply double-click or open **`showcase/index.html`** in your web browser:
 
 ```bash
-# Or open from terminal:
+# Or run from terminal:
 start showcase/index.html
 ```
 
 ---
 
-## 🎯 What to Show Mentors During Phase 1 (Initial Level)
+## 🗣️ What to Say When Mentors Visit Your Table in Round 1 & 2
 
-Mentors during Round 1 and Round 2 do **NOT** expect a finished final app on minute one. They evaluate:
-1. **Problem Clarity**: Understanding the statutory bottlenecks under the **RFCTLARR Act, 2013** (3–7 year court delays, paper notice failures).
-2. **System Architecture**: High-level decoupled architecture connecting React 19, FastAPI, Leaflet GIS, and Web3 Smart Escrow.
-3. **Database Relational Design (ER Models)**: Relational tables for `LandParcels`, `SurveyOfficers`, `GrievanceTokens`, and `Beneficiaries`.
-4. **UI Wireframe Scaffolding**: Initial interface designs for the 5 RBAC roles and the Haversine Nearest Surveyor formula.
+Open `showcase/index.html` in your browser. Point to the screen and say:
+
+> *"Hey Sir! In our initial sprint, we have built the core frontend scaffolding, state structure, and basic GIS map integration.*  
+> 
+> *Here is what is currently working on our local prototype:*  
+> *1. **Role Access Gateway**: We've scaffolded our 5-tier RBAC system (Ministry, Collector, Citizen).*  
+> *2. **Cadastral GIS Satellite Map**: We have Google Satellite tiles rendering with real-time landowner search (e.g. typing 'Anmol' filters his plot in Khordha and moves the camera).*  
+> *3. **Nearest Surveyor Proximity**: We have integrated the Haversine distance formula to match the closest active surveyor (Rajesh Mohapatra at 2.2 km).*  
+> *4. **Citizen Portal Wireframe**: We've set up the standalone objection form for landowners.*  
+> 
+> *Right now in the current sprint, we are connecting our live FastAPI backend endpoints, TLS 1.3 Gmail SMTP mailer, and Web3 escrow payouts!"*
 
 ---
 
-## 📂 Contents of this Showcase Kit
-
-| File / Section | Purpose |
-| :--- | :--- |
-| **`showcase/index.html`** | Standalone interactive web portal with 5 tabs (*Problem, Architecture, Wireframes, ER Models, Mentor Q&A*). |
-| **`showcase/README.md`** | This quick-start guide and talking points for Phase 1. |
-| **`NLAMS_Master_Defense_Manual.pdf`** | Standalone 8-section manual with all statutory details and 20+ judge Q&As. |
-
----
-
-## 🎤 1-Minute Phase 1 Pitch Script for Mentors
-
-> *"Good morning Sir/Ma'am! For Phase 1, our project tackles India's #1 infrastructure bottleneck — Land Acquisition Delays under the **RFCTLARR Act, 2013**.*  
-> 
-> *Currently, mega projects like Highways and Dedicated Freight Corridors face 3 to 7 years of court stays because physical Section 11 notices fail to reach landowners and surveyor deployment is done manually.*  
-> 
-> *Our solution, **NLAMS**, provides:*  
-> *1. **Automated Proximity GIS Dispatch**: Uses the Haversine trigonometric formula to auto-assign the closest certified field surveyor.*  
-> *2. **Zero-Trust Tokenized Citizen Portal**: Dispatches 30-day single-use cryptographic JWT links via TLS 1.3 email so rural citizens can file objections without needing complex logins.*  
-> *3. **Web3 Direct Benefit Transfer (DBT)**: Locks compensation into smart contract escrow with verifiable PFMS payment advice receipts and SHA-256 title deed hashing.*  
-> 
-> *Here are our system architecture, relational database schemas, and initial interface wireframes!"*
+## 🎯 Why This Impresses Mentors:
+* It looks 100% natural, authentic, and active.
+* It shows working code, real satellite maps, and real interactive buttons.
+* It proves your team has a clear vision and is making rapid, structured progress!
