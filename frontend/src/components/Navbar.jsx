@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { 
   Shield, MapPin, Bell, User, Menu, X, Landmark, 
-  FileText, Globe, Send, Compass, Phone, Sparkles, CheckCircle2, ChevronDown, Lock, Radio
+  FileText, Globe, Send, Compass, Phone, Sparkles, CheckCircle2, ChevronDown, Lock, Radio,
+  Calculator, Layers, Scale, BookOpen
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
@@ -39,60 +40,22 @@ export default function Navbar({ activeTab, setActiveTab }) {
       : roleId === 'state' ? 'workflow' 
       : roleId === 'district' ? 'dispatch' 
       : roleId === 'surveyor' ? 'survey' 
-      : 'web3';
+      : 'home';
     setActiveTab(defaultTab);
   };
 
   const getRoleMenuItems = (role) => {
-    switch (role) {
-      case 'ministry':
-        return [
-          { id: 'home', label: language === 'en' ? 'Portal Home' : 'मुख्य पृष्ठ', icon: Landmark },
-          { id: 'dashboard', label: language === 'en' ? 'Executive Dashboard' : 'कार्यकारी डैशबोर्ड', icon: Landmark },
-          { id: 'workflow', label: language === 'en' ? 'LARR Case Workflows' : 'विधिक कार्यप्रवाह', icon: FileText },
-          { id: 'dispatch', label: language === 'en' ? 'Notice Dispatch' : 'नोटिस प्रेषण', icon: Send },
-          { id: 'web3', label: language === 'en' ? 'Web3 Audit & DBT' : 'वेब3 ऑडिट एवं डीबीटी', icon: Shield },
-          { id: 'survey', label: language === 'en' ? 'Field Survey Node' : 'क्षेत्र सर्वेक्षण नोड', icon: MapPin }
-        ];
-      case 'state':
-        return [
-          { id: 'home', label: language === 'en' ? 'Portal Home' : 'मुख्य पृष्ठ', icon: Landmark },
-          { id: 'workflow', label: language === 'en' ? 'State GIS Verification' : 'राज्य जीआईएस सत्यापन', icon: Compass },
-          { id: 'dashboard', label: language === 'en' ? 'State Land Ledger' : 'राज्य भूमि बहीखाता', icon: Landmark },
-          { id: 'survey', label: language === 'en' ? 'Cadastral Surveys' : 'भूकर सर्वेक्षण', icon: MapPin }
-        ];
-      case 'district':
-        return [
-          { id: 'home', label: language === 'en' ? 'Portal Home' : 'मुख्य पृष्ठ', icon: Landmark },
-          { id: 'dispatch', label: language === 'en' ? 'Notice Dispatch' : 'नोटिस प्रेषण', icon: Send },
-          { id: 'workflow', label: language === 'en' ? 'Gazette & Awards' : 'राजपत्र और पंचाट', icon: FileText },
-          { id: 'dashboard', label: language === 'en' ? 'District Dashboard' : 'जिला डैशबोर्ड', icon: Landmark },
-          { id: 'web3', label: language === 'en' ? 'Compensation Escrow' : 'मुआवजा एस्क्रो', icon: Shield }
-        ];
-      case 'surveyor':
-        return [
-          { id: 'home', label: language === 'en' ? 'Portal Home' : 'मुख्य पृष्ठ', icon: Landmark },
-          { id: 'survey', label: language === 'en' ? 'Field Survey Station' : 'क्षेत्र सर्वेक्षण नोड', icon: MapPin },
-          { id: 'dispatch', label: language === 'en' ? 'Assigned Queue' : 'आवंटित कतार', icon: Send }
-        ];
-      case 'citizen':
-        return [
-          { id: 'home', label: language === 'en' ? 'Portal Home' : 'मुख्य पृष्ठ', icon: Landmark },
-          { id: 'web3', label: language === 'en' ? 'Compensation Claims' : 'मुआवजा दावे', icon: Shield },
-          { id: 'workflow', label: language === 'en' ? 'Acquisition Status' : 'अर्जन स्थिति', icon: FileText }
-        ];
-      default:
-        return [
-          { id: 'home', label: language === 'en' ? 'Portal Home' : 'मुख्य पृष्ठ', icon: Landmark },
-          { id: 'dashboard', label: language === 'en' ? 'Executive Dashboard' : 'कार्यकारी डैशबोर्ड', icon: Landmark },
-          { id: 'workflow', label: language === 'en' ? 'Case Workflows' : 'विधिक कार्यप्रवाह', icon: FileText },
-          { id: 'dispatch', label: language === 'en' ? 'Notice Dispatch' : 'नोटिस प्रेषण', icon: Send },
-          { id: 'web3', label: language === 'en' ? 'Web3 Audit & DBT' : 'वेब3 ऑडिट', icon: Shield }
-        ];
-    }
+    return [
+      { id: 'home', label: language === 'en' ? 'Portal Home' : 'मुख्य पृष्ठ', icon: Landmark },
+      { id: 'dashboard', label: language === 'en' ? 'Executive Dashboard' : 'कार्यकारी डैशबोर्ड', icon: Landmark },
+      { id: 'workflow', label: language === 'en' ? 'LARR Case Workflows' : 'विधिक कार्यप्रवाह', icon: FileText },
+      { id: 'dispatch', label: language === 'en' ? 'Notice Dispatch' : 'नोटिस प्रेषण', icon: Send },
+      { id: 'web3', label: language === 'en' ? 'Web3 Audit & DBT' : 'वेब3 ऑडिट', icon: Shield },
+      { id: 'survey', label: language === 'en' ? 'Field Survey' : 'क्षेत्र सर्वेक्षण', icon: MapPin }
+    ];
   };
 
-  const currentRole = user?.role || selectedRole || 'ministry';
+  const currentRole = user?.role || selectedRole || 'citizen';
   const menuItems = getRoleMenuItems(currentRole);
 
   return (
@@ -145,8 +108,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
       </div>
 
       {/* ── Main High-Density Header ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 min-h-[4rem]">
           
           {/* Official Branding with Emblem */}
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
@@ -166,8 +129,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
             </div>
           </div>
 
-          {/* Navigation Items (Desktop) */}
-          <div className="hidden xl:flex items-center space-x-1">
+          {/* Navigation Items */}
+          <div className="flex flex-wrap items-center gap-1">
             {menuItems.map(item => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -189,7 +152,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
           </div>
 
           {/* Right Tools: Role Quick Switcher, Alerts & Account */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="flex items-center gap-3">
             
             {/* Active Persona Quick Switcher Dropdown */}
             <div className="relative">
@@ -303,7 +266,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
           </div>
 
           {/* Mobile Navigation Toggle */}
-          <div className="flex xl:hidden items-center gap-2">
+          <div className="flex lg:hidden items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-slate-700 hover:bg-slate-100 rounded-lg"
@@ -316,7 +279,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="xl:hidden py-3 border-t border-slate-200 space-y-2 bg-slate-50 px-2 rounded-b-xl mb-2">
+          <div className="lg:hidden py-3 border-t border-slate-200 space-y-2 bg-slate-50 px-2 rounded-b-xl mb-2">
             <div className="px-2 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Navigation Menu</div>
             {menuItems.map(item => (
               <button

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AppProvider, AppContext } from './context/AppContext';
-import Navbar from './components/Navbar';
+import SidebarLayout from './components/SidebarLayout';
 import SMSSimulator from './components/SMSSimulator';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
@@ -9,13 +9,16 @@ import CompensationPortal from './pages/CompensationPortal';
 import FieldSurvey from './pages/FieldSurvey';
 import SurveyDispatch from './pages/SurveyDispatch';
 import CitizenObjection from './pages/CitizenObjection';
+import CompensationCalculatorPage from './pages/CompensationCalculatorPage';
+import GISExplorerPage from './pages/GISExplorerPage';
+import LegalJourneyPage from './pages/LegalJourneyPage';
 import Login from './pages/Login';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState('home');
   const [grievanceToken, setGrievanceToken] = useState(null);
-  const { user, backendError, isLoading, refreshData, showLoginModal, setShowLoginModal } = useContext(AppContext);
+  const { user, isLoading, showLoginModal, setShowLoginModal } = useContext(AppContext);
 
   // Detect ?token= in URL for public grievance access and custom navigation events
   useEffect(() => {
@@ -43,12 +46,11 @@ function AppContent() {
         : user.role === 'state' ? 'workflow' 
         : user.role === 'district' ? 'dispatch' 
         : user.role === 'surveyor' ? 'survey' 
-        : 'web3';
+        : 'home';
       setActiveTab(defaultTab);
     }
   }, [user]);
 
-  // Public landing page is Home.jsx, or Objection page if ?token= exists
   const renderActivePage = () => {
     if (grievanceToken || activeTab === 'objection') {
       return <CitizenObjection token={grievanceToken} />;
@@ -56,6 +58,12 @@ function AppContent() {
     switch (activeTab) {
       case 'home':
         return <Home setActiveTab={setActiveTab} />;
+      case 'calc':
+        return <CompensationCalculatorPage setActiveTab={setActiveTab} />;
+      case 'gis':
+        return <GISExplorerPage setActiveTab={setActiveTab} />;
+      case 'journey':
+        return <LegalJourneyPage setActiveTab={setActiveTab} />;
       case 'dashboard':
         return <Dashboard />;
       case 'workflow':
@@ -72,32 +80,18 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      {/* Navigation */}
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
-      
-      {/* Main Content Area */}
-      <main className="flex-1">
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center h-96 text-slate-400 gap-2">
-            <RefreshCw className="h-8 w-8 animate-spin text-sky-500" />
-            <span className="text-xs font-semibold">Synchronizing with registry server...</span>
-          </div>
-        ) : (
-          renderActivePage()
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 text-slate-500 py-6 text-center text-xs">
-        <div className="max-w-7xl mx-auto px-4">
-          <p className="font-semibold text-slate-400">National Land Acquisition & Management System (NLAMS) - Prototype</p>
-          <p className="mt-1">Developed for Smart India Hackathon (SIH) 2026. Powered by Web3, GIS Spatial Ledger, and Automated Workflows.</p>
+    <SidebarLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center h-96 text-slate-400 gap-2">
+          <RefreshCw className="h-8 w-8 animate-spin text-[#ea580c]" />
+          <span className="text-xs font-semibold">Synchronizing with registry server...</span>
         </div>
-      </footer>
+      ) : (
+        renderActivePage()
+      )}
       <SMSSimulator />
       {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}
-    </div>
+    </SidebarLayout>
   );
 }
 
