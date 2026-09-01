@@ -173,9 +173,7 @@ export default function Login({ onClose, isInline = false, onLoginSuccess }) {
 
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="h-8 w-8 rounded-full bg-[#0f2b5c] text-white flex items-center justify-center font-bold text-xs">
-                <Landmark className="h-4.5 w-4.5" />
-              </div>
+              <img src="/emblem.jpg" alt="Government of India Emblem" className="h-9 w-auto object-contain bg-white rounded-lg p-0.5 border border-slate-200 shadow-sm" />
               <span className="text-xs font-extrabold text-[#0f2b5c] uppercase tracking-wider font-serif">
                 NLAMS Portal Authentication
               </span>

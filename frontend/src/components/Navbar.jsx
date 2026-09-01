@@ -113,9 +113,11 @@ export default function Navbar({ activeTab, setActiveTab }) {
           
           {/* Official Branding with Emblem */}
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
-            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-[#0f2b5c] to-[#1e3a8a] flex items-center justify-center text-amber-400 shadow-md group-hover:scale-105 transition-transform flex-shrink-0 border border-slate-700">
-              <Landmark className="h-6 w-6 stroke-[1.8]" />
-            </div>
+            <img 
+              src="/emblem.jpg" 
+              alt="Government of India Emblem" 
+              className="h-12 w-auto object-contain bg-white rounded-xl p-1 border border-slate-200 shadow-md group-hover:scale-105 transition-transform flex-shrink-0" 
+            />
             <div className="border-l border-slate-200 pl-3 flex flex-col justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block font-serif leading-none">

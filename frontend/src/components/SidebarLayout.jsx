@@ -88,16 +88,14 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
           {/* Top Brand Header */}
           <div className="p-4 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('home')}>
-              <div className="h-10 w-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-extrabold shadow-md flex-shrink-0">
-                <Landmark className="h-5 w-5" />
-              </div>
+              <img src="/emblem.jpg" alt="Emblem of India" className="h-10 w-auto object-contain bg-white rounded-lg p-1 shadow-md flex-shrink-0" />
               {sidebarOpen && (
                 <div>
                   <span className="text-[9px] font-bold text-amber-300 uppercase tracking-widest block font-serif leading-none">
                     Government of India
                   </span>
                   <h1 className="font-extrabold text-white text-sm font-heading leading-tight mt-0.5">
-                    NLAMS <span className="text-amber-400 font-bold text-xs">2.0</span>
+                    NLAMS
                   </h1>
                 </div>
               )}

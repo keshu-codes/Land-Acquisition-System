@@ -36,6 +36,13 @@ function AppContent() {
       }
     };
     window.addEventListener('navigate-tab', handleNav);
+    
+    // Show login page immediately when user first opens the website
+    const savedUser = localStorage.getItem('nlams_user');
+    if (!savedUser && !token) {
+      setShowLoginModal(true);
+    }
+
     return () => window.removeEventListener('navigate-tab', handleNav);
   }, []);
 
