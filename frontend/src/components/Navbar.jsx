@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Wallet, Shield, MapPin, Bell, User, Menu, X, Landmark, FileText, Globe, Send } from 'lucide-react';
+import { Wallet, Shield, MapPin, Bell, User, Menu, X, Landmark, FileText, Globe, Send, Compass } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const { 
