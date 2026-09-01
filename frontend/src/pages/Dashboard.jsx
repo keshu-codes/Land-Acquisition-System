@@ -489,14 +489,11 @@ export default function Dashboard() {
 
       {/* ── Live Grievance Monitor ── */}
       {user && (user.role === 'ministry' || user.role === 'district') && (
-        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-          <div className="bg-gradient-to-r from-rose-50 to-amber-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <ShieldAlert className="h-5 w-5 text-rose-600" />
-                {grievances.filter(g => g.status === 'PENDING').length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-rose-500 rounded-full animate-pulse ring-2 ring-white" />
-                )}
+        <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+          <div className="bg-slate-50 px-5 py-3.5 border-b border-slate-200 flex justify-between items-center">
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shadow-xs">
+                <ShieldAlert className="h-4.5 w-4.5" />
               </div>
               <div>
                 <h3 className="font-bold text-[#0f2b5c] text-sm font-serif">
@@ -515,7 +512,7 @@ export default function Dashboard() {
               <button
                 onClick={fetchGrievances}
                 disabled={grievanceLoading}
-                className="p-1.5 rounded-lg border border-slate-200 hover:bg-white text-slate-500 hover:text-[#0f2b5c] cursor-pointer transition-all"
+                className="p-1.5 rounded-lg border border-slate-200 hover:bg-white text-slate-500 hover:text-[#0f2b5c] cursor-pointer transition-all shadow-xs"
               >
                 <RefreshCw className={`h-3.5 w-3.5 ${grievanceLoading ? 'animate-spin' : ''}`} />
               </button>
