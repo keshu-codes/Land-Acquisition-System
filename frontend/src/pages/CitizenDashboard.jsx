@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { 
   Landmark, MapPin, CheckCircle, FileText, AlertTriangle, ShieldCheck, 
-  CreditCard, ExternalLink, ArrowUpRight, Scale, Clock, Download, Eye
+  CreditCard, ExternalLink, ArrowUpRight, Scale, Clock, Download, Sprout
 } from 'lucide-react';
 
 export default function CitizenDashboard({ setActiveTab }) {
@@ -18,16 +18,32 @@ export default function CitizenDashboard({ setActiveTab }) {
     khataNo: "Khordha / 9821 / 2026",
     surveyNo: "SN-9821",
     district: "Khordha, Odisha",
-    village: "Chandaka Revenue Circle",
-    area: "1.45 Acres (Semi-Urban Agricultural)",
+    village: "Chandaka Revenue Circle, Tehsil Jatni",
+    coordinates: "20.2961° N, 85.8245° E",
+    
+    // Land Area & Unit Valuations
+    totalAreaAcres: "1.45 Acres",
+    totalAreaSqM: "5,867.9 sq.m",
+    marketRatePerUnit: "₹29,31,034 / Acre",
+    govtCompensationPerUnit: "₹58,62,068 / Acre",
+    
+    // Total Financial Award Breakdown
     baseMarketValuation: "₹42,50,000",
-    solatiumBonus: "₹42,50,000 (100% Solatium Sec 30)",
+    solatiumBonus: "₹42,50,000",
     totalGovtAward: "₹85,00,000",
+    
+    // Soil & Fertility Attributes
+    soilType: "Alluvial Black Cotton Soil",
+    fertilityRating: "8.8 / 10 (High Fertility Rating)",
+    irrigationStatus: "Double-Crop Perennial Irrigated Land",
+    topography: "Class-1 Semi-Urban Agricultural Terrain",
+    
+    // Status & References
     paymentStatus: "PFMS Bank Transfer Escrow Approved",
     acquisitionStatus: "Section 11 (1) Gazette Published",
-    verificationStatus: "Verified by District Revenue Authority",
+    verificationStatus: "Verified by District Revenue Collectorate",
     transactionId: "TXN-2026-PFMS-982104",
-    blockchainHash: "0x8f7a...9821d"
+    blockchainHash: "0x8f7a9821d4c2"
   };
 
   const handleObjectionSubmit = (e) => {
@@ -36,7 +52,7 @@ export default function CitizenDashboard({ setActiveTab }) {
     setObjectionSubmitted(true);
     setTimeout(() => {
       setShowObjectionModal(false);
-    }, 2000);
+    }, 2200);
   };
 
   return (
@@ -44,104 +60,136 @@ export default function CitizenDashboard({ setActiveTab }) {
       
       {/* ── Header Banner ── */}
       <div className="bg-[#12355B] text-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-700 relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial from-amber-500/10 to-transparent pointer-events-none" />
         <div className="relative z-10 space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 font-mono text-[11px] uppercase tracking-wider">
             <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-            Verified Citizen / Landowner Portal
+            Verified Citizen & Landowner Personal Portal
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Welcome, {citizenLand.ownerName}
+            Land Dossier: {citizenLand.ownerName}
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
-            Track your land parcel acquisition milestone, statutory 100% Solatium payout award, bank payment advice, or submit an objection petition under Section 15.
+            Inspect your land parcel area, per-unit circle rate, statutory 100% Solatium payout (RFCTLARR Sec 30), soil fertility rating, or submit an objection petition under Section 15.
           </p>
         </div>
       </div>
 
-      {/* ── KEY LAND & COMPENSATION CARDS ── */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* ── 1. EASILY SCANABLE LAND AREA & UNIT VALUATION CARDS ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <div className="bg-[#FAFAF7] border border-[#E8E1D5] p-5 rounded-xl shadow-2xs space-y-1">
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Land Area</span>
-          <span className="text-lg font-extrabold text-[#12355B] font-mono block">{citizenLand.area}</span>
-          <span className="text-[10px] text-slate-400 block">Khata: {citizenLand.khataNo}</span>
+        {/* Card A: Total Land Area (Easily Scanable) */}
+        <div className="bg-[#FAFAF7] border-2 border-[#12355B] p-5 rounded-2xl shadow-sm space-y-1">
+          <span className="text-[11px] font-extrabold text-[#12355B] uppercase tracking-wider block">Total Land Area</span>
+          <span className="text-2xl font-black text-[#12355B] font-mono block">{citizenLand.totalAreaAcres}</span>
+          <span className="text-[10px] text-slate-500 font-semibold block">{citizenLand.totalAreaSqM}</span>
         </div>
 
-        <div className="bg-[#FAFAF7] border border-[#E8E1D5] p-5 rounded-xl shadow-2xs space-y-1">
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Base Circle Rate Valuation</span>
-          <span className="text-lg font-extrabold text-[#7A5C3E] font-mono block">{citizenLand.baseMarketValuation}</span>
-          <span className="text-[10px] text-slate-400 block">Assessed Revenue Rate</span>
+        {/* Card B: Market Price Per Unit */}
+        <div className="bg-[#FAFAF7] border border-[#E8E1D5] p-5 rounded-2xl shadow-2xs space-y-1">
+          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Est. Market Rate / Unit</span>
+          <span className="text-lg font-extrabold text-[#7A5C3E] font-mono block">{citizenLand.marketRatePerUnit}</span>
+          <span className="text-[10px] text-slate-400 block">District Registrar Circle Rate</span>
         </div>
 
-        <div className="bg-[#FAFAF7] border border-[#E8E1D5] p-5 rounded-xl shadow-2xs space-y-1">
-          <span className="text-[11px] font-bold text-[#2F6B4F] uppercase tracking-wider block">100% Mandatory Solatium</span>
-          <span className="text-lg font-extrabold text-[#2F6B4F] font-mono block">{citizenLand.solatiumBonus}</span>
-          <span className="text-[10px] text-emerald-600 font-bold block">RFCTLARR Act 2013 Sec 30</span>
+        {/* Card C: Govt Compensation Per Unit */}
+        <div className="bg-[#FAFAF7] border border-[#E8E1D5] p-5 rounded-2xl shadow-2xs space-y-1">
+          <span className="text-[11px] font-bold text-[#2F6B4F] uppercase tracking-wider block">Govt Award Offered / Unit</span>
+          <span className="text-lg font-extrabold text-[#2F6B4F] font-mono block">{citizenLand.govtCompensationPerUnit}</span>
+          <span className="text-[10px] text-emerald-700 font-bold block">Includes 100% Solatium (Sec 30)</span>
         </div>
 
-        <div className="bg-[#12355B] text-white p-5 rounded-xl shadow-2xs space-y-1 border border-slate-700">
-          <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">Total Govt Award</span>
-          <span className="text-xl font-extrabold text-amber-400 font-mono block">{citizenLand.totalGovtAward}</span>
-          <span className="text-[10px] text-emerald-300 font-medium block">✓ Bank Transfer Ready</span>
+        {/* Card D: Total Government Award */}
+        <div className="bg-[#12355B] text-white p-5 rounded-2xl shadow-sm border border-slate-700 space-y-1">
+          <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">Total Award Payable</span>
+          <span className="text-2xl font-black text-amber-400 font-mono block">{citizenLand.totalGovtAward}</span>
+          <span className="text-[10px] text-emerald-300 font-medium block">✓ Bank Transfer Escrow Approved</span>
         </div>
 
       </div>
 
-      {/* ── MAIN LAND DOSSIER & ACTIONS ── */}
+      {/* ── 2. SOIL FERTILITY & DETAILED VALUATION DOSSIER ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Column (8 Cols): Land Details & Documents */}
+        {/* Left Column (8 Cols): Land Details, Soil Attributes, and Status */}
         <div className="lg:col-span-8 space-y-6">
           
-          <div className="bg-white border border-[#E2E8F0] p-6 rounded-2xl space-y-4">
+          {/* Soil Type & Fertility Details Card */}
+          <div className="bg-white border border-[#E2E8F0] p-6 rounded-2xl space-y-4 shadow-2xs">
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h2 className="text-base font-extrabold text-[#12355B] flex items-center gap-2">
-                <Landmark className="h-5 w-5 text-[#2F6B4F]" />
-                Official Land Parcel Dossier
+                <Sprout className="h-5 w-5 text-[#2F6B4F]" />
+                Soil Classification & Fertility Assessment
               </h2>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full font-mono uppercase">
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full font-mono uppercase">
+                High Yield Soil
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Soil Classification</span>
+                <strong className="text-[#12355B] text-sm block mt-0.5">{citizenLand.soilType}</strong>
+              </div>
+
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Fertility Index</span>
+                <strong className="text-[#2F6B4F] text-sm block mt-0.5">{citizenLand.fertilityRating}</strong>
+              </div>
+
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Irrigation & Cultivation</span>
+                <strong className="text-slate-800 text-sm block mt-0.5">{citizenLand.irrigationStatus}</strong>
+              </div>
+
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+                <span className="text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Terrain Topography</span>
+                <strong className="text-slate-800 text-sm block mt-0.5">{citizenLand.topography}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Land Parcel & Location Dossier */}
+          <div className="bg-white border border-[#E2E8F0] p-6 rounded-2xl space-y-4 shadow-2xs">
+            <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+              <h2 className="text-base font-extrabold text-[#12355B] flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-[#C98B2E]" />
+                Land Parcel & Revenue Location Information
+              </h2>
+              <span className="text-[10px] bg-blue-50 text-[#12355B] font-extrabold px-2.5 py-1 rounded font-mono uppercase">
                 {citizenLand.verificationStatus}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-3 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
                 <span className="text-slate-500 block text-[10px]">Plot Survey Number</span>
-                <strong className="font-mono text-[#12355B] text-sm">{citizenLand.plotNo}</strong>
+                <strong className="font-mono text-[#12355B] text-sm">{citizenLand.plotNo} ({citizenLand.surveyNo})</strong>
               </div>
 
-              <div className="p-3 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
-                <span className="text-slate-500 block text-[10px]">District & Location</span>
-                <strong className="text-slate-800 text-sm">{citizenLand.district}</strong>
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+                <span className="text-slate-500 block text-[10px]">Khata Ledger Number</span>
+                <strong className="font-mono text-slate-800 text-sm">{citizenLand.khataNo}</strong>
               </div>
 
-              <div className="p-3 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
-                <span className="text-slate-500 block text-[10px]">Acquisition Status</span>
-                <strong className="text-[#2F6B4F] text-sm">{citizenLand.acquisitionStatus}</strong>
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+                <span className="text-slate-500 block text-[10px]">Revenue Circle & Village</span>
+                <strong className="text-slate-800 text-sm">{citizenLand.village}</strong>
               </div>
 
-              <div className="p-3 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
-                <span className="text-slate-500 block text-[10px]">PFMS Bank Transaction Ref</span>
-                <strong className="font-mono text-slate-800 text-xs">{citizenLand.transactionId}</strong>
+              <div className="p-3.5 bg-[#FAFAF7] rounded-xl border border-[#E8E1D5]">
+                <span className="text-slate-500 block text-[10px]">GIS Geo-Coordinates</span>
+                <strong className="font-mono text-[#2F6B4F] text-xs">{citizenLand.coordinates}</strong>
               </div>
             </div>
 
+            {/* Action Bar */}
             <div className="pt-3 border-t border-slate-100 flex flex-wrap gap-3">
               <button 
-                onClick={() => setActiveTab('calc')}
-                className="bg-[#2F6B4F] hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5"
-              >
-                <CreditCard className="h-4 w-4" />
-                <span>Calculate Solatium Breakdown</span>
-              </button>
-
-              <button 
                 onClick={() => setShowObjectionModal(true)}
-                className="bg-[#C98B2E] hover:bg-amber-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5"
+                className="bg-[#C98B2E] hover:bg-amber-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer transition-all shadow-sm flex items-center gap-2"
               >
                 <Scale className="h-4 w-4" />
-                <span>Submit Objection / Dispute</span>
+                <span>Submit Objection / Disagreement Petition</span>
               </button>
 
               <button 
@@ -149,102 +197,75 @@ export default function CitizenDashboard({ setActiveTab }) {
                 className="bg-slate-100 hover:bg-slate-200 text-[#12355B] text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5"
               >
                 <MapPin className="h-4 w-4 text-[#2F6B4F]" />
-                <span>View GIS Boundary Map</span>
+                <span>View Cadastral Map Boundary</span>
               </button>
-            </div>
-          </div>
-
-          {/* Official Documents List */}
-          <div className="bg-white border border-[#E2E8F0] p-6 rounded-2xl space-y-4">
-            <h3 className="text-sm font-extrabold text-[#12355B] flex items-center gap-2">
-              <FileText className="h-4 w-4 text-[#7A5C3E]" />
-              Verified Land & Gazette Documents
-            </h3>
-
-            <div className="space-y-2 text-xs">
-              <div className="p-3 bg-[#FAFAF7] border border-[#E8E1D5] rounded-xl flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-[#12355B]" />
-                  <div>
-                    <strong className="block text-slate-800">Section 11 (1) Gazette Publication Order</strong>
-                    <span className="text-[10px] text-slate-400">PDF • Official Notification • Govt Gazette</span>
-                  </div>
-                </div>
-                <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-1 rounded text-[10px]">Verified</span>
-              </div>
-
-              <div className="p-3 bg-[#FAFAF7] border border-[#E8E1D5] rounded-xl flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-[#2F6B4F]" />
-                  <div>
-                    <strong className="block text-slate-800">Form K Award Statement & Bank Advice</strong>
-                    <span className="text-[10px] text-slate-400">PDF • PFMS DBT Escrow Ready</span>
-                  </div>
-                </div>
-                <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-1 rounded text-[10px]">Disbursed</span>
-              </div>
             </div>
           </div>
 
         </div>
 
-        {/* Right Column (4 Cols): Status Timeline & Help */}
+        {/* Right Column (4 Cols): Compensation Status & Documents */}
         <div className="lg:col-span-4 space-y-6">
           
-          <div className="bg-white border border-[#E2E8F0] p-5 rounded-2xl space-y-4">
-            <h3 className="text-xs font-bold text-[#12355B] uppercase tracking-wider font-mono">Acquisition Milestone Timeline</h3>
+          {/* Compensation Status Card */}
+          <div className="bg-white border border-[#E2E8F0] p-5 rounded-2xl space-y-4 shadow-2xs">
+            <h3 className="text-xs font-bold text-[#12355B] uppercase tracking-wider font-mono">Compensation & Direct Payout Status</h3>
 
-            <div className="space-y-4 relative pl-4 border-l-2 border-[#E8E1D5] text-xs">
-              
-              <div className="relative">
-                <div className="absolute -left-[21px] top-0 h-3 w-3 rounded-full bg-emerald-600 ring-4 ring-white" />
-                <strong className="block text-slate-900">Section 4 SIA Report Submitted</strong>
-                <span className="text-[10px] text-slate-400 font-mono">Completed • 12-May-2026</span>
+            <div className="space-y-3 text-xs">
+              <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 space-y-1 font-semibold">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                  <span>Escrow Bank Transfer Approved</span>
+                </div>
+                <p className="text-[11px] text-emerald-700 font-mono pt-1">PFMS Advice: {citizenLand.transactionId}</p>
               </div>
 
-              <div className="relative">
-                <div className="absolute -left-[21px] top-0 h-3 w-3 rounded-full bg-emerald-600 ring-4 ring-white" />
-                <strong className="block text-slate-900">Section 11 Gazette Published</strong>
-                <span className="text-[10px] text-slate-400 font-mono">Completed • 01-Jul-2026</span>
+              <div className="p-3 bg-[#FAFAF7] border border-[#E8E1D5] rounded-xl space-y-1">
+                <span className="text-slate-400 block text-[10px]">Blockchain Verification Hash</span>
+                <span className="font-mono text-[11px] text-[#12355B] font-bold block">{citizenLand.blockchainHash}</span>
               </div>
-
-              <div className="relative">
-                <div className="absolute -left-[21px] top-0 h-3 w-3 rounded-full bg-amber-500 ring-4 ring-white animate-pulse" />
-                <strong className="block text-amber-900 font-extrabold">Section 23 Award Declaration</strong>
-                <span className="text-[10px] text-amber-700 font-mono font-bold">In Progress • 100% Solatium Calculated</span>
-              </div>
-
-              <div className="relative opacity-60">
-                <div className="absolute -left-[21px] top-0 h-3 w-3 rounded-full bg-slate-300 ring-4 ring-white" />
-                <strong className="block text-slate-600">Possession Handover & R&R</strong>
-                <span className="text-[10px] text-slate-400 font-mono">Upcoming</span>
-              </div>
-
             </div>
           </div>
 
-          <div className="bg-[#12355B] text-white p-5 rounded-2xl space-y-2 border border-slate-700">
-            <span className="text-amber-400 text-xs font-bold block">District Competent Authority Help:</span>
-            <p className="text-xs text-slate-200 leading-relaxed">
-              If you have any questions regarding your land survey coordinates or bank account linkage, call the District Helpline:
-            </p>
-            <div className="text-lg font-mono font-bold text-white pt-1">1800-11-LARR (5277)</div>
+          {/* Official Land Documents */}
+          <div className="bg-white border border-[#E2E8F0] p-5 rounded-2xl space-y-3 shadow-2xs text-xs">
+            <h3 className="font-extrabold text-[#12355B] flex items-center gap-2">
+              <FileText className="h-4 w-4 text-[#7A5C3E]" />
+              Official Gazette Orders & Award Statements
+            </h3>
+            <div className="space-y-2">
+              <div className="p-3 bg-[#FAFAF7] border border-[#E8E1D5] rounded-xl flex items-center justify-between">
+                <div>
+                  <strong className="block text-slate-800">Sec 11 Gazette Order</strong>
+                  <span className="text-[10px] text-slate-400">PDF • Official Notice</span>
+                </div>
+                <span className="text-emerald-700 font-extrabold text-[10px]">Verified</span>
+              </div>
+
+              <div className="p-3 bg-[#FAFAF7] border border-[#E8E1D5] rounded-xl flex items-center justify-between">
+                <div>
+                  <strong className="block text-slate-800">Form K Award Statement</strong>
+                  <span className="text-[10px] text-slate-400">PDF • Bank Advice</span>
+                </div>
+                <span className="text-emerald-700 font-extrabold text-[10px]">Disbursed</span>
+              </div>
+            </div>
           </div>
 
         </div>
 
       </div>
 
-      {/* ── SUBMIT OBJECTION MODAL ── */}
+      {/* ── 3. INTERACTIVE SECTION 15 OBJECTION SUBMISSION MODAL ── */}
       {showObjectionModal && (
         <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-[100] p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-slate-300">
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="text-base font-extrabold text-[#12355B] flex items-center gap-2">
                 <Scale className="h-5 w-5 text-[#C98B2E]" />
-                Section 15 Land Objection Petition
+                Section 15 Land Acquisition Objection Petition
               </h3>
-              <button onClick={() => setShowObjectionModal(false)} className="text-slate-400 hover:text-slate-700 font-bold">✕</button>
+              <button onClick={() => setShowObjectionModal(false)} className="text-slate-400 hover:text-slate-700 font-bold text-sm">✕</button>
             </div>
 
             {objectionSubmitted ? (
@@ -252,30 +273,31 @@ export default function CitizenDashboard({ setActiveTab }) {
                 <CheckCircle className="h-6 w-6 text-emerald-600 flex-shrink-0" />
                 <div>
                   <strong>Objection Petition Submitted Successfully!</strong>
-                  <p className="text-[11px] text-emerald-700 mt-0.5">Reference ID: OBJ-2026-9821. Competent Revenue Officer assigned.</p>
+                  <p className="text-[11px] text-emerald-700 mt-0.5">Reference ID: OBJ-2026-9821. Assigned to District Revenue Officer for statutory hearing.</p>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleObjectionSubmit} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Objection Category *</label>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Grounds of Objection / Disagreement *</label>
                   <select 
                     value={objectionType}
                     onChange={(e) => setObjectionType(e.target.value)}
                     className="w-full p-2.5 border border-slate-300 rounded-xl bg-slate-50 font-semibold focus:outline-none focus:border-[#12355B]"
                   >
-                    <option value="VALUATION">Dispute Base Market Circle Rate Valuation</option>
-                    <option value="BOUNDARY">Dispute GIS Boundary / Area Survey Coordinates</option>
-                    <option value="TITLE">Dispute Land Title Ownership / Inheritance Claim</option>
+                    <option value="VALUATION">Dispute Market Price / Unit Rate Offered</option>
+                    <option value="BOUNDARY">Dispute Total Land Area or GIS Coordinates</option>
+                    <option value="SOIL_CROPS">Dispute Soil Fertility Rating / Tree & Crop Damages</option>
+                    <option value="TITLE">Dispute Ownership Title / Inheritance Claim</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Objection Details & Grounds *</label>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Detailed Reasons for Objection *</label>
                   <textarea 
                     rows={4}
                     required
-                    placeholder="Provide specific details regarding your dispute (min 20 characters)..."
+                    placeholder="Provide specific details regarding your dispute (e.g., market rate in adjacent survey numbers, soil fertility evidence, etc.)..."
                     value={objectionDesc}
                     onChange={(e) => setObjectionDesc(e.target.value)}
                     className="w-full p-2.5 border border-slate-300 rounded-xl bg-slate-50 font-semibold focus:outline-none focus:border-[#12355B]"
@@ -294,7 +316,7 @@ export default function CitizenDashboard({ setActiveTab }) {
                     type="submit"
                     className="px-5 py-2 rounded-xl text-white bg-[#C98B2E] hover:bg-amber-700 font-bold shadow-md cursor-pointer"
                   >
-                    Submit Official Petition
+                    Submit Statutory Objection
                   </button>
                 </div>
               </form>
