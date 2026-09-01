@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NLAMS Executive Monitoring Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "border": "#E2E8F0",
+                        "tertiary-container": "#007f36",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed": "#dbe1ff",
+                        "secondary": "#565e74",
+                        "background": "#f7f9fb",
+                        "on-surface": "#191c1e",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary-fixed": "#002109",
+                        "outline": "#737686",
+                        "tertiary-fixed": "#7ffc97",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface": "#FFFFFF",
+                        "on-tertiary-container": "#c7ffca",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "outline-variant": "#c3c6d7",
+                        "on-error": "#ffffff",
+                        "warning": "#F59E0B",
+                        "on-tertiary-fixed-variant": "#005320",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "surface-container-low": "#f2f4f6",
+                        "inverse-primary": "#b4c5ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "ink-subtle": "#64748B",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#131b2e",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#2563eb",
+                        "tertiary": "#006329",
+                        "tertiary-fixed-dim": "#62df7d",
+                        "secondary-container": "#dae2fd",
+                        "surface-dim": "#d8dadc",
+                        "danger": "#DC2626",
+                        "on-secondary": "#ffffff",
+                        "success": "#16A34A",
+                        "surface-bright": "#f7f9fb",
+                        "on-surface-variant": "#434655",
+                        "surface-tint": "#0053db",
+                        "on-background": "#191c1e",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-primary-fixed": "#00174b",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#5c647a",
+                        "on-primary-fixed-variant": "#003ea8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "sm": "12px",
+                        "margin-desktop": "48px",
+                        "xs": "8px",
+                        "base": "4px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #f7f9fb; }
+        .nav-item-active { background-color: #2563eb; color: #ffffff; }
+        .nav-item-inactive { color: #5c647a; }
+        .nav-item-inactive:hover { background-color: #e6e8ea; }
+        
+        /* Custom scrollbar for registry list */
+        .registry-scroll::-webkit-scrollbar { width: 6px; }
+        .registry-scroll::-webkit-scrollbar-track { background: transparent; }
+        .registry-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+    </style>
+</head>
+<body class="text-on-surface font-body-md antialiased overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 w-full z-50 flex justify-between items-center px-lg py-sm bg-surface dark:bg-on-surface border-b border-border dark:border-outline-variant shadow-sm h-16">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant hover:bg-surface-container-low p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary-fixed rounded flex items-center justify-center text-on-primary-fixed font-bold">NL</div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-inverse-on-surface">National Land Portal</span>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-6 h-full">
+<a class="h-full flex items-center px-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-inverse-surface transition-colors font-label-md" href="#">
+<span class="material-symbols-outlined mr-2 text-[20px]">home</span>
+                Home
+            </a>
+<a class="h-full flex items-center px-2 text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary font-label-md" href="#">
+<span class="material-symbols-outlined mr-2 text-[20px]">dashboard</span>
+                Executive Dashboard
+            </a>
+<a class="h-full flex items-center px-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low dark:hover:bg-inverse-surface transition-colors font-label-md" href="#">
+<span class="material-symbols-outlined mr-2 text-[20px]">description</span>
+                LARR Case Workflows
+            </a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">language</span>
+</button>
+<div class="flex items-center gap-2 border-l border-border pl-4">
+<div class="text-right hidden sm:block">
+<div class="font-label-md text-on-surface">Dr. Rajesh Verma</div>
+<div class="font-label-sm text-on-surface-variant">MINISTRY</div>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">RV</div>
+<button class="text-danger hover:bg-error-container p-1 rounded transition-colors ml-2 font-label-sm font-bold flex items-center">
+                    Logout
+                </button>
+</div>
+</div>
+</header>
+<div class="flex h-[calc(100vh-64px)] overflow-hidden bg-background">
+<!-- Side Navigation Bar -->
+<aside class="hidden md:flex flex-col w-72 bg-inverse-surface dark:bg-surface-container-lowest border-r border-border h-full flex-shrink-0 transition-all duration-200 ease-in-out">
+<div class="p-6 border-b border-surface-variant/20 flex flex-col items-center">
+<div class="w-16 h-16 bg-surface rounded-full mb-3 shadow-md flex items-center justify-center overflow-hidden">
+<img class="w-10 h-10 object-contain" data-alt="Detailed illustration of a majestic gold emblem representing national authority, glowing softly on a pure white circular badge, corporate modern minimalist style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb5egJ2nRkIJQ1eSNpRL7BTyKfu3O4pp2FOtCSn502vy_MtkBL6nH67EOkPayRjsyEq9WNqui82h5e7r5OdvVfPS4SmjsBYVuLFSjl4RLF9pAqysMLsbPlpRSqgtQnZwpgQvIgxIiantu0oBd7J8JMA3FEPUn-FeH0szkVPMN3C8X9Znxve3iUtEouDyY477gH3jziByVaeWXiz6jI3bPBhRT5Wxea36caPYfhv80UEIrZ0oT5Tcfe"/>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-primary-fixed dark:text-primary">NLAMS</h2>
+<p class="text-on-secondary-fixed-variant text-label-sm">Land Management</p>
+</div>
+<nav class="flex-1 py-4 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md">Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg mx-2 my-1 shadow-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-md">GIS Explorer</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md">Compensation Portal</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label-md">Citizen Objections</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md">Field Survey</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-surface-variant/20 p-2">
+<a class="flex items-center gap-3 px-4 py-2 text-on-secondary-fixed-variant hover:bg-on-secondary-fixed-variant/10 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-label-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-secondary-fixed-variant hover:bg-on-secondary-fixed-variant/10 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<span class="font-label-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- Dashboard Header -->
+<div class="px-lg py-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface/80 border-b border-border z-10 backdrop-blur-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Executive Monitoring Dashboard</h1>
+<p class="font-body-sm text-on-surface-variant mt-1">Real-Time Land Acquisition Lifecycle and R&amp;R Status Analytics</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-on-surface text-surface px-4 py-2 rounded-lg font-label-md flex items-center gap-2 hover:bg-on-surface-variant transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export MIS Report
+                    </button>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="pl-10 pr-4 py-2 border border-border rounded-lg bg-surface text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 shadow-sm" placeholder="Search by ID or title..." type="text"/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">filter_alt</span>
+<select class="pl-10 pr-8 py-2 border border-border rounded-lg bg-surface text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer shadow-sm">
+<option>All States</option>
+<option>Tamil Nadu</option>
+<option>Odisha</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">arrow_drop_down</span>
+</div>
+</div>
+</div>
+<!-- Scrollable Content Container -->
+<div class="flex-1 overflow-y-auto p-lg">
+<!-- Top Section: Officer Perspective & KPIs -->
+<div class="grid grid-cols-12 gap-lg mb-lg">
+<!-- Officer Perspective Card -->
+<div class="col-span-12 md:col-span-5 bg-surface rounded-2xl border border-border overflow-hidden relative shadow-sm flex flex-col h-full">
+<img alt="Officer Perspective" class="w-full h-48 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqkk5g-CGBURDFKWdH8AvwBG28Fx_b6tjoA-2GER11AtX7gn4Mzq8i95n3pcM_VdsAzbHMQmKcV_FGn510rEw7QA19tvKYLfJSf4QYH49xiLdr8OH3Li9dAnIW2XjjFt9BPd3u7b1Ja6TrdoXn-g_0nPaj6dmh-TQ8sqaePB2ZdZPkeFUETRGmxYRXikzNXTaoz03838unMdID_MvzHfewDS8IBB040pA_rhufefSKG28q3FK8pg8H"/>
+<div class="p-5 flex-1 flex flex-col justify-between relative bg-surface">
+<div class="absolute -top-6 right-5 w-12 h-12 bg-primary rounded-full flex items-center justify-center border-4 border-surface shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-[20px]">monitoring</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-primary mb-2">Monitoring Status</h3>
+<p class="font-body-sm text-on-surface-variant italic mb-4">"Monitoring land records and acquisition progress in real-time allows for unprecedented transparency and rapid resolution of bottlenecks."</p>
+</div>
+<div class="flex items-center gap-3 pt-4 border-t border-border">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">RV</div>
+<div>
+<div class="font-label-md text-on-surface">Dr. Rajesh Verma</div>
+<div class="font-label-sm text-ink-subtle">Chief Monitoring Officer</div>
+</div>
+</div>
+</div>
+</div>
+<!-- KPIs Grid -->
+<div class="col-span-12 md:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
+<!-- KPI 1 -->
+<div class="bg-surface rounded-2xl border border-border p-5 shadow-sm relative overflow-hidden group flex flex-col justify-between">
+<div class="flex justify-between items-start mb-2 relative z-10">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">LAND NOTIFIED</span>
+<div class="w-8 h-8 rounded bg-primary-fixed/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">layers</span>
+</div>
+</div>
+<div class="relative z-10 mt-4">
+<h3 class="font-headline-lg text-headline-lg text-primary mb-1">13,369.02 ha</h3>
+<p class="font-body-sm text-ink-subtle">Total area under Section 11</p>
+</div>
+<!-- Sparkline -->
+<div class="absolute bottom-0 left-0 w-full h-16 opacity-10">
+<svg class="w-full h-full text-primary" fill="currentColor" preserveaspectratio="none" viewbox="0 0 100 30">
+<path d="M0,30 L0,20 C10,15 20,25 30,10 C40,-5 50,20 60,15 C70,10 80,25 90,5 C95,-5 100,10 100,10 L100,30 Z"></path>
+</svg>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface rounded-2xl border border-border p-5 shadow-sm relative overflow-hidden group flex justify-between items-center">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">LAND HANDED OVER</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-success mb-1">4,300.02 ha</h3>
+<p class="font-body-sm text-ink-subtle">32% possession complete</p>
+</div>
+<div class="relative w-16 h-16 mr-2">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-success" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="32, 100" stroke-width="3"></path>
+</svg>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface rounded-2xl border border-border p-5 shadow-sm relative overflow-hidden group flex flex-col justify-between">
+<div class="flex justify-between items-start mb-2 relative z-10">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">COMPENSATION</span>
+<div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+</div>
+</div>
+<div class="relative z-10 mt-4">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">₹8,796.452 Cr</h3>
+<p class="font-body-sm text-ink-subtle">of ₹23,923.87 Cr total awarded</p>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-1 bg-surface-container-highest">
+<div class="h-full bg-primary" style="width: 37%"></div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface rounded-2xl border border-border p-5 shadow-sm relative overflow-hidden group flex justify-between items-center">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-wider">RESETTLEMENT (R&amp;R)</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-danger mb-1">35%</h3>
+<p class="font-body-sm text-ink-subtle">1,185 families resettled</p>
+</div>
+<div class="relative w-16 h-16 mr-2">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-danger" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="35, 100" stroke-width="3"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab Navigation (Sub-nav) -->
+<div class="flex border-b border-border mb-lg gap-8">
+<button class="pb-3 border-b-2 border-primary text-primary font-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">map</span>
+                        Cadastral GIS Visualizer &amp; Dossier
+                    </button>
+<button class="pb-3 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-label-md flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[18px]">bar_chart</span>
+                        Registry Analytics &amp; Interoperability
+                    </button>
+<button class="pb-3 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-label-md flex items-center gap-2 transition-colors relative">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+                        Citizen Grievances &amp; Objections
+                        <span class="absolute top-1 -right-3 w-2 h-2 bg-danger rounded-full"></span>
+</button>
+</div>
+<!-- Main Layout Grid (GIS + Details) -->
+<div class="grid grid-cols-12 gap-lg h-[700px] min-h-[600px]">
+<!-- Left Column: Registry & Project Details Combined -->
+<div class="col-span-4 flex flex-col gap-4 h-full">
+<!-- Registry Search & List Mini -->
+<div class="bg-surface rounded-xl border border-border shadow-sm flex flex-col overflow-hidden h-1/2">
+<div class="p-4 border-b border-border flex justify-between items-center bg-surface-container-low/50">
+<h2 class="font-headline-sm text-[16px] flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">list_alt</span> LAND PARCELS
+        </h2>
+<span class="bg-surface-container text-on-surface-variant font-label-sm px-2 py-1 rounded-full border border-border">41</span>
+</div>
+<div class="flex-1 overflow-y-auto registry-scroll p-3 space-y-3 bg-background/50">
+<!-- Card 1 (Active) -->
+<div class="bg-surface rounded-lg border-2 border-primary p-3 shadow-sm cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-sm text-on-surface-variant">PRJ-001</span>
+<span class="bg-tertiary-container/20 text-tertiary-fixed-dim px-2 py-0.5 rounded text-[10px] font-bold uppercase">Possession</span>
+</div>
+<h4 class="font-headline-sm text-[14px] font-bold text-on-surface mb-1">Chennai Industrial Link</h4>
+<p class="text-[11px] text-ink-subtle">Kanchipuram, Tamil Nadu</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface rounded-lg border border-border p-3 shadow-sm cursor-pointer hover:border-outline-variant transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-sm text-on-surface-variant">PRJ-002</span>
+<span class="bg-tertiary-container/20 text-tertiary-fixed-dim px-2 py-0.5 rounded text-[10px] font-bold uppercase">Possession</span>
+</div>
+<h4 class="font-headline-sm text-[14px] font-bold text-on-surface mb-1 truncate">Indore Metro Rail</h4>
+<p class="text-[11px] text-ink-subtle">Sambalpur, Odisha</p>
+</div>
+</div>
+</div>
+<!-- Project Details Card -->
+<div class="bg-surface rounded-xl border border-border shadow-sm flex-1 flex flex-col overflow-hidden h-1/2">
+<div class="p-4 border-b border-border bg-surface-bright">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container border border-border text-on-surface-variant px-2 py-0.5 rounded text-[11px] font-bold">PRJ-001</span>
+<span class="text-success text-[10px] font-bold uppercase tracking-wide">Possession Complete</span>
+</div>
+<h2 class="font-headline-sm text-[16px] text-primary mb-1">Chennai Industrial Link</h2>
+</div>
+<div class="p-4 flex-1 overflow-y-auto">
+<table class="w-full text-sm">
+<tbody>
+<tr class="border-b border-border/50">
+<td class="py-2 text-on-surface-variant font-medium text-[13px]">Required Area</td>
+<td class="py-2 text-right font-bold text-on-surface text-[13px]">300 ha</td>
+</tr>
+<tr class="border-b border-border/50">
+<td class="py-2 text-on-surface-variant font-medium text-[13px]">Assessed Budget</td>
+<td class="py-2 text-right font-bold text-on-surface text-[13px]">₹500 Cr</td>
+</tr>
+<tr class="border-b border-border/50">
+<td class="py-2 text-on-surface-variant font-medium text-[13px]">Paid Comp.</td>
+<td class="py-2 text-right font-bold text-primary text-[13px]">₹500 Cr</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-3 border-t border-border bg-surface-container-low/50">
+<button class="w-full bg-on-secondary-fixed text-on-primary py-2 rounded-lg font-label-md flex items-center justify-center gap-2 hover:bg-on-primary-fixed transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                                        Issue Notice
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Center Column: Map Visualizer Full Bleed -->
+<div class="col-span-8 bg-surface rounded-xl border border-border shadow-sm flex flex-col h-full overflow-hidden relative">
+<!-- Map Header Overlay -->
+<div class="absolute top-4 left-4 right-4 bg-inverse-surface/90 backdrop-blur rounded-lg text-on-primary p-3 flex justify-between items-center z-10 shadow-lg">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-warning">public</span>
+<span class="font-headline-sm text-[15px] font-bold">Cadastral GIS Visualizer</span>
+<span class="text-on-surface-variant text-[12px] ml-2 border-l border-on-surface-variant pl-2">National Satellite Layer</span>
+</div>
+<div class="flex gap-2">
+<div class="bg-surface-container-high/20 rounded flex overflow-hidden border border-border/20">
+<button class="px-3 py-1 text-[12px] font-medium bg-on-surface/20 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">map</span> Road</button>
+<button class="px-3 py-1 text-[12px] font-medium hover:bg-on-surface/20 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">satellite</span> Satellite</button>
+</div>
+<button class="bg-warning text-on-surface px-3 py-1 rounded text-[12px] font-bold flex items-center gap-1 hover:brightness-110 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[14px]">open_in_full</span> Fullscreen
+                                </button>
+</div>
+</div>
+<!-- Map Controls -->
+<div class="absolute right-4 bottom-8 z-10 flex flex-col gap-1 bg-surface rounded-lg shadow-lg border border-border overflow-hidden">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container-low text-on-surface border-b border-border transition-colors"><span class="material-symbols-outlined">add</span></button>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container-low text-on-surface transition-colors"><span class="material-symbols-outlined">remove</span></button>
+</div>
+<!-- Map Placeholder Image (Full bleed) -->
+<div class="flex-1 w-full h-full bg-surface-container-low relative" data-alt="A clean, modern top-down 2D digital map interface showing cadastral land parcels. The map background is a very light grey (#e2e8f0). There are striking, angular polygonal shapes overlaying the map representing land plots. One large diagonal polygon is bright translucent green, another intersecting polygon is translucent purple. Minimalistic, professional UI style, flat design, no text labels, just geometric land plot representations on a soft light background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDRdFuInfZgpl4SlwHfna8lqBBvM4-R_LbyFwyKJHJB5DjeSm2Twfl96opKOi1Oqg2YrhhNTBUhpQenu30NptFUwRbn1Ux4VI4YGT414OOZ6CbT4iH1j9cehputsXZ3Z2wavOUExQXZh_81mmd1x1SWYctk56GGZgsx22TX6UQrPEEYB3z1Lukg5kEm_0MEot0PXluachKLn8hkPY6aaHzKEGgN3I1j_3iXvWFMkCZQOG58wUm4rH7z'); background-size: cover; background-position: center;">
+<!-- Inline SVG to add texture over the placeholder to mimic the user image -->
+<svg class="absolute inset-0 w-full h-full opacity-40 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<pattern height="40" id="grid" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#cbd5e1" stroke-width="0.5"></path>
+</pattern>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

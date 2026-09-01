@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Compensation Portal - NLAMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "border": "#E2E8F0",
+                      "tertiary-container": "#007f36",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-primary": "#ffffff",
+                      "inverse-surface": "#2d3133",
+                      "primary-fixed": "#dbe1ff",
+                      "secondary": "#565e74",
+                      "background": "#f7f9fb",
+                      "on-surface": "#191c1e",
+                      "surface-container-high": "#e6e8ea",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-variant": "#e0e3e5",
+                      "on-tertiary-fixed": "#002109",
+                      "outline": "#737686",
+                      "tertiary-fixed": "#7ffc97",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface": "#FFFFFF",
+                      "on-tertiary-container": "#c7ffca",
+                      "on-tertiary": "#ffffff",
+                      "primary": "#004ac6",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "outline-variant": "#c3c6d7",
+                      "on-error": "#ffffff",
+                      "warning": "#F59E0B",
+                      "on-tertiary-fixed-variant": "#005320",
+                      "error": "#ba1a1a",
+                      "surface-container": "#eceef0",
+                      "surface-container-low": "#f2f4f6",
+                      "inverse-primary": "#b4c5ff",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-primary-container": "#eeefff",
+                      "ink-subtle": "#64748B",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed": "#131b2e",
+                      "secondary-fixed": "#dae2fd",
+                      "primary-container": "#2563eb",
+                      "tertiary": "#006329",
+                      "tertiary-fixed-dim": "#62df7d",
+                      "secondary-container": "#dae2fd",
+                      "surface-dim": "#d8dadc",
+                      "danger": "#DC2626",
+                      "on-secondary": "#ffffff",
+                      "success": "#16A34A",
+                      "surface-bright": "#f7f9fb",
+                      "on-surface-variant": "#434655",
+                      "surface-tint": "#0053db",
+                      "on-background": "#191c1e",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "on-primary-fixed": "#00174b",
+                      "on-error-container": "#93000a",
+                      "on-secondary-container": "#5c647a",
+                      "on-primary-fixed-variant": "#003ea8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "gutter": "24px",
+                      "sm": "12px",
+                      "margin-desktop": "48px",
+                      "xs": "8px",
+                      "base": "4px",
+                      "md": "16px",
+                      "xl": "32px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "display": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background min-h-screen text-on-background flex">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full flex flex-col pt-20 bg-inverse-surface dark:bg-surface-container-lowest text-primary-fixed dark:text-primary font-label-md text-label-md shadow-lg transition-all duration-200 ease-in-out fixed h-full left-0 w-72 z-40 hidden md:flex">
+<div class="px-lg pb-xl">
+<h1 class="font-headline-md text-headline-md text-on-primary-fixed dark:text-primary">NLAMS</h1>
+<p class="font-body-sm text-body-sm opacity-80">Land Management</p>
+</div>
+<div class="flex-1 overflow-y-auto">
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+                Home
+            </a>
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+                GIS Explorer
+            </a>
+<a class="flex items-center gap-md bg-primary-container text-on-primary-container rounded-lg mx-2 my-1 p-sm transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Compensation Portal
+            </a>
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+                Citizen Objections
+            </a>
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                Field Survey
+            </a>
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                Analytics
+            </a>
+</div>
+<div class="mt-auto border-t border-border/20 p-sm">
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-md text-on-secondary-fixed-variant dark:text-on-surface-variant mx-2 my-1 p-sm rounded-lg hover:bg-on-secondary-fixed-variant/10 dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Support
+            </a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-72 min-w-0">
+<!-- TopNavBar -->
+<header class="sticky top-0 w-full z-50 flex justify-between items-center px-lg py-sm bg-surface/90 backdrop-blur-md dark:bg-on-surface/90 text-primary dark:text-primary-fixed-dim font-body-md text-body-md shadow-sm border-b border-border dark:border-outline-variant">
+<div class="flex items-center gap-md md:hidden">
+<button class="p-xs text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-inverse-on-surface hidden md:block">
+                National Land Portal
+            </div>
+<div class="flex items-center gap-lg">
+<button class="hover:bg-surface-container-low dark:hover:bg-inverse-surface transition-colors p-xs rounded-full">
+<span class="material-symbols-outlined" data-icon="language">language</span>
+</button>
+<button class="hover:bg-surface-container-low dark:hover:bg-inverse-surface transition-colors p-xs rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<img alt="Government Official Profile" class="w-8 h-8 rounded-full border border-border" data-alt="A small circular avatar placeholder image for a Government Official Profile. The image should be a professional, high-quality, front-facing portrait, well-lit, clean background, suitable for a corporate or government dashboard, evoking trust and administrative competence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4OiQpiObe9Fbqv784QfXxgayzlq_GktT3MMX69s-ZZMpZofYd7nwrCSJHDRdAYSzY2IfINr7wt5iYl9_B6KMRc0Y7QtkcTIg7k6MqPgo2W3_8lXeNAC6xaCbEkIu9LiiKNnClo4hDe4CinIM3jrSESl8_Mkhm8yHQRBIg5zI09HnxnDvioYnlHjTPgcgk8jL5lbEpJkQtAhMHL9zDFtfCRWe6Ts_coiIKVt5_X7KhQxa06YC-YIk4"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 pb-margin-mobile md:pb-margin-desktop overflow-x-hidden">
+<!-- Thematic Header -->
+<div class="relative w-full h-48 md:h-64 bg-surface-container-highest mb-xl">
+<div class="absolute inset-0 bg-black/40 z-10"></div>
+<img alt="Legal Document and GIS" class="w-full h-full object-cover absolute inset-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC7-lVAW9qN5uQzTA9F58Z0XOuu_lPxZ6REnJYiGLFV-1y4U8THoIj-AXAla_EUMy2TD5ao6htl_Eq6iFdXXVHHLaWc2uD-pV7dc6ETWSGRMYvba1U5NfGLWTE8sMlh0ILFOq8UNDCunw9cAuPZ5B_bSaUf0c27oqTaxxxyxW53QBx9sObs6FUT1ROp2VV9t8_dBslCyYtkiqiebqB-5yEyGEBZUwWfqa0OpMVyojYf4gmsQoliiY1"/>
+<div class="relative z-20 h-full flex flex-col justify-end p-margin-mobile md:p-margin-desktop pb-lg md:pb-lg text-white">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-xs drop-shadow-md">Compensation Portal</h2>
+<p class="font-body-lg text-body-lg text-white/90 drop-shadow-md max-w-2xl">Track your compensation application status, upload documents, and view disbursement details securely.</p>
+</div>
+</div>
+<div class="px-margin-mobile md:px-margin-desktop">
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Status Card (Main) -->
+<div class="col-span-1 lg:col-span-8 bg-surface rounded-2xl shadow-sm p-xl border border-border">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl pb-md border-b border-border/50 gap-md">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Application Journey</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 tracking-wide">REF ID: <span class="font-mono text-on-surface font-medium">NLAMS-COMP-2024-892</span></p>
+</div>
+<span class="px-4 py-2 bg-warning/10 text-warning font-label-md text-label-md rounded-full border border-warning/20 shadow-sm flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-warning animate-pulse"></span>
+                            Verification Pending
+                        </span>
+</div>
+<!-- Narrative Timeline -->
+<div class="relative py-md">
+<div class="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-border to-border -ml-[1px]"></div>
+<div class="relative flex items-start mb-xl group">
+<div class="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center z-10 border-4 border-surface shadow-sm mt-1 transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-[32px]">task_alt</span>
+</div>
+<div class="ml-lg flex-1 bg-surface-container-lowest border border-border/50 rounded-xl p-md shadow-sm">
+<h4 class="font-label-md text-[16px] text-on-surface font-bold mb-1">Application Submitted</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">Oct 12, 2024 - 10:30 AM</p>
+<p class="font-body-sm text-body-sm text-on-surface">Your initial application for parcel ID 4892 has been successfully received by the regional office.</p>
+</div>
+</div>
+<div class="relative flex items-start mb-xl group">
+<div class="w-16 h-16 rounded-full bg-surface border-[3px] border-primary text-primary flex items-center justify-center z-10 shadow-sm mt-1 bg-surface transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-[32px] animate-pulse">search_check</span>
+</div>
+<div class="ml-lg flex-1 bg-primary/5 border border-primary/20 rounded-xl p-md shadow-sm">
+<h4 class="font-label-md text-[16px] text-primary font-bold mb-1">Document Verification</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">In Progress by District Officer</p>
+<p class="font-body-sm text-body-sm text-on-surface">Awaiting submission of missing documents before calculation can commence.</p>
+</div>
+</div>
+<div class="relative flex items-start mb-xl opacity-60">
+<div class="w-16 h-16 rounded-full bg-surface border-2 border-border text-outline flex items-center justify-center z-10 bg-surface mt-1">
+<span class="material-symbols-outlined text-[32px]">calculate</span>
+</div>
+<div class="ml-lg flex-1 py-md">
+<h4 class="font-label-md text-[16px] text-on-surface font-medium mb-1">Award Calculation</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pending verification completion.</p>
+</div>
+</div>
+<div class="relative flex items-start opacity-60">
+<div class="w-16 h-16 rounded-full bg-surface border-2 border-border text-outline flex items-center justify-center z-10 bg-surface mt-1">
+<span class="material-symbols-outlined text-[32px]">account_balance</span>
+</div>
+<div class="ml-lg flex-1 py-md">
+<h4 class="font-label-md text-[16px] text-on-surface font-medium mb-1">Final Disbursement</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pending award calculation.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Summary & Actions -->
+<div class="col-span-1 lg:col-span-4 flex flex-col gap-xl">
+<!-- Estimate Card -->
+<div class="bg-gradient-to-br from-surface to-surface-container-low rounded-2xl border border-border shadow-md p-xl overflow-hidden relative">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary text-[28px]">account_balance_wallet</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Estimated Award</h3>
+</div>
+<div class="mb-xl">
+<p class="font-display text-[56px] leading-[64px] text-on-surface font-black tracking-tight">₹14,50k</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">info</span>
+    Based on initial survey area (1.2 Hectares)
+</p>
+</div>
+<div class="space-y-md border-t border-border/60 pt-lg relative z-10">
+<div class="flex justify-between font-body-sm text-body-sm items-center">
+<span class="text-on-surface-variant">Base Land Value</span>
+<span class="text-on-surface font-semibold text-[16px]">₹12,00,000</span>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm items-center">
+<span class="text-on-surface-variant">Solatium (100%)</span>
+<span class="text-on-surface font-semibold text-[16px]">₹2,00,000</span>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm items-center">
+<span class="text-on-surface-variant">Standing Structures</span>
+<span class="text-on-surface font-semibold text-[16px]">₹50,000</span>
+</div>
+</div>
+</div>
+<!-- Document Upload Area -->
+<div class="bg-surface rounded-2xl border border-border shadow-sm p-xl flex-1 flex flex-col">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Required Documents</h3>
+<span class="bg-surface-container-highest text-on-surface-variant text-[12px] px-2 py-1 rounded font-medium">1 of 2</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-xl">Please provide the missing documentation to advance your claim.</p>
+<div class="space-y-md flex-1">
+<!-- Doc Item -->
+<div class="flex items-center justify-between p-md border border-border rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-success">check</span>
+</div>
+<div>
+<p class="font-label-md text-[15px] text-on-surface">Title Deed</p>
+<p class="font-body-sm text-body-sm text-success text-[12px] font-medium mt-0.5">Verified</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary hover:bg-primary/5 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- Doc Item (Action needed) -->
+<div class="p-md border-[2px] border-dashed border-warning/50 rounded-xl bg-warning/5 relative overflow-hidden group hover:bg-warning/10 transition-colors cursor-pointer">
+<div class="flex flex-col items-center justify-center text-center py-sm">
+<span class="material-symbols-outlined text-warning text-[32px] mb-2 group-hover:scale-110 transition-transform">cloud_upload</span>
+<p class="font-label-md text-[15px] text-on-surface mb-1">Bank Mandate Form</p>
+<p class="font-body-sm text-body-sm text-warning font-medium mb-3">Action Required</p>
+<button class="bg-warning text-on-warning font-label-sm text-label-sm px-6 py-2 rounded-full hover:bg-warning/90 transition-colors shadow-sm font-medium">
+                                    Browse or Drag File
+                                </button>
+</div>
+</div>
+</div>
+<div class="mt-xl pt-lg border-t border-border/50">
+<button class="w-full border border-border text-on-surface font-label-md text-[15px] py-3 rounded-xl hover:bg-surface-container-low transition-colors flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+                                Upload Additional Document
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-surface-container-low dark:bg-surface-container-highest text-on-surface dark:text-on-surface-variant font-body-sm text-body-sm border-t border-border dark:border-outline-variant flat no shadows opacity-90 mt-auto">
+<div class="font-label-md text-[14px] text-on-surface-variant mb-4 md:mb-0">
+                © 2024 National Land Acquisition Management System. Government of India.
+            </div>
+<div class="flex gap-xl font-medium text-[13px]">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</footer>
+</div>
+</body></html>
