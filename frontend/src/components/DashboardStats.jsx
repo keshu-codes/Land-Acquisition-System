@@ -5,15 +5,16 @@ import { AreaChart, Users, CreditCard, Layers } from 'lucide-react';
 export default function DashboardStats() {
   const { proposals, language } = useContext(AppContext);
 
-  const totalRequired = proposals.reduce((sum, p) => sum + p.areaRequired, 0);
-  const totalAcquired = proposals.reduce((sum, p) => sum + p.areaAcquired, 0);
-  const totalAssessed = proposals.reduce((sum, p) => sum + p.budgetAssessed, 0);
-  const totalDisbursed = proposals.reduce((sum, p) => sum + p.budgetDisbursed, 0);
-  const totalAffected = proposals.reduce((sum, p) => sum + p.affectedFamilies, 0);
-  const totalDisplaced = proposals.reduce((sum, p) => sum + p.displacedFamilies, 0);
+  const safeProposals = proposals || [];
+  const totalRequired = safeProposals.reduce((sum, p) => sum + p.areaRequired, 0);
+  const totalAcquired = safeProposals.reduce((sum, p) => sum + p.areaAcquired, 0);
+  const totalAssessed = safeProposals.reduce((sum, p) => sum + p.budgetAssessed, 0);
+  const totalDisbursed = safeProposals.reduce((sum, p) => sum + p.budgetDisbursed, 0);
+  const totalAffected = safeProposals.reduce((sum, p) => sum + p.affectedFamilies, 0);
+  const totalDisplaced = safeProposals.reduce((sum, p) => sum + p.displacedFamilies, 0);
   
   const averageRR = Math.round(
-    proposals.reduce((sum, p) => sum + (p.rrProgress * p.affectedFamilies), 0) / 
+    safeProposals.reduce((sum, p) => sum + (p.rrProgress * p.affectedFamilies), 0) / 
     (totalAffected || 1)
   );
 

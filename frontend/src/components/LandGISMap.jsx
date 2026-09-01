@@ -99,7 +99,8 @@ export default function LandGISMap({ proposals, selectedProject, setSelectedProj
   }, [selectedProject]);
 
   // Enrich proposals with landowner information
-  const enrichedProposals = proposals.map(p => ({
+  const safeProposals = proposals || [];
+  const enrichedProposals = safeProposals.map(p => ({
     ...p,
     landownerInfo: getLandownerForProject(p)
   }));

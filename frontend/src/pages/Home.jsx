@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
+import LandGISMap from '../components/LandGISMap';
 import { 
   Landmark, MapPin, ChevronRight, FileText, 
   Users, Lock, Shield, CheckCircle, Search, ExternalLink,
   Scale, BookOpen, Building, Phone, AlertCircle, ArrowRight, Download,
-  HelpCircle, ArrowUpRight, Check, Sparkles
+  HelpCircle, ArrowUpRight, Check, Sparkles, Calculator, Layers, Radio,
+  Clock, ShieldCheck, HeartHandshake, FileCheck2, Coins, Eye, CheckCircle2
 } from 'lucide-react';
 
 export default function Home({ setActiveTab }) {
@@ -12,11 +14,21 @@ export default function Home({ setActiveTab }) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedPlot, setSearchedPlot] = useState(null);
-  const [activeFaq, setActiveFaq] = useState(null);
+  const [activeFaq, setActiveFaq] = useState(0);
 
-  const totalRequired = proposals.reduce((sum, p) => sum + p.areaRequired, 0);
-  const totalAcquired = proposals.reduce((sum, p) => sum + p.areaAcquired, 0);
-  const totalDisbursed = proposals.reduce((sum, p) => sum + p.budgetDisbursed, 0);
+  // Interactive Compensation Calculator state
+  const [calcArea, setCalcArea] = useState(1.5); // Acres
+  const [calcCircleRate, setCalcCircleRate] = useState(500); // ₹ per sq ft
+  const [calcLandType, setCalcLandType] = useState('semi-urban'); // urban, semi-urban, rural
+
+  // Calculation logic under RFCTLARR Act 2013
+  const landAreaSqFt = calcArea * 43560;
+  const rawMarketValue = landAreaSqFt * calcCircleRate;
+  const landMultiplier = calcLandType === 'rural' ? 2.0 : calcLandType === 'semi-urban' ? 1.5 : 1.0;
+  const adjustedMarketValue = rawMarketValue * landMultiplier;
+  const solatium100 = adjustedMarketValue; // 100% mandatory solatium under Sec 30
+  const interest12 = adjustedMarketValue * 0.12; // 12% annual interest
+  const totalCalculatedAward = adjustedMarketValue + solatium100 + interest12;
 
   // Sample parcel database for instant search
   const allPlots = [
@@ -78,28 +90,12 @@ export default function Home({ setActiveTab }) {
     setSearchedPlot(found || "NOT_FOUND");
   };
 
-  const quickPersonaLogin = async (userRole) => {
-    if (userRole === 'citizen') {
-      await login('citizen', 'nlams2026');
-      setActiveTab('web3');
-    } else if (userRole === 'collector') {
-      await login('collector', 'nlams2026');
-      setActiveTab('dispatch');
-    } else if (userRole === 'surveyor') {
-      await login('surveyor', 'nlams2026');
-      setActiveTab('survey');
-    } else {
-      await login('ministry', 'nlams2026');
-      setActiveTab('dashboard');
-    }
-  };
-
   const faqs = [
     {
       q: language === 'en' ? "How is land compensation calculated under RFCTLARR Act 2013?" : "RFCTLARR अधिनियम 2013 के तहत मुआवजे की गणना कैसे की जाती है?",
       a: language === 'en'
-        ? "Compensation is calculated as: Base Circle Rate Market Value + 100% Mandatory Solatium (Section 30) + 12% Annual Interest from Section 11 notice date + Structural/Crop valuation."
-        : "मुआवजे की गणना: आधार सर्किल दर बाजार मूल्य + 100% अनिवार्य सोलेशियम (धारा 30) + 12% वार्षिक ब्याज + संरचना/फसल का मूल्यांकन।"
+        ? "Compensation is calculated as: (Base Market Value × Multiplier Factor 1.0x to 2.0x) + 100% Mandatory Solatium (Section 30) + 12% Annual Interest from Section 11 notice date + Structural/Crop valuation."
+        : "मुआवजे की गणना: (आधार बाजार मूल्य × गुणक 1.0x से 2.0x) + 100% अनिवार्य सोलेशियम (धारा 30) + 12% वार्षिक ब्याज + संरचना/फसल का मूल्यांकन।"
     },
     {
       q: language === 'en' ? "How do I file an objection if my land area or valuation is incorrect?" : "यदि मेरी भूमि का क्षेत्रफल या मूल्यांकन गलत है तो मैं आपत्ति कैसे दर्ज करूँ?",
@@ -110,40 +106,52 @@ export default function Home({ setActiveTab }) {
     {
       q: language === 'en' ? "How do field surveyors verify GPS coordinates on ground?" : "फील्ड सर्वेयर जमीन पर जीपीएस निर्देशांक कैसे सत्यापित करते हैं?",
       a: language === 'en'
-        ? "Under Section 12, authorized surveyors visit the plot and use the Mobile Cadastral GPS Node to capture live satellite boundary coordinates within ±3 meters accuracy with geotagged site photographs."
-        : "धारा 12 के तहत, अधिकृत सर्वेयर मौके पर जाकर सब-3 मीटर सटीकता के साथ लाइव उपग्रह जीपीएस निर्देशांक और भू-टैग की गई तस्वीरें रिकॉर्ड करते हैं।"
+        ? "Under Section 12, authorized surveyors visit the plot and use the Mobile Cadastral GPS Node to capture live satellite boundary coordinates within ±1 meter accuracy with geotagged site photographs."
+        : "धारा 12 के तहत, अधिकृत सर्वेयर मौके पर जाकर sub-1m सटीकता के साथ लाइव उपग्रह जीपीएस निर्देशांक और भू-टैग की गई तस्वीरें रिकॉर्ड करते हैं।"
+    },
+    {
+      q: language === 'en' ? "What makes Web3 Escrow different from traditional compensation disbursement?" : "वेब3 एस्क्रो पारंपरिक मुआवजा वितरण से अलग कैसे है?",
+      a: language === 'en'
+        ? "Web3 Smart Escrow locks approved compensation funds directly on-chain and triggers immediate direct bank transfer (DBT) via PFMS as soon as Section 19 declaration is verified, eliminating middlemen delays and corruption."
+        : "वेब3 स्मार्ट एस्क्रो स्वीकृत धन को ब्लॉकचेन पर सुरक्षित रखता है और सत्यापन के तुरंत बाद बिना किसी बिचौलिए के पीएफएमएस के जरिए सीधे बैंक खाते में भुगतान जारी करता है।"
     }
   ];
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen font-sans text-slate-800 select-none pb-12">
+    <div className="bg-[#f8fafc] min-h-screen font-sans text-slate-800 select-none pb-16">
       
-      {/* ── Top Hero: Easy 1-Click Search & Quick Actions ── */}
-      <div className="bg-[#0f2b5c] text-white py-12 px-4 sm:px-8 border-b-4 border-[#ea580c]">
-        <div className="max-w-6xl mx-auto space-y-6">
+      {/* ── Top Hero Banner: Humanized Command Center & Instant Land Search ── */}
+      <section className="hero-gradient text-white py-16 px-4 sm:px-8 border-b-4 border-[#ea580c] relative overflow-hidden">
+        {/* Decorative Grid Pattern */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto space-y-8 relative z-10">
           
-          <div className="text-center space-y-2">
-            <span className="bg-white/10 text-amber-400 border border-white/20 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider font-serif inline-block">
-              {language === 'en' ? 'Single-Window Public Land Portal' : 'एकल खिड़की सार्वजनिक भूमि पोर्टल'}
-            </span>
-            <h1 className="text-2xl sm:text-4xl font-bold font-serif tracking-tight">
-              {language === 'en' ? 'Search Your Land Record & Compensation Status' : 'अपना भूमि रिकॉर्ड और मुआवजा स्थिति खोजें'}
-            </h1>
-            <p className="text-slate-300 text-xs sm:text-sm max-w-2xl mx-auto font-medium">
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 bg-white/10 text-amber-300 border border-white/20 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider font-mono">
+              <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+              {language === 'en' ? 'Official National Portal • RFCTLARR Act 2013 Compliant' : 'आधिकारिक राष्ट्रीय पोर्टल • RFCTLARR अधिनियम 2013'}
+            </div>
+            <h1 className="text-3xl sm:text-5xl font-extrabold font-heading tracking-tight leading-tight max-w-4xl mx-auto">
               {language === 'en' 
-                ? 'No complicated steps or tutorials needed. Enter your Name, Plot Number, or Survey Number below to instantly check your official notice, valuation, and bank payment advice.'
-                : 'सरल एवं त्वरित खोज। अपना नाम या प्लॉट नंबर दर्ज करें और तुरंत अपनी नोटिस, मूल्यांकन और मुआवजा स्थिति देखें।'}
+                ? 'Transparent Land Acquisition, Instant 100% Solatium & Web3 Escrow' 
+                : 'पारदर्शी भूमि अर्जन, त्वरित 100% सोलेशियम एवं वेब3 एस्क्रो'}
+            </h1>
+            <p className="text-slate-200 text-sm sm:text-base max-w-2xl mx-auto font-medium">
+              {language === 'en' 
+                ? 'Single-window public portal for landowners, district collectors, and field surveyors. Search your plot number, inspect live GIS boundary coordinates, and track direct bank compensation payout.'
+                : 'भूमि स्वामियों, जिला अधिकारियों और सर्वेक्षकों के लिए एकल-खिड़की पोर्टल। अपना प्लॉट नंबर खोजें और सीधा बैंक मुआवजा ट्रैक करें।'}
             </p>
           </div>
 
           {/* 🔍 Easy Search Box */}
-          <div className="max-w-3xl mx-auto bg-white rounded-md p-2 shadow-lg border border-slate-200">
+          <div className="max-w-3xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl p-2.5 shadow-2xl border border-white/30">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
-              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-slate-800">
+              <div className="flex-1 flex items-center gap-2.5 px-4 py-2 text-slate-800">
                 <Search className="h-5 w-5 text-[#ea580c] flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder={language === 'en' ? "Type Name (e.g. Anmol), Plot No. (e.g. PLOT-OD-2026-9821), or District..." : "नाम या प्लॉट नंबर दर्ज करें..."}
+                  placeholder={language === 'en' ? "Search Name (e.g. Anmol), Plot No. (PLOT-OD-2026-9821), or District..." : "नाम या प्लॉट नंबर दर्ज करें..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full text-xs sm:text-sm font-semibold outline-none text-slate-800 placeholder:text-slate-400"
@@ -151,7 +159,7 @@ export default function Home({ setActiveTab }) {
               </div>
               <button
                 type="submit"
-                className="bg-[#ea580c] hover:bg-orange-700 text-white px-6 py-2.5 rounded text-xs sm:text-sm font-bold font-serif transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+                className="bg-[#ea580c] hover:bg-orange-700 text-white px-7 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg hover:shadow-orange-500/20"
               >
                 <span>{language === 'en' ? 'Track My Land' : 'खोजें'}</span>
                 <ArrowRight className="h-4 w-4" />
@@ -159,97 +167,82 @@ export default function Home({ setActiveTab }) {
             </form>
           </div>
 
-          {/* Quick Demo Search Chips */}
+          {/* Quick Search Chips */}
           <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
-            <span className="text-slate-300 text-[11px] font-medium">Try clicking an example:</span>
+            <span className="text-slate-300 text-xs font-semibold">Try sample records:</span>
             <button
               onClick={() => { setSearchQuery("Anmol"); setSearchedPlot(allPlots[0]); }}
-              className="bg-white/10 hover:bg-white/20 text-amber-300 px-2.5 py-1 rounded text-[11px] font-bold border border-white/20 transition-colors cursor-pointer"
+              className="bg-white/10 hover:bg-white/20 text-amber-300 px-3 py-1 rounded-full text-xs font-bold border border-white/20 transition-all cursor-pointer flex items-center gap-1"
             >
               📍 Anmol (PLOT-OD-2026-9821, Odisha)
             </button>
             <button
               onClick={() => { setSearchQuery("Rameshwar Patel"); setSearchedPlot(allPlots[1]); }}
-              className="bg-white/10 hover:bg-white/20 text-slate-200 px-2.5 py-1 rounded text-[11px] font-bold border border-white/20 transition-colors cursor-pointer"
+              className="bg-white/10 hover:bg-white/20 text-slate-200 px-3 py-1 rounded-full text-xs font-bold border border-white/20 transition-all cursor-pointer flex items-center gap-1"
             >
-              📍 Rameshwar Patel (PLOT-MH-2026-1044)
+              📍 Rameshwar Patel (PLOT-MH-1044)
             </button>
             <button
               onClick={() => { setSearchQuery("Chennai"); setSearchedPlot(allPlots[2]); }}
-              className="bg-white/10 hover:bg-white/20 text-slate-200 px-2.5 py-1 rounded text-[11px] font-bold border border-white/20 transition-colors cursor-pointer"
+              className="bg-white/10 hover:bg-white/20 text-slate-200 px-3 py-1 rounded-full text-xs font-bold border border-white/20 transition-all cursor-pointer flex items-center gap-1"
             >
-              📍 Chennai Industrial Corridor
+              📍 Chennai Industrial Link Corridor
             </button>
           </div>
 
           {/* 🎯 Instant Search Result Card */}
           {searchedPlot && (
-            <div className="max-w-3xl mx-auto mt-4 animate-fadeIn">
+            <div className="max-w-3xl mx-auto mt-4 animate-in fade-in duration-200">
               {searchedPlot === "NOT_FOUND" ? (
-                <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded text-xs font-semibold flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5 text-rose-600 flex-shrink-0" />
+                <div className="bg-rose-500/10 backdrop-blur-md border border-rose-400/30 text-rose-200 p-4 rounded-xl text-xs font-semibold flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-rose-400 flex-shrink-0" />
                   <div>
-                    <strong className="block font-serif">No Record Found for "{searchQuery}"</strong>
-                    <span className="text-[11px] text-rose-700">Please check your plot number or click one of the preset example buttons above.</span>
+                    <strong className="block text-white font-heading">No Record Found for "{searchQuery}"</strong>
+                    <span className="text-xs text-rose-200">Please verify your plot survey number or click one of the sample buttons above.</span>
                   </div>
                 </div>
               ) : (
-                <div className="bg-white border-2 border-amber-400 rounded-md p-5 text-slate-800 shadow-xl space-y-4">
+                <div className="bg-white border-2 border-amber-400 rounded-2xl p-6 text-slate-800 shadow-2xl space-y-4 text-left">
                   <div className="flex flex-wrap justify-between items-start border-b border-slate-200 pb-3 gap-2">
                     <div>
-                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded uppercase font-mono">
-                        Official Land Record Verified
+                      <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-md uppercase font-mono tracking-wider">
+                        {searchedPlot.status}
                       </span>
-                      <h3 className="text-lg font-bold text-[#0f2b5c] font-serif mt-1">
-                        {searchedPlot.name} — {searchedPlot.plot}
-                      </h3>
-                      <span className="text-xs text-slate-500 font-medium">{searchedPlot.project} ({searchedPlot.district})</span>
+                      <h3 className="text-lg font-extrabold text-[#0f2b5c] mt-1 font-heading">{searchedPlot.project}</h3>
+                      <p className="text-xs text-slate-500 font-medium">Landowner: <strong className="text-slate-800">{searchedPlot.name}</strong> • District: {searchedPlot.district}</p>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Total Award (with 100% Solatium)</span>
-                      <strong className="text-xl font-bold text-emerald-700 font-serif">{searchedPlot.totalAward}</strong>
+                      <span className="text-[10px] text-slate-400 uppercase font-mono block">Calculated Net Award</span>
+                      <span className="text-xl font-extrabold text-emerald-600 font-mono">{searchedPlot.totalAward}</span>
                     </div>
                   </div>
 
-                  {/* Specification Table */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border border-slate-200 rounded p-3 bg-slate-50">
-                    <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Area</span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                      <span className="text-[10px] text-slate-500 block">Plot Survey No</span>
+                      <strong className="font-mono text-slate-800">{searchedPlot.plot}</strong>
+                    </div>
+                    <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                      <span className="text-[10px] text-slate-500 block">Acquisition Area</span>
                       <strong className="text-slate-800">{searchedPlot.area}</strong>
                     </div>
-                    <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Base Circle Rate</span>
-                      <strong className="text-slate-800 font-serif">{searchedPlot.valuation}</strong>
+                    <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                      <span className="text-[10px] text-slate-500 block">Base Valuation</span>
+                      <strong className="text-slate-800">{searchedPlot.valuation}</strong>
                     </div>
-                    <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Statutory Solatium</span>
-                      <strong className="text-emerald-700 font-serif">{searchedPlot.solatium}</strong>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 text-[10px] uppercase font-bold block">Current Stage</span>
-                      <strong className="text-[#0f2b5c] text-[11px]">{searchedPlot.status}</strong>
+                    <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200">
+                      <span className="text-[10px] text-amber-800 font-bold block">100% Solatium (Sec 30)</span>
+                      <strong className="text-amber-900">{searchedPlot.solatium}</strong>
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex flex-wrap gap-2.5 pt-1">
+                  <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
                     <button
-                      onClick={() => setActiveTab('web3')}
-                      className="flex-1 bg-[#0f2b5c] hover:bg-[#0c224a] text-white px-4 py-2 rounded text-xs font-bold font-serif flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                      onClick={() => setActiveTab(searchedPlot.tabTarget)}
+                      className="bg-[#0f2b5c] hover:bg-[#0c224a] text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                     >
-                      <span>💰 View Compensation & Bank DBT</span>
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('dispatch')}
-                      className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded text-xs font-bold font-serif flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-                    >
-                      <span>⚖️ File Objection / Dispute</span>
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('dashboard')}
-                      className="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 px-4 py-2 rounded text-xs font-bold font-serif flex items-center justify-center gap-1.5 cursor-pointer"
-                    >
-                      <span>🗺️ View on Satellite GIS</span>
+                      <span>View Full Case Details</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
@@ -257,177 +250,348 @@ export default function Home({ setActiveTab }) {
             </div>
           )}
 
-        </div>
-      </div>
-
-      {/* ── 3-Step Simple Guide ("How It Works") ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-10">
-        <div className="text-center space-y-1 mb-8">
-          <span className="text-[10px] font-bold text-[#ea580c] uppercase tracking-wider font-serif">Easy Walkthrough</span>
-          <h2 className="text-xl font-bold text-[#0f2b5c] font-serif">
-            {language === 'en' ? 'How to Track & Claim Your Compensation in 3 Steps' : '3 आसान चरणों में अपनी मुआवजा स्थिति जानें'}
-          </h2>
-          <p className="text-xs text-slate-500 max-w-lg mx-auto">Zero technical knowledge required. The entire legal acquisition process is fully automated:</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          {/* Step 1 */}
-          <div className="bg-white border border-slate-300 rounded-md p-5 space-y-3 relative">
-            <div className="h-8 w-8 rounded-full bg-[#0f2b5c] text-white flex items-center justify-center font-bold text-xs font-serif">
-              1
+          {/* Key Metrics Counters */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 max-w-5xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/15 text-center">
+              <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono block">1,420</span>
+              <span className="text-[11px] text-slate-300 font-medium">Cadastral Plots Ledgered</span>
             </div>
-            <h3 className="font-bold text-slate-800 text-sm font-serif">Search Your Land Parcel</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Enter your Name or Plot Survey Number in the search box above to view your officially notified boundary, circle rate, and project details.
-            </p>
-          </div>
-
-          {/* Step 2 */}
-          <div className="bg-white border border-slate-300 rounded-md p-5 space-y-3 relative">
-            <div className="h-8 w-8 rounded-full bg-[#ea580c] text-white flex items-center justify-center font-bold text-xs font-serif">
-              2
+            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/15 text-center">
+              <span className="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono block">₹452.8 Cr</span>
+              <span className="text-[11px] text-slate-300 font-medium">Escrow Disbursed via PFMS</span>
             </div>
-            <h3 className="font-bold text-slate-800 text-sm font-serif">Inspect Section 11 Notice & Award</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Check your fair valuation including the mandatory <strong>100% Solatium</strong> bonus under Section 30 of the RFCTLARR Act 2013.
-            </p>
-          </div>
-
-          {/* Step 3 */}
-          <div className="bg-white border border-slate-300 rounded-md p-5 space-y-3 relative">
-            <div className="h-8 w-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs font-serif">
-              3
+            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/15 text-center">
+              <span className="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono block">100%</span>
+              <span className="text-[11px] text-slate-300 font-medium">Solatium Act Compliance</span>
             </div>
-            <h3 className="font-bold text-slate-800 text-sm font-serif">Receive DBT or File Objection</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              If satisfied, compensation is disbursed directly to your bank account via PFMS. If you dispute the area, click 'File Objection' within 60 days.
-            </p>
+            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/15 text-center">
+              <span className="text-2xl sm:text-3xl font-extrabold text-sky-400 font-mono block">&lt; 14 Days</span>
+              <span className="text-[11px] text-slate-300 font-medium">Avg Objection Disposal</span>
+            </div>
           </div>
 
         </div>
-      </div>
+      </section>
 
-      {/* ── 1-Click Role Access Portal ("Who Are You?") ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6">
-        <div className="bg-white border border-slate-300 rounded-md p-6 space-y-5">
-          <div className="border-b border-slate-200 pb-3">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-serif">Fast Access Gateways</span>
-            <h2 className="text-lg font-bold text-[#0f2b5c] font-serif">
-              {language === 'en' ? 'Select Your Role for 1-Click Instant Access' : '1-क्लिक त्वरित पहुंच हेतु अपना पद चुनें'}
-            </h2>
-            <p className="text-xs text-slate-500">Click any card below to launch the respective workspace immediately:</p>
+      {/* ── Main Content Container ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+        
+        {/* ── Section 1: Interactive RFCTLARR 2013 Compensation Calculator ── */}
+        <section className="gov-card p-6 sm:p-8 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2 py-0.5 rounded font-mono uppercase">Interactive Tool</span>
+                <span className="text-xs text-slate-500 font-bold">RFCTLARR Act 2013 Schedule I</span>
+              </div>
+              <h2 className="text-2xl font-extrabold text-[#0f2b5c] font-heading mt-1">
+                Land Compensation & Solatium Calculator
+              </h2>
+              <p className="text-xs text-slate-600 font-medium mt-0.5">
+                Calculate legal land valuation, market multiplier, mandatory 100% solatium (Section 30), and interest under RFCTLARR.
+              </p>
+            </div>
+            <div className="h-12 w-12 rounded-xl bg-amber-500/10 border border-amber-300 flex items-center justify-center text-amber-600 flex-shrink-0">
+              <Calculator className="h-6 w-6" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            {/* Citizen Persona */}
-            <div 
-              onClick={() => quickPersonaLogin('citizen')}
-              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xl">🌾</span>
-                <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">Landowner</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Input Controls */}
+            <div className="lg:col-span-6 space-y-5 bg-slate-50 p-5 rounded-xl border border-slate-200">
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1 flex justify-between">
+                  <span>Land Area (Acres)</span>
+                  <span className="font-mono text-[#ea580c] font-bold">{calcArea} Acres</span>
+                </label>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="10"
+                  step="0.1"
+                  value={calcArea}
+                  onChange={(e) => setCalcArea(parseFloat(e.target.value))}
+                  className="w-full accent-[#ea580c] cursor-pointer"
+                />
               </div>
-              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Citizen / Landowner</strong>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                Check compensation, view title deed SHA-256 hash, and monitor PFMS bank transfer advice.
-              </p>
-              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
-                Launch Portal <ArrowRight className="h-3 w-3" />
-              </span>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1 flex justify-between">
+                  <span>Base Circle Rate (₹ per sq. ft)</span>
+                  <span className="font-mono text-[#0f2b5c] font-bold">₹{calcCircleRate.toLocaleString('en-IN')}/sq ft</span>
+                </label>
+                <input
+                  type="range"
+                  min="100"
+                  max="5000"
+                  step="50"
+                  value={calcCircleRate}
+                  onChange={(e) => setCalcCircleRate(parseInt(e.target.value))}
+                  className="w-full accent-[#0f2b5c] cursor-pointer"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-2">Land Classification & Location Multiplier</label>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setCalcLandType('urban')}
+                    className={`py-2 px-3 rounded-lg text-xs font-bold border cursor-pointer transition-all ${
+                      calcLandType === 'urban' ? 'bg-[#0f2b5c] text-white border-[#0f2b5c]' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                    }`}
+                  >
+                    Urban (1.0x)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCalcLandType('semi-urban')}
+                    className={`py-2 px-3 rounded-lg text-xs font-bold border cursor-pointer transition-all ${
+                      calcLandType === 'semi-urban' ? 'bg-[#0f2b5c] text-white border-[#0f2b5c]' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                    }`}
+                  >
+                    Semi-Urban (1.5x)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCalcLandType('rural')}
+                    className={`py-2 px-3 rounded-lg text-xs font-bold border cursor-pointer transition-all ${
+                      calcLandType === 'rural' ? 'bg-[#0f2b5c] text-white border-[#0f2b5c]' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                    }`}
+                  >
+                    Rural (2.0x)
+                  </button>
+                </div>
+              </div>
+
+              <div className="text-[11px] text-slate-500 bg-white p-3 rounded-lg border border-slate-200 leading-relaxed">
+                ℹ️ <strong>Legal Rule:</strong> Section 30 of RFCTLARR Act 2013 mandates an additional <strong>100% Solatium</strong> on top of total market value to compensate for compulsory acquisition.
+              </div>
             </div>
 
-            {/* Collector Persona */}
-            <div 
-              onClick={() => quickPersonaLogin('collector')}
-              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xl">🏢</span>
-                <span className="text-[9px] font-bold bg-sky-100 text-sky-800 px-1.5 py-0.5 rounded">District Collector</span>
+            {/* Calculated Results Display */}
+            <div className="lg:col-span-6 space-y-4 bg-gradient-to-br from-[#0f2b5c] to-[#1e3a8a] text-white p-6 rounded-xl shadow-xl">
+              <div className="border-b border-white/15 pb-3">
+                <span className="text-[10px] text-amber-400 font-mono font-bold uppercase tracking-wider block">Estimated Total Award Payable</span>
+                <span className="text-3xl sm:text-4xl font-extrabold text-white font-mono block mt-1">
+                  ₹{(totalCalculatedAward / 100000).toFixed(2)} Lakhs
+                </span>
+                <span className="text-[11px] text-slate-300">Total payable directly into Landowner PFMS Escrow Bank Account.</span>
               </div>
-              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Amitabh Choudhury (IAS)</strong>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                Issue Section 11 notices, calculate nearest surveyor via Haversine formula, and handle hearings.
-              </p>
-              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
-                Launch Dispatch <ArrowRight className="h-3 w-3" />
-              </span>
-            </div>
 
-            {/* Surveyor Persona */}
-            <div 
-              onClick={() => quickPersonaLogin('surveyor')}
-              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xl">📍</span>
-                <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Field Officer</span>
+              <div className="space-y-2 text-xs divide-y divide-white/10">
+                <div className="flex justify-between py-1.5">
+                  <span className="text-slate-300">Base Circle Valuation:</span>
+                  <span className="font-mono font-bold">₹{(rawMarketValue / 100000).toFixed(2)} L</span>
+                </div>
+                <div className="flex justify-between py-1.5">
+                  <span className="text-slate-300">Adjusted Market Value ({landMultiplier}x multiplier):</span>
+                  <span className="font-mono font-bold">₹{(adjustedMarketValue / 100000).toFixed(2)} L</span>
+                </div>
+                <div className="flex justify-between py-1.5 text-amber-300">
+                  <span className="font-semibold">+ Mandatory 100% Solatium (Sec 30):</span>
+                  <span className="font-mono font-bold">₹{(solatium100 / 100000).toFixed(2)} L</span>
+                </div>
+                <div className="flex justify-between py-1.5 text-emerald-300">
+                  <span className="font-semibold">+ 12% Interest Compensation (Sec 30):</span>
+                  <span className="font-mono font-bold">₹{(interest12 / 100000).toFixed(2)} L</span>
+                </div>
               </div>
-              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Suresh Kumar</strong>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                Detect real-time device GPS coordinates, inspect soil structures, and upload ground photos.
-              </p>
-              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
-                Launch GPS Station <ArrowRight className="h-3 w-3" />
-              </span>
-            </div>
 
-            {/* Ministry Persona */}
-            <div 
-              onClick={() => quickPersonaLogin('ministry')}
-              className="p-4 rounded border border-slate-200 hover:border-[#0f2b5c] hover:bg-slate-50 transition-all cursor-pointer space-y-2 group"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xl">🏛️</span>
-                <span className="text-[9px] font-bold bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded">Central MoRD</span>
+              <div className="pt-2">
+                <button
+                  onClick={() => setActiveTab('web3')}
+                  className="w-full bg-[#ea580c] hover:bg-orange-700 text-white font-bold py-2.5 rounded-lg text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                >
+                  <Coins className="h-4 w-4" />
+                  <span>Verify Web3 Smart Contract Escrow Lock</span>
+                </button>
               </div>
-              <strong className="text-xs font-bold text-slate-800 block group-hover:text-[#0f2b5c]">Dr. Rajesh Verma</strong>
-              <p className="text-[11px] text-slate-500 leading-normal">
-                National macro-level KPIs, GIS visualizer, and live interoperability hub syncing BHOOMI & GatiShakti.
-              </p>
-              <span className="text-[11px] font-bold text-[#ea580c] flex items-center gap-1 pt-1">
-                Launch MIS <ArrowRight className="h-3 w-3" />
-              </span>
             </div>
-
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* ── Frequently Asked Questions (Self-Service Helpdesk) ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6">
-        <div className="bg-white border border-slate-300 rounded-md p-6 space-y-4">
-          <div className="border-b border-slate-200 pb-2">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-serif">Need Help?</span>
-            <h2 className="text-lg font-bold text-[#0f2b5c] font-serif">
-              Frequently Asked Questions (Citizen Guidance)
-            </h2>
+        {/* ── Section 2: GIS Satellite Spatial Map Preview ── */}
+        <section className="gov-card p-6 sm:p-8 space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <span className="text-[10px] font-extrabold bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-mono uppercase">GIS Satellite Spatial Ledger</span>
+              <h2 className="text-2xl font-extrabold text-[#0f2b5c] font-heading mt-1">Live Cadastral Boundary & Parcel Explorer</h2>
+              <p className="text-xs text-slate-500 font-medium">Sub-meter accuracy GIS plot boundary mapping integrated with state land revenue registers.</p>
+            </div>
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className="bg-[#0f2b5c] text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 self-start md:self-auto cursor-pointer hover:bg-[#0c224a] transition-all"
+            >
+              <Layers className="h-4 w-4 text-amber-400" />
+              <span>Open Full GIS Spatial Workstation</span>
+            </button>
+          </div>
+
+          <div className="h-96 rounded-xl overflow-hidden border border-slate-200 relative shadow-inner">
+            <LandGISMap selectedProject={proposals[0]} />
+          </div>
+        </section>
+
+        {/* ── Section 3: 5-Stage Legal Acquisition Journey ── */}
+        <section className="space-y-6">
+          <div className="text-center space-y-1">
+            <span className="text-[10px] font-extrabold bg-[#0f2b5c] text-amber-400 px-3 py-1 rounded-full uppercase tracking-wider font-mono">RFCTLARR Statutory Process</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0f2b5c] font-heading">Transparent 5-Stage Land Acquisition Workflow</h2>
+            <p className="text-xs text-slate-500 font-medium max-w-xl mx-auto">Every stage of land acquisition strictly follows legal notifications to ensure complete transparency for landowners.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {[
+              {
+                step: "01",
+                title: "Social Impact (SIA)",
+                act: "Section 4 & 7",
+                desc: "Public SIA study conducted with mandatory Gram Sabha approval and environmental assessment.",
+                badge: "Approved",
+                color: "border-sky-500 bg-sky-50/50 text-sky-800"
+              },
+              {
+                step: "02",
+                title: "Preliminary Gazette",
+                act: "Section 11 (1)",
+                desc: "Official Gazette published in local news & SMS alerts sent to registered land parcel owners.",
+                badge: "Public Notice",
+                color: "border-indigo-500 bg-indigo-50/50 text-indigo-800"
+              },
+              {
+                step: "03",
+                title: "Objections Hearing",
+                act: "Section 15 (1)",
+                desc: "60-day legal window for landowners to submit boundary disputes or valuation objections.",
+                badge: "Active Hearing",
+                color: "border-amber-500 bg-amber-50/50 text-amber-800"
+              },
+              {
+                step: "04",
+                title: "Final Declaration",
+                act: "Section 19 (1)",
+                desc: "Final acquisition notice & compensation award declared by the District Collector.",
+                badge: "Award Declared",
+                color: "border-emerald-500 bg-emerald-50/50 text-emerald-800"
+              },
+              {
+                step: "05",
+                title: "Web3 DBT Escrow",
+                act: "Section 30",
+                desc: "Instant 100% Solatium & Market Value transferred directly into landowner's bank account.",
+                badge: "Disbursed",
+                color: "border-orange-500 bg-orange-50/50 text-orange-800"
+              }
+            ].map((item, idx) => (
+              <div key={idx} className={`gov-card p-5 border-t-4 ${item.color} space-y-2 flex flex-col justify-between`}>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xl font-extrabold font-mono text-[#0f2b5c] opacity-40">{item.step}</span>
+                    <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-white border border-slate-200 uppercase font-mono">{item.badge}</span>
+                  </div>
+                  <h3 className="font-extrabold text-sm text-[#0f2b5c] font-heading">{item.title}</h3>
+                  <span className="text-[10px] font-bold text-[#ea580c] block font-mono">{item.act}</span>
+                  <p className="text-[11px] text-slate-600 font-medium leading-normal">{item.desc}</p>
+                </div>
+                <button
+                  onClick={() => setActiveTab('workflow')}
+                  className="mt-3 text-[10px] font-bold text-[#0f2b5c] hover:text-[#ea580c] flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <span>Inspect Gazette Rule</span>
+                  <ArrowRight className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Section 4: Public Downloads & Official Forms Hub ── */}
+        <section className="gov-card p-6 sm:p-8 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono uppercase">Official Downloads</span>
+              <h2 className="text-2xl font-extrabold text-[#0f2b5c] font-heading mt-1">Gazette Notifications & Public Claim Forms</h2>
+              <p className="text-xs text-slate-500 font-medium">Download official gazette templates, objection petition forms, and RFCTLARR statutory manuals.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-3 hover:border-slate-300 transition-all">
+              <FileText className="h-8 w-8 text-[#0f2b5c] flex-shrink-0 mt-1" />
+              <div className="space-y-1">
+                <h4 className="font-bold text-xs text-slate-900 font-heading">Section 11 (1) Gazette Template</h4>
+                <p className="text-[11px] text-slate-500 font-medium">Standard official gazette publication format for preliminary notification.</p>
+                <a 
+                  href="#download"
+                  onClick={(e) => { e.preventDefault(); alert("Downloading official Gazette Section 11 Template PDF..."); }}
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ea580c] hover:underline pt-1 cursor-pointer"
+                >
+                  <Download className="h-3 w-3" /> Download PDF (1.2 MB)
+                </a>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-3 hover:border-slate-300 transition-all">
+              <FileCheck2 className="h-8 w-8 text-emerald-600 flex-shrink-0 mt-1" />
+              <div className="space-y-1">
+                <h4 className="font-bold text-xs text-slate-900 font-heading">Form K - Solatium Claim Sheet</h4>
+                <p className="text-[11px] text-slate-500 font-medium">Official claim submission form for 100% Solatium & structural valuation.</p>
+                <a 
+                  href="#download"
+                  onClick={(e) => { e.preventDefault(); alert("Downloading Form K Solatium Sheet PDF..."); }}
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ea580c] hover:underline pt-1 cursor-pointer"
+                >
+                  <Download className="h-3 w-3" /> Download PDF (850 KB)
+                </a>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-3 hover:border-slate-300 transition-all">
+              <BookOpen className="h-8 w-8 text-amber-600 flex-shrink-0 mt-1" />
+              <div className="space-y-1">
+                <h4 className="font-bold text-xs text-slate-900 font-heading">RFCTLARR Act 2013 Citizen Handbook</h4>
+                <p className="text-[11px] text-slate-500 font-medium">Comprehensive legal guide on landowner rights, SIA, and R&R entitlement.</p>
+                <a 
+                  href="#download"
+                  onClick={(e) => { e.preventDefault(); alert("Downloading RFCTLARR Handbook PDF..."); }}
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ea580c] hover:underline pt-1 cursor-pointer"
+                >
+                  <Download className="h-3 w-3" /> Download PDF (4.5 MB)
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Section 5: Legal & Citizen FAQ Accordion ── */}
+        <section className="gov-card p-6 sm:p-8 space-y-6">
+          <div className="border-b border-slate-200 pb-4">
+            <span className="text-[10px] font-extrabold bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-mono uppercase">Frequently Asked Questions</span>
+            <h2 className="text-2xl font-extrabold text-[#0f2b5c] font-heading mt-1">Landowner Help & Legal Rights</h2>
           </div>
 
           <div className="space-y-3">
             {faqs.map((faq, idx) => (
-              <div key={idx} className="border border-slate-200 rounded overflow-hidden">
+              <div key={idx} className="border border-slate-200 rounded-xl overflow-hidden">
                 <button
                   onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                  className="w-full text-left p-3.5 bg-slate-50 hover:bg-slate-100 font-bold text-xs text-slate-800 flex justify-between items-center transition-colors cursor-pointer"
+                  className="w-full text-left p-4 bg-slate-50 hover:bg-slate-100 flex justify-between items-center text-xs sm:text-sm font-bold text-[#0f2b5c] transition-colors cursor-pointer"
                 >
-                  <span className="font-serif">{faq.q}</span>
-                  <span className="text-slate-400 text-sm font-mono">{activeFaq === idx ? '−' : '+'}</span>
+                  <span>{faq.q}</span>
+                  <span className="text-base text-slate-500 font-mono">{activeFaq === idx ? '−' : '+'}</span>
                 </button>
                 {activeFaq === idx && (
-                  <div className="p-3.5 bg-white text-xs text-slate-600 leading-relaxed border-t border-slate-200 font-medium">
+                  <div className="p-4 bg-white text-xs text-slate-600 font-medium border-t border-slate-200 leading-relaxed animate-in fade-in duration-150">
                     {faq.a}
                   </div>
                 )}
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        </section>
 
+      </div>
     </div>
   );
 }

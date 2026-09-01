@@ -5,8 +5,9 @@ import {
 } from 'recharts';
 
 export default function AnalyticsCharts({ proposals }) {
+  const safeProposals = proposals || [];
   // Chart 1: Compensation Assessed vs Disbursed
-  const compensationData = proposals.map(p => ({
+  const compensationData = safeProposals.map(p => ({
     name: p.id,
     title: p.title,
     'Assessed (Cr)': p.budgetAssessed,
@@ -14,7 +15,7 @@ export default function AnalyticsCharts({ proposals }) {
   }));
 
   // Chart 2: State-wise Land Acquisition Summary
-  const stateSummary = proposals.reduce((acc, p) => {
+  const stateSummary = safeProposals.reduce((acc, p) => {
     if (!acc[p.state]) {
       acc[p.state] = { state: p.state, proposed: 0, acquired: 0 };
     }

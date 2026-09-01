@@ -51,10 +51,11 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, [user]);
 
-  const states = [language === 'en' ? "All States" : "सभी राज्य", ...new Set(proposals.map(p => p.state))];
-  const statuses = [language === 'en' ? "All Statuses" : "सभी स्थितियाँ", ...new Set(proposals.map(p => p.status))];
+  const safeProposals = proposals || [];
+  const states = [language === 'en' ? "All States" : "सभी राज्य", ...new Set(safeProposals.map(p => p.state))];
+  const statuses = [language === 'en' ? "All Statuses" : "सभी स्थितियाँ", ...new Set(safeProposals.map(p => p.status))];
 
-  const filteredProposals = proposals.filter(p => {
+  const filteredProposals = safeProposals.filter(p => {
     const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || p.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesState = selectedStateFilter === "All States" || selectedStateFilter === "सभी राज्य" || p.state === selectedStateFilter;
     const matchesStatus = selectedStatusFilter === "All Statuses" || selectedStatusFilter === "सभी स्थितियाँ" || p.status === selectedStatusFilter;
