@@ -48,47 +48,11 @@ function AppContent() {
     }
   }, [user]);
 
-  // Mandatory Login Gate (Unless accessing public grievance link with token)
-  if (!user && !grievanceToken) {
-    return (
-      <div className="min-h-screen bg-slate-100 flex flex-col font-sans select-none">
-        <header className="bg-white border-b border-slate-200 shadow-sm">
-          <div className="h-1 w-full flex">
-            <div className="bg-[#FF9933] h-full flex-1" />
-            <div className="bg-[#FFFFFF] h-full flex-1" />
-            <div className="bg-[#138808] h-full flex-1" />
-          </div>
-          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-slate-50 border border-slate-300 flex items-center justify-center text-slate-800 shadow-inner">
-                <span className="font-serif font-bold text-sm text-[#0f2b5c]">IND</span>
-              </div>
-              <div>
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block font-serif">Government of India</span>
-                <span className="font-extrabold text-[#0f2b5c] text-sm tracking-wide block leading-none font-serif mt-0.5">
-                  National Land Acquisition & Management System (NLAMS)
-                </span>
-              </div>
-            </div>
-            <span className="text-[10px] bg-orange-50 border border-orange-200 text-orange-700 font-bold px-3 py-1 rounded-full uppercase">
-              Official Access Gateway
-            </span>
-          </div>
-        </header>
-
-        <main className="flex-1 flex items-center justify-center p-4">
-          <Login isInline={true} />
-        </main>
-
-        <footer className="bg-slate-900 border-t border-slate-800 text-slate-500 py-4 text-center text-xs">
-          <p className="font-semibold text-slate-400">National Land Acquisition & Management System (NLAMS) — SIH 2026</p>
-          <p className="text-[10px] text-slate-500 mt-0.5">Strict Role-Based Access Control enforced for Central, State, and District administrative tiers.</p>
-        </footer>
-      </div>
-    );
-  }
-
+  // Public landing page is Home.jsx, or Objection page if ?token= exists
   const renderActivePage = () => {
+    if (grievanceToken || activeTab === 'objection') {
+      return <CitizenObjection token={grievanceToken} />;
+    }
     switch (activeTab) {
       case 'home':
         return <Home setActiveTab={setActiveTab} />;
@@ -102,8 +66,6 @@ function AppContent() {
         return <FieldSurvey />;
       case 'dispatch':
         return <SurveyDispatch />;
-      case 'objection':
-        return <CitizenObjection token={grievanceToken} />;
       default:
         return <Home setActiveTab={setActiveTab} />;
     }
