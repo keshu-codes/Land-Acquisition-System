@@ -3,284 +3,489 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NLAMS - Tech Stack & Work Flow Diagram</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>NLAMS - Tech Stack & Work Flow</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@700;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .font-serif { font-family: 'Merriweather', serif; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .slide-container {
+      width: 100%;
+      max-width: 1400px;
+      background: #ffffff;
+      display: grid;
+      grid-template-columns: 48% 52%;
+      gap: 30px;
+      padding: 20px;
+    }
+    @media (max-width: 1024px) {
+      .slide-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Headings matching image */
+    h1.heading {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 32px;
+      font-weight: 900;
+      text-align: center;
+      text-decoration: underline;
+      text-underline-offset: 8px;
+      text-decoration-thickness: 3px;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+    }
+
+    /* ========================================================================= */
+    /* LEFT TABLE: TECH STACK USED (Pixel-Perfect Table)                         */
+    /* ========================================================================= */
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 3px solid #000000;
+      font-size: 13px;
+    }
+    .tech-table tr {
+      border-bottom: 2px solid #000000;
+    }
+    .tech-table tr:last-child {
+      border-bottom: none;
+    }
+    .tech-table td {
+      padding: 10px 14px;
+      vertical-align: middle;
+      border-right: 2px solid #000000;
+    }
+    .tech-table td:last-child {
+      border-right: none;
+    }
+    .logo-cell {
+      width: 130px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .logo-img {
+      max-height: 28px;
+      max-width: 100px;
+      display: block;
+      margin: 0 auto 4px auto;
+    }
+    .logo-label {
+      font-size: 13px;
+      font-weight: bold;
+    }
+    .desc-cell {
+      line-height: 1.4;
+      color: #000000;
+    }
+
+    /* ========================================================================= */
+    /* RIGHT FLOWCHART: WORK FLOW (Exact Colors & Geometry)                     */
+    /* ========================================================================= */
+    .flowchart-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding-top: 10px;
+    }
+    
+    /* Level 1: Root Oval (User) */
+    .node-root {
+      background-color: #dfd2ec;
+      border: 2px solid #a98ec9;
+      color: #000000;
+      font-size: 18px;
+      font-weight: 500;
+      padding: 10px 45px;
+      border-radius: 40px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Vertical line down from Root */
+    .vline-root {
+      width: 2px;
+      height: 25px;
+      background-color: #b3a5c9;
+    }
+
+    /* Horizontal branch bar */
+    .hbar-level2 {
+      width: 90%;
+      height: 2px;
+      background-color: #b3a5c9;
+      position: relative;
+    }
+
+    /* 4 Column Container */
+    .branches-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      width: 100%;
+      margin-top: 0;
+    }
+
+    .branch-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Vertical drop line from horizontal bar */
+    .vline-drop {
+      width: 2px;
+      height: 25px;
+      background-color: #b3a5c9;
+    }
+
+    /* Level 2 Nodes (Cyan/Turquoise Rounded Rectangles) */
+    .node-l2 {
+      background-color: #9fe2dc;
+      border: 1.5px solid #6cb8b1;
+      color: #000000;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 10px;
+      border-radius: 12px;
+      text-align: center;
+      width: 100%;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    /* Connector line to level 3 */
+    .vline-l3 {
+      width: 2px;
+      height: 22px;
+      background-color: #88c0ba;
+    }
+
+    /* Level 3 Nodes (Light Blue/Periwinkle Rectangles) */
+    .node-l3 {
+      background-color: #d6e8fa;
+      border: 1.5px solid #a8cceb;
+      color: #000000;
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 10px 6px;
+      border-radius: 6px;
+      text-align: center;
+      width: 100%;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* Level 4 Leaf Nodes (Orange / Light Peach) */
+    .node-l4-orange {
+      background-color: #fdd9b5;
+      border: 1.5px solid #eab786;
+      color: #000000;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 8px 4px;
+      border-radius: 6px;
+      text-align: center;
+      width: 92%;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    /* Dashed arrow items */
+    .dashed-arrow-item {
+      font-size: 10px;
+      color: #333333;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      width: 100%;
+      padding-left: 4px;
+    }
+    .dashed-arrow-item::before {
+      content: "▷";
+      color: #4a90e2;
+      font-size: 9px;
+    }
+
+    /* Level 5 Bottom Convergence Oval (Green) */
+    .bottom-convergence-container {
+      margin-top: 15px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .node-bottom-green {
+      background-color: #c9eed7;
+      border: 1.5px solid #8ec5a1;
+      color: #000000;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 30px;
+      text-align: center;
+      max-width: 320px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      line-height: 1.3;
+    }
+
+    .connecting-lines-svg {
+      width: 100%;
+      height: 35px;
+    }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 p-4 sm:p-8 min-h-screen flex flex-col justify-center items-center">
+<body>
 
-  <!-- Main Slide Container (16:9 Presentation Aspect Ratio) -->
-  <div class="max-w-7xl w-full bg-white border-2 border-slate-300 rounded-2xl shadow-xl overflow-hidden p-6 sm:p-10 space-y-8">
+  <div class="slide-container">
     
-    <!-- Top Header -->
-    <div class="flex justify-between items-center border-b-2 border-slate-200 pb-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#0f2b5c] text-amber-400 flex items-center justify-center text-xl shadow-sm">
-          <i class="fa-solid fa-landmark"></i>
-        </div>
-        <div>
-          <span class="text-[10px] uppercase font-bold tracking-widest text-[#ea580c] block font-mono">Smart India Hackathon 2026 • SIH-NLAMS</span>
-          <h1 class="text-xl sm:text-2xl font-black font-serif text-[#0f2b5c]">National Land Acquisition & Management System</h1>
-        </div>
-      </div>
-      <div class="text-right hidden sm:block">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block font-mono">System Blueprint</span>
-        <span class="text-sm font-extrabold text-emerald-700 font-mono">RFCTLARR Act 2013</span>
-      </div>
+    <!-- ========================================================================= -->
+    <!-- LEFT SIDE: TECH STACK USED                                                -->
+    <!-- ========================================================================= -->
+    <div>
+      <h1 class="heading">TECH STACK USED</h1>
+
+      <table class="tech-table">
+        <!-- Row 1: React.js -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 115 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="57.5" cy="51" rx="14" ry="14" fill="#00D8FF"/>
+              <ellipse cx="57.5" cy="51" rx="52" ry="20" stroke="#00D8FF" stroke-width="4.5" fill="none"/>
+              <ellipse cx="57.5" cy="51" rx="52" ry="20" transform="rotate(60 57.5 51)" stroke="#00D8FF" stroke-width="4.5" fill="none"/>
+              <ellipse cx="57.5" cy="51" rx="52" ry="20" transform="rotate(120 57.5 51)" stroke="#00D8FF" stroke-width="4.5" fill="none"/>
+            </svg>
+            <span class="logo-label">React.js</span>
+          </td>
+          <td class="desc-cell">
+            Using <strong>React.js</strong> which is an open-source front-end JavaScript library for building interactive, role-tailored user interfaces.
+          </td>
+        </tr>
+
+        <!-- Row 2: Vite -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M29.5 5.5L16.8 28.5C16.5 29 15.8 29 15.5 28.5L2.5 5.5C2.2 4.9 2.7 4.2 3.4 4.3L16.2 6.5L28.6 4.3C29.3 4.2 29.8 4.9 29.5 5.5Z" fill="url(#vite-grad)"/>
+              <path d="M21 2L11 15H17L12 25L23 11H17L21 2Z" fill="#FFD02F"/>
+              <defs>
+                <linearGradient id="vite-grad" x1="2" y1="4" x2="29" y2="28" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#41D1FF"/>
+                  <stop offset="1" stop-color="#BD34FE"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="logo-label">Vite</span>
+          </td>
+          <td class="desc-cell">
+            Using <strong>Vite</strong> for next-generation frontend tooling offering fast build bundling and instant Hot Module Replacement (HMR).
+          </td>
+        </tr>
+
+        <!-- Row 3: Tailwind CSS -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="#38BDF8" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 13.5C10.5 9 13.5 7.5 18 9C15 10.5 14.25 12 15.75 13.5C17.25 15 19.5 16.5 19.5 21C18 25.5 15 27 10.5 25.5C13.5 24 14.25 22.5 12.75 21C11.25 19.5 9 18 9 13.5ZM18 4.5C19.5 0 22.5 -1.5 27 0C24 1.5 23.25 3 24.75 4.5C26.25 6 28.5 7.5 28.5 12C27 16.5 24 18 19.5 16.5C22.5 15 23.25 13.5 21.75 12C20.25 10.5 18 9 18 4.5Z"/>
+            </svg>
+            <span class="logo-label">Tailwind</span>
+          </td>
+          <td class="desc-cell">
+            Using <strong>Tailwind CSS</strong> as the utility-first CSS framework for structuring a clean, responsive Government of India portal theme.
+          </td>
+        </tr>
+
+        <!-- Row 4: Leaflet GIS -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2C8.5 8 4 15 4 22C4 28 9.5 30 16 30C22.5 30 28 28 28 22C28 15 23.5 8 16 2Z" fill="#74C043"/>
+              <path d="M16 8V28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <span class="logo-label">Leaflet</span>
+          </td>
+          <td class="desc-cell">
+            Using <strong>Leaflet GIS</strong> with Google Satellite hybrid tiles to render spatial cadastral land parcels, circle rates, and boundaries.
+          </td>
+        </tr>
+
+        <!-- Row 5: FastAPI -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="#009688" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" fill="#009688"/>
+              <path d="M17 6L9 18H16L15 26L23 14H16L17 6Z" fill="#ffffff"/>
+            </svg>
+            <span class="logo-label">FastAPI</span>
+          </td>
+          <td class="desc-cell">
+            <strong>FastAPI (Python)</strong> for asynchronous backend architecture because it is ideal for building scalable, high-speed RESTful APIs.
+          </td>
+        </tr>
+
+        <!-- Row 6: SQLModel / SQLite -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="#336791" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="16" cy="7" rx="12" ry="4" fill="#336791"/>
+              <path d="M4 7V15C4 17.2 9.4 19 16 19C22.6 19 28 17.2 28 15V7" fill="#2B5B84"/>
+              <path d="M4 15V23C4 25.2 9.4 27 16 27C22.6 27 28 25.2 28 23V15" fill="#234B6E"/>
+            </svg>
+            <span class="logo-label">SQLModel</span>
+          </td>
+          <td class="desc-cell">
+            <strong>SQLModel & SQLite</strong> (Relational ORM) to store and manage vast amounts of land parcels, projects, surveyors, and grievance tokens.
+          </td>
+        </tr>
+
+        <!-- Row 7: TLS 1.3 SMTP -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="#EA4335" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6C2.9 6 2 6.9 2 8V24C2 25.1 2.9 26 4 26H28C29.1 26 30 25.1 30 24V8C30 6.9 29.1 6 28 6H4ZM16 16.5L5.5 9.5H26.5L16 16.5Z"/>
+            </svg>
+            <span class="logo-label">SMTP SSL</span>
+          </td>
+          <td class="desc-cell">
+            <strong>Python SMTPLib (TLS 1.3)</strong> for secure, cryptographically signed legal notice email dispatch directly to landowner inboxes.
+          </td>
+        </tr>
+
+        <!-- Row 8: PyJWT -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="#FB015B" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" fill="#000000"/>
+              <circle cx="10" cy="16" r="4" fill="#FB015B"/>
+              <circle cx="16" cy="16" r="4" fill="#00B9F1"/>
+              <circle cx="22" cy="16" r="4" fill="#D63AFF"/>
+            </svg>
+            <span class="logo-label">PyJWT</span>
+          </td>
+          <td class="desc-cell">
+            Using <strong>PyJWT</strong> for 5-tier role authentication state and issuing 30-day single-use tamper-proof citizen objection tokens.
+          </td>
+        </tr>
+
+        <!-- Row 9: Web3 & SHA-256 -->
+        <tr>
+          <td class="logo-cell">
+            <svg class="logo-img" viewBox="0 0 32 32" fill="#627EEA" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" fill="#627EEA"/>
+              <path d="M16 4L9 15.5L16 19.5L23 15.5L16 4Z" fill="#ffffff" fill-opacity="0.8"/>
+              <path d="M16 20.5L9 16.5L16 27L23 16.5L16 20.5Z" fill="#ffffff"/>
+            </svg>
+            <span class="logo-label">Web3 / SHA</span>
+          </td>
+          <td class="desc-cell">
+            <strong>Web3 Escrow & SHA-256</strong> for Direct Benefit Transfer (DBT) compensation payouts and client-side land deed verification.
+          </td>
+        </tr>
+      </table>
     </div>
 
-    <!-- Two-Column Grid: Tech Stack (Left) & Workflow (Right) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      
-      <!-- ========================================================================= -->
-      <!-- LEFT COLUMN: TECH STACK USED TABLE (5 Cols)                               -->
-      <!-- ========================================================================= -->
-      <div class="lg:col-span-5 space-y-4">
-        <h2 class="text-xl font-black font-serif text-slate-900 tracking-tight text-center lg:text-left underline decoration-[#ea580c] decoration-4 underline-offset-8">
-          TECH STACK USED
-        </h2>
+    <!-- ========================================================================= -->
+    <!-- RIGHT SIDE: WORK FLOW                                                     -->
+    <!-- ========================================================================= -->
+    <div>
+      <h1 class="heading">WORK FLOW</h1>
 
-        <div class="border-2 border-slate-800 rounded-xl overflow-hidden shadow-xs divide-y-2 divide-slate-800 text-xs">
-          
-          <!-- Row 1: React 19 -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-brands fa-react text-sky-500 text-base"></i>
-              <span class="font-mono text-slate-900">React 19</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>React.js</strong> to build responsive, role-tailored single-page UI views.
-            </div>
-          </div>
-
-          <!-- Row 2: Vite -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-bolt text-amber-500 text-base"></i>
-              <span class="font-mono text-slate-900">Vite 8</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>Vite</strong> for lightning-fast build bundling and Hot Module Replacement.
-            </div>
-          </div>
-
-          <!-- Row 3: Tailwind CSS -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-brands fa-css3-alt text-cyan-500 text-base"></i>
-              <span class="font-mono text-slate-900">Tailwind</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>Tailwind CSS</strong> for an official Government of India design system.
-            </div>
-          </div>
-
-          <!-- Row 4: Leaflet GIS -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-earth-americas text-emerald-600 text-base"></i>
-              <span class="font-mono text-slate-900">Leaflet GIS</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>Leaflet + Google Satellite</strong> to plot cadastral parcels & boundaries.
-            </div>
-          </div>
-
-          <!-- Row 5: FastAPI -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-server text-teal-600 text-base"></i>
-              <span class="font-mono text-slate-900">FastAPI</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>FastAPI (Python)</strong> for high-speed, asynchronous REST API services.
-            </div>
-          </div>
-
-          <!-- Row 6: SQLModel / SQLite -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-database text-indigo-600 text-base"></i>
-              <span class="font-mono text-slate-900">SQLModel</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>SQLModel</strong> (SQLAlchemy + Pydantic) for typed relational DB schemas.
-            </div>
-          </div>
-
-          <!-- Row 7: TLS 1.3 SMTP -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-envelope-shield text-rose-600 text-base"></i>
-              <span class="font-mono text-slate-900">SMTP SSL</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>Python SMTPLib (TLS 1.3)</strong> for secure legal notice email dispatch.
-            </div>
-          </div>
-
-          <!-- Row 8: PyJWT (Security) -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-key text-amber-600 text-base"></i>
-              <span class="font-mono text-slate-900">PyJWT</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>PyJWT</strong> for 5-tier session auth and 30-day single-use grievance tokens.
-            </div>
-          </div>
-
-          <!-- Row 9: Web3 & SHA-256 -->
-          <div class="grid grid-cols-12 items-center bg-white hover:bg-slate-50 transition-colors">
-            <div class="col-span-4 p-2.5 bg-slate-100 border-r-2 border-slate-800 font-bold flex items-center gap-2">
-              <i class="fa-solid fa-cubes text-purple-600 text-base"></i>
-              <span class="font-mono text-slate-900">Web3 / SHA</span>
-            </div>
-            <div class="col-span-8 p-2.5 text-slate-700 font-medium leading-tight">
-              Using <strong>Web3 Escrow</strong> for direct payouts and <strong>SHA-256</strong> for title deed verification.
-            </div>
-          </div>
+      <div class="flowchart-wrapper">
+        
+        <!-- Level 1: Root User Oval -->
+        <div class="node-root">
+          User
         </div>
-      </div>
 
-      <!-- ========================================================================= -->
-      <!-- RIGHT COLUMN: WORK FLOW DIAGRAM (7 Cols)                                  -->
-      <!-- ========================================================================= -->
-      <div class="lg:col-span-7 space-y-4">
-        <h2 class="text-xl font-black font-serif text-slate-900 tracking-tight text-center lg:text-left underline decoration-[#0f2b5c] decoration-4 underline-offset-8">
-          WORK FLOW
-        </h2>
+        <!-- Vertical Line from Root -->
+        <div class="vline-root"></div>
 
-        <!-- Flowchart Container -->
-        <div class="bg-slate-50 border-2 border-slate-300 rounded-2xl p-4 sm:p-6 flex flex-col items-center space-y-5">
+        <!-- Horizontal Distribution Bar -->
+        <div class="hbar-level2"></div>
+
+        <!-- 4 Branches -->
+        <div class="branches-grid">
           
-          <!-- Level 1: Root User / Stakeholders Bubble -->
-          <div class="bg-purple-100 border-2 border-purple-400 text-purple-900 font-bold px-6 py-2 rounded-full text-sm shadow-sm flex items-center gap-2">
-            <i class="fa-solid fa-users text-purple-600"></i>
-            <span>Stakeholders / Users</span>
+          <!-- Branch 1: Ministry -->
+          <div class="branch-col">
+            <div class="vline-drop"></div>
+            <div class="node-l2">Ministry</div>
+            <div class="vline-l3"></div>
+            <div class="node-l3">Executive<br>Dashboard</div>
+            <div class="dashed-arrow-item">National KPIs</div>
+            <div class="dashed-arrow-item">MIS Reports</div>
           </div>
 
-          <!-- Connecting Line -->
-          <div class="w-0.5 h-4 bg-slate-400"></div>
-
-          <!-- Level 2: 4 Primary Role Channels (Horizontal Branching) -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full text-center">
-            
-            <!-- Channel 1: Ministry -->
-            <div class="bg-cyan-100 border-2 border-cyan-400 text-cyan-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
-              <i class="fa-solid fa-landmark text-cyan-700 text-sm mb-1"></i>
-              <span>Central Ministry</span>
-            </div>
-
-            <!-- Channel 2: District Collector -->
-            <div class="bg-amber-100 border-2 border-amber-400 text-amber-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
-              <i class="fa-solid fa-building-columns text-amber-700 text-sm mb-1"></i>
-              <span>District Collector</span>
-            </div>
-
-            <!-- Channel 3: Field Surveyor -->
-            <div class="bg-sky-100 border-2 border-sky-400 text-sky-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
-              <i class="fa-solid fa-location-crosshairs text-sky-700 text-sm mb-1"></i>
-              <span>Field Surveyor</span>
-            </div>
-
-            <!-- Channel 4: Citizen -->
-            <div class="bg-emerald-100 border-2 border-emerald-400 text-emerald-900 font-bold p-2 rounded-xl text-xs flex flex-col items-center justify-center shadow-xs">
-              <i class="fa-solid fa-user text-emerald-700 text-sm mb-1"></i>
-              <span>Citizen / Landowner</span>
-            </div>
+          <!-- Branch 2: Collector -->
+          <div class="branch-col">
+            <div class="vline-drop"></div>
+            <div class="node-l2">Collector</div>
+            <div class="vline-l3"></div>
+            <div class="node-l3">Notice<br>Dispatch</div>
+            <div class="node-l4-orange">Haversine<br>Locator</div>
+            <div class="dashed-arrow-item">SIH@12345</div>
+            <div class="dashed-arrow-item">TLS 1.3 Notice</div>
           </div>
 
-          <!-- Connecting Lines -->
-          <div class="w-full flex justify-around px-8">
-            <div class="w-0.5 h-4 bg-slate-300"></div>
-            <div class="w-0.5 h-4 bg-slate-300"></div>
-            <div class="w-0.5 h-4 bg-slate-300"></div>
-            <div class="w-0.5 h-4 bg-slate-300"></div>
+          <!-- Branch 3: Surveyor -->
+          <div class="branch-col">
+            <div class="vline-drop"></div>
+            <div class="node-l2">Surveyor</div>
+            <div class="vline-l3"></div>
+            <div class="node-l3">Mobile<br>Node</div>
+            <div class="node-l4-orange">Field<br>Survey</div>
+            <div class="dashed-arrow-item">GPS Coords</div>
+            <div class="dashed-arrow-item">Photo Geotag</div>
           </div>
 
-          <!-- Level 3: Action Sub-Modules -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full text-[11px] text-slate-700 font-semibold">
-            
-            <!-- Col 1: Ministry Actions -->
-            <div class="space-y-1.5 flex flex-col items-center">
-              <div class="w-full bg-white border border-cyan-300 p-2 rounded-lg text-center shadow-xs">
-                Executive Dashboard
-              </div>
-              <div class="w-full bg-cyan-50 border border-cyan-200 p-1.5 rounded-md text-[10px] text-cyan-800 text-center">
-                National KPIs & MIS
-              </div>
-            </div>
-
-            <!-- Col 2: Collector Actions -->
-            <div class="space-y-1.5 flex flex-col items-center">
-              <div class="w-full bg-white border border-amber-300 p-2 rounded-lg text-center shadow-xs">
-                Notice Dispatch
-              </div>
-              <div class="w-full bg-amber-50 border border-amber-200 p-1.5 rounded-md text-[10px] text-amber-800 text-center">
-                Haversine Proximity Match
-              </div>
-              <div class="w-full bg-amber-100/60 border border-amber-300 p-1.5 rounded-md text-[10px] text-amber-900 text-center font-bold">
-                SIH@12345 2FA Auth
-              </div>
-            </div>
-
-            <!-- Col 3: Surveyor Actions -->
-            <div class="space-y-1.5 flex flex-col items-center">
-              <div class="w-full bg-white border border-sky-300 p-2 rounded-lg text-center shadow-xs">
-                Mobile Node
-              </div>
-              <div class="w-full bg-sky-50 border border-sky-200 p-1.5 rounded-md text-[10px] text-sky-800 text-center">
-                GPS Coordinate Capture
-              </div>
-              <div class="w-full bg-sky-50 border border-sky-200 p-1.5 rounded-md text-[10px] text-sky-800 text-center">
-                Geotagged Evidence
-              </div>
-            </div>
-
-            <!-- Col 4: Citizen Actions -->
-            <div class="space-y-1.5 flex flex-col items-center">
-              <div class="w-full bg-white border border-emerald-300 p-2 rounded-lg text-center shadow-xs">
-                Public Portal Link
-              </div>
-              <div class="w-full bg-emerald-50 border border-emerald-200 p-1.5 rounded-md text-[10px] text-emerald-800 text-center">
-                Single-Use Token (30d)
-              </div>
-              <div class="w-full bg-emerald-100/60 border border-emerald-300 p-1.5 rounded-md text-[10px] text-emerald-900 text-center font-bold">
-                Submit & Burn Token
-              </div>
-            </div>
-          </div>
-
-          <!-- Connecting Bottom Convergence -->
-          <div class="w-0.5 h-4 bg-slate-400"></div>
-
-          <!-- Level 4: Core Engine Outcomes (Bottom Convergence) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-            <div class="bg-indigo-50 border-2 border-indigo-300 p-2.5 rounded-xl text-center shadow-xs">
-              <span class="text-[10px] font-bold text-indigo-900 uppercase block font-mono">1. Real-Time Dispute Resolution</span>
-              <strong class="text-xs text-[#0f2b5c]">Live Grievance Monitor (15s Polling)</strong>
-            </div>
-            <div class="bg-emerald-50 border-2 border-emerald-300 p-2.5 rounded-xl text-center shadow-xs">
-              <span class="text-[10px] font-bold text-emerald-900 uppercase block font-mono">2. Direct Benefit Transfer</span>
-              <strong class="text-xs text-emerald-800">Web3 Smart Escrow & PFMS Receipts</strong>
-            </div>
+          <!-- Branch 4: Citizen -->
+          <div class="branch-col">
+            <div class="vline-drop"></div>
+            <div class="node-l2">Citizen</div>
+            <div class="vline-l3"></div>
+            <div class="node-l3">Public<br>Portal</div>
+            <div class="dashed-arrow-item">30-Day Token</div>
+            <div class="dashed-arrow-item">Burn Token</div>
           </div>
 
         </div>
+
+        <!-- SVG Connecting Lines to Bottom Convergence -->
+        <div class="bottom-convergence-container">
+          <svg class="connecting-lines-svg" viewBox="0 0 500 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left line from collector/surveyor -->
+            <path d="M 180 0 L 180 15 L 250 30" stroke="#f6c28b" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <!-- Right line from citizen -->
+            <path d="M 320 0 L 320 15 L 250 30" stroke="#8ec5a1" stroke-width="1.5" stroke-dasharray="3 3"/>
+          </svg>
+
+          <!-- Bottom Green Convergence Node -->
+          <div class="node-bottom-green">
+            Live Grievance Monitor (15s Polling)<br>
+            <strong>& Web3 Escrow DBT Payouts</strong>
+          </div>
+        </div>
+
       </div>
-
-    </div>
-
-    <!-- Slide Footer -->
-    <div class="flex justify-between items-center text-xs text-slate-400 border-t pt-3 font-mono">
-      <span>NLAMS Architecture Blueprint</span>
-      <span>Compliant with RFCTLARR Act, 2013</span>
     </div>
 
   </div>
