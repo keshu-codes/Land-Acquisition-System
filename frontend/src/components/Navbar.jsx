@@ -89,17 +89,16 @@ export default function Navbar({ activeTab, setActiveTab }) {
         <div className="flex items-center justify-between h-20">
           
           {/* Official Emblem & Branding */}
-          <div className="flex items-center gap-3.5 cursor-pointer" onClick={() => setActiveTab('home')}>
-            <div className="h-11 w-11 rounded-full bg-slate-50 border border-slate-350 flex items-center justify-center text-slate-800 shadow-inner">
-              <Landmark className="h-6 w-6 stroke-[1.5] text-[#0f2b5c]" />
+          <div className="flex items-center gap-3 cursor-pointer flex-shrink-0" onClick={() => setActiveTab('home')}>
+            <div className="h-10 w-10 rounded-full bg-slate-50 border border-slate-300 flex items-center justify-center text-slate-800 shadow-inner flex-shrink-0">
+              <Landmark className="h-5 w-5 stroke-[1.5] text-[#0f2b5c]" />
             </div>
-            <div className="border-l border-slate-300 pl-3">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block font-serif">{t('govIndia')}</span>
-              <span className="font-extrabold text-[#0f2b5c] text-sm tracking-wide block leading-none font-serif mt-0.5">
-                {t('portalTitle')}
+            <div className="border-l border-slate-300 pl-3 flex flex-col justify-center">
+              <span className="text-[9.5px] text-slate-500 font-bold uppercase tracking-wider block font-serif leading-none">
+                {t('govIndia')}
               </span>
-              <span className="text-[11px] text-slate-700 font-semibold block leading-tight font-serif mt-0.5">
-                {t('portalSub')}
+              <span className="font-extrabold text-[#0f2b5c] text-[13.5px] tracking-tight block leading-tight font-serif mt-1 whitespace-nowrap">
+                National Land Portal <span className="text-[#ea580c] font-black">(NLAMS)</span>
               </span>
             </div>
           </div>
