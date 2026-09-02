@@ -16,6 +16,7 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
     notifications, 
     language, 
     setLanguage, 
+    t,
     logout, 
     login, 
     setShowLoginModal 
@@ -53,16 +54,16 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
 
   const getNavigationItems = (role) => {
     return [
-      { id: 'home', label: 'Portal Overview', icon: Landmark },
-      { id: 'citizen-dashboard', label: 'Citizen Land Dashboard', icon: UserCheck, badge: 'Landowner' },
-      { id: 'agency-dashboard', label: 'Agency Tenders & Bids', icon: Building2, badge: 'Partner' },
-      { id: 'dashboard', label: 'Authority Command Centre', icon: Landmark, badge: 'Analytics' },
-      { id: 'workflow', label: 'LARR Case Workflows', icon: FileText },
-      { id: 'dispatch', label: 'Notice Dispatch', icon: Send },
-      { id: 'web3', label: 'Web3 Audit & DBT', icon: Shield },
-      { id: 'survey', label: 'Field Survey Station', icon: MapPin },
-      { id: 'calc', label: 'Solatium Calculator', icon: Calculator },
-      { id: 'gis', label: 'GIS Satellite Explorer', icon: Layers }
+      { id: 'home', label: t('portalOverview') || 'Portal Overview', icon: Landmark },
+      { id: 'citizen-dashboard', label: t('citizenDashboardNav') || 'Citizen Land Dashboard', icon: UserCheck, badge: 'Landowner' },
+      { id: 'agency-dashboard', label: t('agencyDashboardNav') || 'Agency Tenders & Bids', icon: Building2, badge: 'Partner' },
+      { id: 'dashboard', label: t('authorityDashboardNav') || 'Authority Command Centre', icon: Landmark, badge: 'Analytics' },
+      { id: 'workflow', label: t('workflowsNav') || 'LARR Case Workflows', icon: FileText },
+      { id: 'dispatch', label: t('dispatchNav') || 'Notice Dispatch', icon: Send },
+      { id: 'web3', label: t('web3Nav') || 'Web3 Audit & DBT', icon: Shield },
+      { id: 'survey', label: t('surveyNav') || 'Field Survey Station', icon: MapPin },
+      { id: 'calc', label: t('calcNav') || 'Solatium Calculator', icon: Calculator },
+      { id: 'gis', label: t('gisNav') || 'GIS Satellite Explorer', icon: Layers }
     ];
   };
 

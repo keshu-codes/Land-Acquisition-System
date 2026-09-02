@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    // Navbar & Header
+    // Navbar & Sidebar Navigation
     govIndia: "Government of India",
     portalTitle: "NLAMS",
     portalSub: "National Land Acquisition & Management System",
@@ -20,6 +20,18 @@ export const translations = {
     dashboardSummary: "Dashboard Summary",
     aboutUs: "About Us",
 
+    // Sidebar Menu Items
+    portalOverview: "Portal Overview",
+    citizenDashboardNav: "Citizen Land Dashboard",
+    agencyDashboardNav: "Agency Tenders & Bids",
+    authorityDashboardNav: "Authority Command Centre",
+    workflowsNav: "LARR Case Workflows",
+    dispatchNav: "Notice Dispatch",
+    web3Nav: "Web3 Audit & DBT",
+    surveyNav: "Field Survey Station",
+    calcNav: "Solatium Calculator",
+    gisNav: "GIS Satellite Explorer",
+
     // Metric Cards
     subdivisionTitle: "Online Subdivision / Sec 11 Proposals",
     jpmsTitle: "Joint LPMs Subdivision / Cadastral Survey",
@@ -35,6 +47,24 @@ export const translations = {
     cadastralTools: "Cadastral Mapping Tools",
     spatialData: "Geo-referenced Spatial Data",
     userFriendly: "User Friendly Software",
+
+    // Notice Dispatch Page
+    surveyDispatchTitle: "Survey & Notice Dispatch",
+    surveyDispatchSub: "Assign land survey officers and dispatch formal acquisition notices.",
+    gisMapViewer: "GIS Map Viewer",
+    landParcelDetails: "Land & Parcel Details",
+    landowner: "Landowner",
+    plotSurveyNo: "Plot / Survey No",
+    areaDetails: "Area Details",
+    valuation: "Valuation",
+    project: "Project",
+    noticeEmailDest: "Notice Email Destination",
+    nearestOfficers: "Nearest Survey Officers",
+    autoDetected: "Auto-detected",
+    available: "Available",
+    onDuty: "On Duty",
+    dispatchNoticeBtn: "Dispatch Survey Notice & Assign Officer",
+    dispatchWarning: "This action will issue a formal legal notice and assign the selected officer.",
 
     // Home & Citizen Dashboard
     homeTitle: "National Land Acquisition & Management System",
@@ -115,7 +145,7 @@ export const translations = {
     apiHubTitle: "Inter-Ministerial API Integration Status"
   },
   hi: {
-    // Navbar & Header
+    // Navbar & Sidebar Navigation
     govIndia: "भारत सरकार",
     portalTitle: "NLAMS",
     portalSub: "राष्ट्रीय भूमि अर्जन एवं प्रबंधन प्रणाली",
@@ -135,6 +165,18 @@ export const translations = {
     dashboardSummary: "डैशबोर्ड सारांश",
     aboutUs: "हमारे बारे में",
 
+    // Sidebar Menu Items
+    portalOverview: "पोर्टल अवलोकन",
+    citizenDashboardNav: "नागरिक भूमि डैशबोर्ड",
+    agencyDashboardNav: "एजेंसी निविदाएं और बोलियां",
+    authorityDashboardNav: "प्राधिकरण कमान केंद्र",
+    workflowsNav: "LARR केस कार्यप्रवाह",
+    dispatchNav: "नोटिस प्रेषण",
+    web3Nav: "वेब3 ऑडिट और डीबीटी",
+    surveyNav: "फील्ड सर्वेक्षण स्टेशन",
+    calcNav: "मुआवजा कैलकुलेटर",
+    gisNav: "जीआईएस उपग्रह अन्वेषक",
+
     // Metric Cards
     subdivisionTitle: "ऑनलाइन उप-विभाजन / धारा 11 प्रस्ताव",
     jpmsTitle: "संयुक्त एलपीएम उप-विभाजन / कैडस्ट्रल सर्वेक्षण",
@@ -150,6 +192,24 @@ export const translations = {
     cadastralTools: "कैडस्ट्रल मैपिंग उपकरण",
     spatialData: "जियो-संदर्भित स्थानिक डेटा",
     userFriendly: "उपयोगकर्ता के अनुकूल सॉफ्टवेयर",
+
+    // Notice Dispatch Page
+    surveyDispatchTitle: "सर्वेक्षण और नोटिस प्रेषण",
+    surveyDispatchSub: "भूमि सर्वेक्षण अधिकारियों को नियुक्त करें और औपचारिक अधिग्रहण नोटिस भेजें।",
+    gisMapViewer: "जीआईएस मानचित्र दर्शक",
+    landParcelDetails: "भूमि और पार्सल विवरण",
+    landowner: "भूस्वामी",
+    plotSurveyNo: "प्लाट / सर्वेक्षण संख्या",
+    areaDetails: "क्षेत्र विवरण",
+    valuation: "मूल्यांकन",
+    project: "परियोजना",
+    noticeEmailDest: "नोटिस ईमेल गंतव्य",
+    nearestOfficers: "निकटतम सर्वेक्षण अधिकारी",
+    autoDetected: "स्वचालित पाया गया",
+    available: "उपलब्ध",
+    onDuty: "ड्यूटी पर",
+    dispatchNoticeBtn: "सर्वेक्षण नोटिस भेजें और अधिकारी नियुक्त करें",
+    dispatchWarning: "यह कार्रवाई एक औपचारिक कानूनी नोटिस जारी करेगी और चयनित अधिकारी को नियुक्त करेगी।",
 
     // Home & Citizen Dashboard
     homeTitle: "राष्ट्रीय भूमि अर्जन एवं प्रबंधन प्रणाली",
@@ -250,6 +310,18 @@ export const translations = {
     dashboardSummary: "ଡ୍ୟାସବୋର୍ଡ ସାରାଂଶ",
     aboutUs: "ଆମ ବିଷୟରେ",
 
+    // Sidebar Menu Items
+    portalOverview: "ପୋର୍ଟାଲ୍ ଅବଲୋକନ",
+    citizenDashboardNav: "ନାଗରିକ ଜମି ଡ୍ୟାସବୋର୍ଡ",
+    agencyDashboardNav: "ଏଜେନ୍ସି ଟେଣ୍ଡର",
+    authorityDashboardNav: "କର୍ତ୍ତୃପକ୍ଷ କମାଣ୍ଡ ସେଣ୍ଟର",
+    workflowsNav: "ମାମଲା କାର୍ଯ୍ୟପ୍ରବାହ",
+    dispatchNav: "ନୋଟିସ୍ ପ୍ରେରଣ",
+    web3Nav: "ୱେବ୍୩ ଅଡିଟ୍ ଓ ଡିବିଟି",
+    surveyNav: "ଫିଲ୍ଡ ସର୍ଭେ ଷ୍ଟେସନ",
+    calcNav: "କ୍ଷତିପୂରଣ କାଲକୁଲେଟର",
+    gisNav: "ଜିଆଇଏସ୍ ସାଟେଲାଇଟ୍",
+
     // Metric Cards
     subdivisionTitle: "ଅନଲାଇନ୍ ଉପ-ବିଭାଜନ / ଧାରା ୧୧ ପ୍ରସ୍ତାବ",
     jpmsTitle: "ଯୁଗ୍ମ ଏଲପିଏମ୍ ଉପ-ବିଭାଜନ / କ୍ୟାଡାଷ୍ଟ୍ରାଲ୍ ସର୍ଭେ",
@@ -265,6 +337,24 @@ export const translations = {
     cadastralTools: "ମାନଚିତ୍ର ଉପକରଣ",
     spatialData: "ସ୍ପାସିଆଲ୍ ଡାଟା",
     userFriendly: "ସହଜ ବ୍ୟବହାରଯୋଗ୍ୟ",
+
+    // Notice Dispatch Page
+    surveyDispatchTitle: "ସର୍ଭେ ଓ ନୋଟିସ୍ ପ୍ରେରଣ",
+    surveyDispatchSub: "ଜମି ସର୍ଭେୟର ନିଯୁକ୍ତ କରନ୍ତୁ ଓ ନୋଟିସ୍ ପ୍ରେରଣ କରନ୍ତୁ।",
+    gisMapViewer: "ଜିଆଇଏସ୍ ମାନଚିତ୍ର",
+    landParcelDetails: "ଜମି ଓ ପ୍ଲଟ୍ ବିବରଣୀ",
+    landowner: "ଜମି ମାଲିକ",
+    plotSurveyNo: "ପ୍ଲଟ୍ / ସର୍ଭେ ନମ୍ବର",
+    areaDetails: "କ୍ଷେତ୍ରଫଳ ବିବରଣୀ",
+    valuation: "ମୂଲ୍ୟାଙ୍କନ",
+    project: "ପ୍ରକଳ୍ପ",
+    noticeEmailDest: "ଇମେଲ୍ ଗନ୍ତବ୍ୟ",
+    nearestOfficers: "ନିକଟସ୍ଥ ସର୍ଭେୟର",
+    autoDetected: "ସ୍ୱୟଂକ୍ରିୟ ଚିହ୍ନଟ",
+    available: "ଉପଲବ୍ଧ",
+    onDuty: "ଡ୍ୟୁଟିରେ",
+    dispatchNoticeBtn: "ସର୍ଭେ ନୋଟିସ୍ ପ୍ରେରଣ କରନ୍ତୁ",
+    dispatchWarning: "ଏହି କାର୍ଯ୍ୟ ଦ୍ୱାରା ନୋଟିସ୍ ପ୍ରେରିତ ହେବ।",
 
     // Home & Citizen Dashboard
     homeTitle: "ଜାତୀୟ ଜମି ଅଧିଗ୍ରହଣ ଓ ପରିଚାଳନା ପ୍ରଣାଳୀ",
@@ -365,6 +455,18 @@ export const translations = {
     dashboardSummary: "डॅशबोर्ड सारांश",
     aboutUs: "आमच्याबद्दल",
 
+    // Sidebar Menu Items
+    portalOverview: "पोर्टल पुनरावलोकन",
+    citizenDashboardNav: "नागरिक जमीन डॅशबोर्ड",
+    agencyDashboardNav: "एजन्सी निविदा",
+    authorityDashboardNav: "प्राधिकरण कमांड सेंटर",
+    workflowsNav: "प्रकरण कार्यप्रवाह",
+    dispatchNav: "नोटीस पाठवणे",
+    web3Nav: "वेब३ ऑडिट आणि डीबीटी",
+    surveyNav: "फिल्ड सर्व्हे स्टेशन",
+    calcNav: "भरपाई कॅल्क्युलेटर",
+    gisNav: "जीआयएस उपग्रह एक्सप्लोरर",
+
     // Metric Cards
     subdivisionTitle: "ऑनलाइन उपविभाजन / कलम ११ प्रस्ताव",
     jpmsTitle: "संयुक्त एलपीएम उपविभाजन / कॅडस्ट्रल सर्व्हे",
@@ -380,6 +482,24 @@ export const translations = {
     cadastralTools: "नकाशा साधने",
     spatialData: "स्थानिक डेटा",
     userFriendly: "वापरण्यास सुलभ",
+
+    // Notice Dispatch Page
+    surveyDispatchTitle: "सर्व्हे आणि नोटीस पाठवणे",
+    surveyDispatchSub: "जमीन सर्व्हेअर नियुक्त करा आणि नोटीस पाठवा.",
+    gisMapViewer: "जीआयएस नकाशा",
+    landParcelDetails: "जमीन आणि पार्सल तपशील",
+    landowner: "जमीन मालक",
+    plotSurveyNo: "प्लॉट / सर्व्हे नंबर",
+    areaDetails: "क्षेत्र तपशील",
+    valuation: "मूल्यांकन",
+    project: "प्रकल्प",
+    noticeEmailDest: "ईमेल पत्ता",
+    nearestOfficers: "जवळचे सर्व्हेअर",
+    autoDetected: "आपोआप शोधले",
+    available: "उपलब्ध",
+    onDuty: "कर्तव्यावर",
+    dispatchNoticeBtn: "सर्व्हे नोटीस पाठवा",
+    dispatchWarning: "या कारवाईने नोटीस पाठवली जाईल.",
 
     // Home & Citizen Dashboard
     homeTitle: "राष्ट्रीय भूसंपादन आणि व्यवस्थापन प्रणाली",
@@ -460,7 +580,7 @@ export const translations = {
     apiHubTitle: "एपीआय जोडणी स्थिती"
   },
   ta: {
-    // Tamil (தமிழ்)
+    // Navbar & Sidebar Navigation
     govIndia: "இந்திய அரசு",
     portalTitle: "NLAMS",
     portalSub: "தேசிய நில கையகப்படுத்தல் மற்றும் மேலாண்மை அமைப்பு",
@@ -480,6 +600,18 @@ export const translations = {
     dashboardSummary: "டாஷ்போர்டு சுருக்கம்",
     aboutUs: "எங்களைப் பற்றி",
 
+    // Sidebar Menu Items
+    portalOverview: "போர்டல் மேலோட்டம்",
+    citizenDashboardNav: "குடிமகன் நில டாஷ்போர்டு",
+    agencyDashboardNav: "ஏஜென்சி டெண்டர்கள்",
+    authorityDashboardNav: "அதிகார மையம்",
+    workflowsNav: "வழக்கு பணிப்பாய்வு",
+    dispatchNav: "அறிவிப்பு அனுப்புதல்",
+    web3Nav: "வெப்3 தணிக்கை",
+    surveyNav: "புல ஆய்வு மையம்",
+    calcNav: "இழப்பீடு கணக்கிடுவான்",
+    gisNav: "ஜிஐஎஸ் செயற்கைக்கோள்",
+
     // Metric Cards
     subdivisionTitle: "ஆன்லைன் உட்பிரிவு / பிரிவு 11 முன்மொழிவுகள்",
     jpmsTitle: "கூட்டு எல்பிஎம் உட்பிரிவு / சர்வே",
@@ -495,6 +627,24 @@ export const translations = {
     cadastralTools: "வரைபட கருவிகள்",
     spatialData: "புவியியல் தரவு",
     userFriendly: "எளிதான மென்பொருள்",
+
+    // Notice Dispatch Page
+    surveyDispatchTitle: "ஆய்வு மற்றும் அறிவிப்பு அனுப்புதல்",
+    surveyDispatchSub: "நில அதிகாரிகளை நியமித்து அறிவிப்புகளை அனுப்பவும்.",
+    gisMapViewer: "ஜிஐஎஸ் வரைபடம்",
+    landParcelDetails: "நில விவரங்கள்",
+    landowner: "நில உரிமையாளர்",
+    plotSurveyNo: "நில எண் / சர்வே எண்",
+    areaDetails: "பரப்பளவு",
+    valuation: "மதிப்பு",
+    project: "திட்டம்",
+    noticeEmailDest: "மின்னஞ்சல்",
+    nearestOfficers: "அதிகாரிகள்",
+    autoDetected: "கண்டறியப்பட்டது",
+    available: "கிடைக்கிறது",
+    onDuty: "பணியில்",
+    dispatchNoticeBtn: "அறிவிப்பை அனுப்பவும்",
+    dispatchWarning: "அறிவிப்பு அனுப்பப்படும்.",
 
     // Home & Citizen Dashboard
     homeTitle: "தேசிய நில கையகப்படுத்தல் மற்றும் மேலாண்மை அமைப்பு",
@@ -575,7 +725,7 @@ export const translations = {
     apiHubTitle: "ஏபிஐ நிலை"
   },
   bn: {
-    // Bengali (বাংলা)
+    // Navbar & Sidebar Navigation
     govIndia: "भारत सरकार",
     portalTitle: "NLAMS",
     portalSub: "জাতীয় জমি অধিগ্রহণ ও ব্যবস্থাপনা ব্যবস্থা",
@@ -595,6 +745,18 @@ export const translations = {
     dashboardSummary: "ড্যাশবোর্ড সারসংক্ষেপ",
     aboutUs: "আমাদের কথা",
 
+    // Sidebar Menu Items
+    portalOverview: "পোর্টাল সারসংক্ষেপ",
+    citizenDashboardNav: "নাগরিক জমি ড্যাশবোর্ড",
+    agencyDashboardNav: "এজেন্সি টেন্ডার",
+    authorityDashboardNav: "কর্তৃপক্ষ কমান্ড সেন্টার",
+    workflowsNav: "মামলা কাজের ধারা",
+    dispatchNav: "নোটিশ প্রেরণ",
+    web3Nav: "ওয়েব৩ অডিট ও ডিবিটি",
+    surveyNav: "ফিল্ড সার্ভে স্টেশন",
+    calcNav: "ক্ষতিপূরণ ক্যালকুলেটর",
+    gisNav: "জিআইএস স্যাটেলাইট এক্সপ্লোরার",
+
     // Metric Cards
     subdivisionTitle: "অনলাইন উপ-বিভাজন / ধারা ১১ প্রস্তাব",
     jpmsTitle: "যৌথ এলপিএম উপ-বিভাজন / ক্যাডাস্ট্রাল জরিপ",
@@ -610,6 +772,24 @@ export const translations = {
     cadastralTools: "মানচিত্র সরঞ্জাম",
     spatialData: "স্প্যাশিয়াল ডেটা",
     userFriendly: "সহজ ব্যবহারযোগ্য সফটওয়্যার",
+
+    // Notice Dispatch Page
+    surveyDispatchTitle: "জরিপ ও নোটিশ প্রেরণ",
+    surveyDispatchSub: "জমির সার্ভেয়ার নিয়োগ করুন এবং নোটিশ প্রেরণ করুন।",
+    gisMapViewer: "জিআইএস মানচিত্র",
+    landParcelDetails: "জমি ও প্লট বিবরণ",
+    landowner: "জমির মালিক",
+    plotSurveyNo: "প্লট / জরিপ নম্বর",
+    areaDetails: "ক্ষেত্রফল বিবরণ",
+    valuation: "মূল্যায়ন",
+    project: "প্রকল্প",
+    noticeEmailDest: "ইমেইল গন্তব্য",
+    nearestOfficers: "নিকটস্থ সার্ভেয়ার",
+    autoDetected: "স্বয়ংক্রিয় সনাক্তকরণ",
+    available: "উপলব্ধ",
+    onDuty: "ডিউটিতে",
+    dispatchNoticeBtn: "সার্ভে নোটিশ প্রেরণ করুন",
+    dispatchWarning: "এই পদক্ষেপের মাধ্যমে নোটিশ প্রেরিত হবে।",
 
     // Home & Citizen Dashboard
     homeTitle: "জাতীয় জমি অধিগ্রহণ ও ব্যবস্থাপনা ব্যবস্থা",
