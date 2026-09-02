@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
+import NLAMSLogo from '../components/NLAMSLogo';
 import { 
   Shield, Key, User, Building2, Compass, Landmark, Lock, CheckCircle, 
   AlertCircle, ArrowRight, RefreshCw, X, Smartphone, MessageSquareCheck, UserCheck
@@ -147,7 +148,7 @@ export default function Login({ onClose, isInline = false, onLoginSuccess, initi
         {/* ── DUAL LOGIN SELECTION TAB BAR ── */}
         <div className="bg-[#12355B] text-white p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-700">
           <div className="flex items-center gap-2">
-            <img src="/emblem.jpg" alt="Emblem of India" className="h-8 w-auto object-contain bg-white rounded p-0.5" />
+            <NLAMSLogo className="h-7 w-7" />
             <span className="font-extrabold text-sm sm:text-base font-serif">
               NLAMS Dual Portal Login
             </span>

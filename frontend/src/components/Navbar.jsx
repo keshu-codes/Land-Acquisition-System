@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
+import NLAMSLogo from './NLAMSLogo';
 import { 
   Shield, MapPin, Bell, User, Menu, X, Landmark, 
   FileText, Globe, Send, Compass, Phone, Sparkles, CheckCircle2, ChevronDown, Lock, Radio,
@@ -120,13 +121,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex flex-wrap items-center justify-between gap-3 min-h-[4rem]">
           
-          {/* Official Branding with Emblem */}
+          {/* Official Branding with NLAMS Logo */}
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
-            <img 
-              src="/emblem.jpg" 
-              alt="Government of India Emblem" 
-              className="h-12 w-auto object-contain bg-white rounded-xl p-1 border border-slate-200 shadow-md group-hover:scale-105 transition-transform flex-shrink-0" 
-            />
+            <NLAMSLogo className="h-10 w-10 group-hover:scale-105 transition-transform" />
             <div className="border-l border-slate-200 pl-3 flex flex-col justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block font-serif leading-none">

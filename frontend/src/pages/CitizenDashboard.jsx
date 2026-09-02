@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
+import NLAMSLogo from '../components/NLAMSLogo';
 import { 
   Landmark, MapPin, CheckCircle, FileText, ShieldCheck, 
   CreditCard, Scale, Clock, Sprout, Fingerprint, FileCheck, Building, 
@@ -86,7 +87,7 @@ export default function CitizenDashboard({ setActiveTab }) {
         {/* Top Government Strip */}
         <div className="bg-[#12355B] text-white px-6 sm:px-8 py-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="/emblem.jpg" alt="Emblem of India" className="h-10 w-auto object-contain bg-white rounded-md p-1" />
+            <NLAMSLogo className="h-9 w-9" />
             <div>
               <span className="text-[10px] text-amber-300 font-bold uppercase tracking-widest block font-serif">
                 Land Record & Compensation Statement

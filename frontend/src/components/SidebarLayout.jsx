@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
+import NLAMSLogo from './NLAMSLogo';
 import { 
   Landmark, Search, Bell, User, Globe, Radio, Shield, 
   Calculator, Layers, BookOpen, Scale, FileText, Send, Compass, MapPin, 
@@ -94,7 +95,7 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
           {/* Top Brand Header */}
           <div className="p-4 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('home')}>
-              <img src="/emblem.jpg" alt="Emblem of India" className="h-10 w-auto object-contain bg-white rounded-lg p-1 shadow-md flex-shrink-0" />
+              <NLAMSLogo className="h-9 w-9" />
               {sidebarOpen && (
                 <div>
                   <span className="text-[9px] font-bold text-amber-300 uppercase tracking-widest block font-serif leading-none">

@@ -6,6 +6,8 @@ import {
   ArrowUpRight, ListCheck, CheckCircle, XCircle, Clock, ChevronUp, Layers, Building, Eye
 } from 'lucide-react';
 
+import NLAMSLogo from '../components/NLAMSLogo';
+
 export default function Home({ setActiveTab }) {
   const { language, setLanguage, user, selectedRole, setSelectedRole, login, setShowLoginModal, openLoginModal } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,7 +68,7 @@ export default function Home({ setActiveTab }) {
           
           {/* Center Official Portal Title */}
           <div className="flex items-center justify-center gap-3">
-            <img src="/emblem.jpg" alt="Emblem of India" className="h-14 w-auto object-contain bg-white rounded p-1 shadow-xs border border-slate-200" />
+            <NLAMSLogo className="h-12 w-12" />
             <div className="text-left border-l border-slate-200 pl-3">
               <h1 className="text-2xl sm:text-3xl font-black text-[#12355B] tracking-tight font-serif">
                 NLAMS
