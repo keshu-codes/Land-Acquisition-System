@@ -204,13 +204,24 @@ export default function SidebarLayout({ activeTab, setActiveTab, children }) {
             </div>
           )}
 
-          <button
-            onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-            className="w-full bg-white/10 hover:bg-white/20 text-white p-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
-          >
-            <Globe className="h-3.5 w-3.5 text-amber-400" />
-            {sidebarOpen && <span>{language === 'en' ? 'हिन्दी (Hindi)' : 'English'}</span>}
-          </button>
+          <div className="flex items-center gap-1.5 bg-white/10 p-2 rounded-xl border border-white/10">
+            <Globe className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+            {sidebarOpen && (
+              <select
+                id="sidebar-regional-lang-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent text-amber-300 text-xs font-bold focus:outline-none cursor-pointer w-full"
+              >
+                <option value="en" className="bg-slate-900 text-white">English (EN)</option>
+                <option value="hi" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
+                <option value="or" className="bg-slate-900 text-white">ଓଡ଼ିଆ (Odia)</option>
+                <option value="mr" className="bg-slate-900 text-white">मराठी (Marathi)</option>
+                <option value="ta" className="bg-slate-900 text-white">தமிழ் (Tamil)</option>
+                <option value="bn" className="bg-slate-900 text-white">বাংলা (Bengali)</option>
+              </select>
+            )}
+          </div>
         </div>
 
       </aside>
