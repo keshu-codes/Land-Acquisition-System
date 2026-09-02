@@ -60,57 +60,23 @@ export default function Home({ setActiveTab }) {
   return (
     <div className="space-y-10 font-sans text-slate-800 bg-[#FAFAF7] pb-12">
       
-      {/* ── 1. OFFICIAL TOP EMBLEM & MINISTERIAL HEADER (IMAGE 1 EXACT) ── */}
-      <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-8 shadow-xs">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* ── 1. OFFICIAL TOP EMBLEM HEADER ── */}
+      <div className="bg-white border-b border-slate-200 py-5 px-4 sm:px-8 shadow-xs">
+        <div className="max-w-7xl mx-auto flex items-center justify-center text-center">
           
-          {/* Left Dignitary */}
-          <div className="flex items-center gap-3">
-            <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-emerald-700 shadow-sm flex-shrink-0 bg-slate-100">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/c/c0/Narendra_Modi_official_portrait_July_2024.jpg" 
-                alt="Hon'ble Prime Minister" 
-                className="w-full h-full object-cover"
-                onError={(e) => { e.target.src = '/emblem.jpg'; }}
-              />
-            </div>
-            <div className="text-left hidden sm:block">
-              <strong className="block text-xs font-extrabold text-[#12355B]">Shri Narendra Modi</strong>
-              <span className="text-[10px] text-slate-500 font-semibold block">Hon'ble Prime Minister of India</span>
-            </div>
-          </div>
-
           {/* Center Official Portal Title */}
-          <div className="text-center space-y-1">
-            <div className="flex items-center justify-center gap-2">
-              <img src="/emblem.jpg" alt="Emblem of India" className="h-12 w-auto object-contain bg-white rounded p-0.5" />
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-black text-[#D97706] tracking-tight font-serif">
-                  BHUNAKSHA - NLAMS
-                </h1>
-                <span className="text-[11px] font-extrabold text-[#12355B] uppercase tracking-wider block font-serif">
-                  SURVEY, SETTLEMENTS AND LAND RECORDS
-                </span>
-                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block">
-                  GOVERNMENT OF INDIA
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Dignitary */}
-          <div className="flex items-center gap-3">
-            <div className="text-right hidden sm:block">
-              <strong className="block text-xs font-extrabold text-[#12355B]">Shri Nitin Gadkari</strong>
-              <span className="text-[10px] text-slate-500 font-semibold block">Hon'ble Minister for Road Transport & Highways</span>
-            </div>
-            <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-emerald-700 shadow-sm flex-shrink-0 bg-slate-100">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Nitin_Gadkari_%28cropped%29.jpg/330px-Nitin_Gadkari_%28cropped%29.jpg" 
-                alt="Hon'ble Minister" 
-                className="w-full h-full object-cover"
-                onError={(e) => { e.target.src = '/emblem.jpg'; }}
-              />
+          <div className="flex items-center justify-center gap-3">
+            <img src="/emblem.jpg" alt="Emblem of India" className="h-14 w-auto object-contain bg-white rounded p-1 shadow-xs border border-slate-200" />
+            <div className="text-left border-l border-slate-200 pl-3">
+              <h1 className="text-2xl sm:text-3xl font-black text-[#12355B] tracking-tight font-serif">
+                NLAMS
+              </h1>
+              <span className="text-[11px] font-extrabold text-[#D97706] uppercase tracking-wider block font-serif leading-none mt-0.5">
+                SURVEY, SETTLEMENTS AND LAND RECORDS
+              </span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mt-0.5">
+                GOVERNMENT OF INDIA
+              </span>
             </div>
           </div>
 
@@ -172,7 +138,7 @@ export default function Home({ setActiveTab }) {
 
         <div className="relative z-10 space-y-4 max-w-2xl text-white">
           <h2 className="text-3xl sm:text-5xl font-black font-serif tracking-tight leading-tight">
-            BHUNAKSHA - NLAMS
+            NLAMS
           </h2>
           <p className="text-lg sm:text-xl font-bold text-amber-300">
             Survey, Settlements and Land Records
@@ -226,7 +192,7 @@ export default function Home({ setActiveTab }) {
         </div>
       </div>
 
-      {/* ── 4. DASHBOARD METRIC CARDS SECTION (IMAGE 2 EXACT) ── */}
+      {/* ── 4. DASHBOARD METRIC CARDS SECTION ── */}
       <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-8">
         
         <div className="flex items-center justify-between border-b border-slate-300 pb-3">
@@ -286,7 +252,7 @@ export default function Home({ setActiveTab }) {
             <div className="p-4 space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
                 <span className="flex items-center gap-2 font-bold text-slate-700">
-                  <ListCheck className="h-4 w-4 text-[#EC4899]" /> Total Parcls
+                  <ListCheck className="h-4 w-4 text-[#EC4899]" /> Total Parcels
                 </span>
                 <strong className="font-mono text-sm text-[#EC4899]">3,51,020</strong>
               </div>
@@ -344,7 +310,7 @@ export default function Home({ setActiveTab }) {
 
               <div className="flex items-center justify-between p-2.5 bg-amber-50 text-amber-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <Clock className="h-4 w-4 text-amber-600" /> Pending Review
+                  <Clock className="h-4 w-4 text-[#0D9488]" /> Pending Review
                 </span>
                 <strong className="font-mono text-sm text-amber-700">852</strong>
               </div>
@@ -354,7 +320,7 @@ export default function Home({ setActiveTab }) {
         </div>
       </div>
 
-      {/* ── 5. ABOUT US & COLORED HEXAGON PILLARS (IMAGE 2 EXACT) ── */}
+      {/* ── 5. ABOUT US & COLORED HEXAGON PILLARS ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-6 pt-4">
         
         <div className="border-b-2 border-emerald-600 pb-2">
@@ -367,7 +333,7 @@ export default function Home({ setActiveTab }) {
           
           <div className="lg:col-span-6 space-y-3 text-xs text-slate-600 leading-relaxed font-medium">
             <p>
-              The <strong>Bhunaksha NLAMS</strong> platform is a state-of-the-art cadastral mapping and land acquisition management software designed by the National Informatics Centre (NIC) and Central Ministry. The primary purpose of Bhunaksha NLAMS is to facilitate the creation and accessibility of land maps for the public and reduce property-related fraud.
+              The <strong>NLAMS</strong> platform is a state-of-the-art cadastral mapping and land acquisition management system designed by the National Informatics Centre (NIC) and Central Ministry. The primary purpose of NLAMS is to facilitate the creation and accessibility of land maps for the public and reduce property-related fraud.
             </p>
             <p>
               The platform seamlessly integrates with existing land record systems, PM GatiShakti NMP, and Public Financial Management System (PFMS) portals to enhance transparent access to land records, 100% Solatium awards, and digitized cadastral maps.
