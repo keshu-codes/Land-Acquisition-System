@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 export default function Home({ setActiveTab }) {
-  const { language, setLanguage, user, selectedRole, setSelectedRole, login, setShowLoginModal } = useContext(AppContext);
+  const { language, setLanguage, user, selectedRole, setSelectedRole, login, setShowLoginModal, openLoginModal } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedPlot, setSearchedPlot] = useState(null);
 
@@ -99,14 +99,14 @@ export default function Home({ setActiveTab }) {
 
           <div className="flex items-center gap-3">
             <button 
-              onClick={() => setShowLoginModal(true)}
+              onClick={() => openLoginModal ? openLoginModal('citizen') : setShowLoginModal(true)}
               className="bg-white hover:bg-slate-100 text-[#1B5E20] px-4 py-1.5 rounded-lg text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <User className="h-3.5 w-3.5" />
               <span>Citizen Login</span>
             </button>
             <button 
-              onClick={() => setShowLoginModal(true)}
+              onClick={() => openLoginModal ? openLoginModal('authority') : setShowLoginModal(true)}
               className="bg-[#FBC02D] hover:bg-amber-400 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Shield className="h-3.5 w-3.5 text-slate-900" />

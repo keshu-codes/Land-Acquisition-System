@@ -114,6 +114,12 @@ export const AppContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [authToken, setAuthToken] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginModalMode, setLoginModalMode] = useState('authority');
+
+  const openLoginModal = (mode = 'authority') => {
+    setLoginModalMode(mode);
+    setShowLoginModal(true);
+  };
 
   // Synchronize selectedRole with logged-in user role
   useEffect(() => {
@@ -474,6 +480,9 @@ export const AppContextProvider = ({ children }) => {
       logout,
       showLoginModal,
       setShowLoginModal,
+      loginModalMode,
+      setLoginModalMode,
+      openLoginModal,
       authHeader,
       addNotification,
       logBlockchainTx

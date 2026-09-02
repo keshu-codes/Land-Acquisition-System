@@ -5,11 +5,11 @@ import {
   AlertCircle, ArrowRight, RefreshCw, X, Smartphone, MessageSquareCheck, UserCheck
 } from 'lucide-react';
 
-export default function Login({ onClose, isInline = false, onLoginSuccess }) {
-  const { login, language, setLanguage, t, setShowLoginModal } = useContext(AppContext);
+export default function Login({ onClose, isInline = false, onLoginSuccess, initialMode }) {
+  const { login, language, setLanguage, t, setShowLoginModal, loginModalMode } = useContext(AppContext);
 
   // Dual Login Mode: 'authority' vs 'citizen'
-  const [loginMode, setLoginMode] = useState('authority');
+  const [loginMode, setLoginMode] = useState(initialMode || loginModalMode || 'authority');
 
   // Authority Login State
   const [username, setUsername] = useState("");
