@@ -9,7 +9,7 @@ import {
 import NLAMSLogo from '../components/NLAMSLogo';
 
 export default function Home({ setActiveTab }) {
-  const { language, setLanguage, user, selectedRole, setSelectedRole, login, setShowLoginModal, openLoginModal } = useContext(AppContext);
+  const { language, setLanguage, t, user, selectedRole, setSelectedRole, login, setShowLoginModal, openLoginModal } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedPlot, setSearchedPlot] = useState(null);
 
@@ -71,13 +71,13 @@ export default function Home({ setActiveTab }) {
             <NLAMSLogo className="h-12 w-12" />
             <div className="text-left border-l border-slate-200 pl-3">
               <h1 className="text-2xl sm:text-3xl font-black text-[#12355B] tracking-tight font-serif">
-                NLAMS
+                {t('portalTitle')}
               </h1>
               <span className="text-[11px] font-extrabold text-[#D97706] uppercase tracking-wider block font-serif leading-none mt-0.5">
-                SURVEY, SETTLEMENTS AND LAND RECORDS
+                {t('surveySettlements')}
               </span>
               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mt-0.5">
-                GOVERNMENT OF INDIA
+                {t('govIndia')}
               </span>
             </div>
           </div>
@@ -91,11 +91,11 @@ export default function Home({ setActiveTab }) {
           <div className="flex items-center gap-6 text-xs font-bold">
             <button onClick={() => setActiveTab('home')} className="flex items-center gap-1.5 hover:text-amber-300 transition-colors cursor-pointer">
               <Landmark className="h-4 w-4" />
-              <span>Home</span>
+              <span>{t('home')}</span>
             </button>
             <button onClick={() => setActiveTab('dashboard')} className="flex items-center gap-1.5 hover:text-amber-300 transition-colors cursor-pointer">
               <Layers className="h-4 w-4" />
-              <span>Dashboard</span>
+              <span>{t('dashboard')}</span>
             </button>
           </div>
 
@@ -105,14 +105,14 @@ export default function Home({ setActiveTab }) {
               className="bg-white hover:bg-slate-100 text-[#1B5E20] px-4 py-1.5 rounded-lg text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <User className="h-3.5 w-3.5" />
-              <span>Citizen Login</span>
+              <span>{t('citizenLogin')}</span>
             </button>
             <button 
               onClick={() => openLoginModal ? openLoginModal('authority') : setShowLoginModal(true)}
               className="bg-[#FBC02D] hover:bg-amber-400 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Shield className="h-3.5 w-3.5 text-slate-900" />
-              <span>Officer Login</span>
+              <span>{t('officerLogin')}</span>
             </button>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function Home({ setActiveTab }) {
               <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
               <input 
                 type="text" 
-                placeholder="Enter Plot Number, Survey ID, or Landowner Name..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-white text-slate-900 text-xs font-bold pl-10 pr-4 py-3 rounded-xl focus:outline-none shadow-md"
@@ -165,7 +165,7 @@ export default function Home({ setActiveTab }) {
               type="submit"
               className="bg-[#FBC02D] hover:bg-amber-400 text-slate-900 text-xs font-extrabold px-6 py-3 rounded-xl transition-all shadow-md cursor-pointer whitespace-nowrap"
             >
-              Search Land Record
+              {t('searchBtn')}
             </button>
           </form>
 
@@ -199,7 +199,7 @@ export default function Home({ setActiveTab }) {
         
         <div className="flex items-center justify-between border-b border-slate-300 pb-3">
           <h2 className="text-2xl font-black text-[#12355B] font-serif">
-            Dashboard Summary
+            {t('dashboardSummary')}
           </h2>
           <span className="text-[11px] text-slate-500 font-mono">
             Last updated on: 29/08/2026, 05:49:47 pm
@@ -211,34 +211,34 @@ export default function Home({ setActiveTab }) {
           {/* PURPLE CARD: ONLINE SUBDIVISION */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden space-y-3">
             <div className="bg-[#6B46C1] text-white font-extrabold px-5 py-3 text-center text-sm font-serif">
-              Online Subdivision / Sec 11 Proposals
+              {t('subdivisionTitle')}
             </div>
 
             <div className="p-4 space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
                 <span className="flex items-center gap-2 font-bold text-slate-700">
-                  <ListCheck className="h-4 w-4 text-[#6B46C1]" /> Total Proposals
+                  <ListCheck className="h-4 w-4 text-[#6B46C1]" /> {t('total')}
                 </span>
                 <strong className="font-mono text-sm text-[#6B46C1]">5,94,003</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-emerald-50 text-emerald-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <CheckCircle className="h-4 w-4 text-emerald-600" /> Approved Gazette
+                  <CheckCircle className="h-4 w-4 text-emerald-600" /> {t('approved')}
                 </span>
                 <strong className="font-mono text-sm text-emerald-700">4,96,023</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-rose-50 text-rose-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <XCircle className="h-4 w-4 text-rose-600" /> Rejected / Closed
+                  <XCircle className="h-4 w-4 text-rose-600" /> {t('rejected')}
                 </span>
                 <strong className="font-mono text-sm text-rose-700">88,564</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-amber-50 text-amber-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <Clock className="h-4 w-4 text-amber-600" /> Pending Scrutiny
+                  <Clock className="h-4 w-4 text-amber-600" /> {t('pending')}
                 </span>
                 <strong className="font-mono text-sm text-amber-700">9,179</strong>
               </div>
@@ -248,34 +248,34 @@ export default function Home({ setActiveTab }) {
           {/* PINK CARD: JOINT LPMS SUBDIVISION */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden space-y-3">
             <div className="bg-[#EC4899] text-white font-extrabold px-5 py-3 text-center text-sm font-serif">
-              Joint LPMs Subdivision / Cadastral Survey
+              {t('jpmsTitle')}
             </div>
 
             <div className="p-4 space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
                 <span className="flex items-center gap-2 font-bold text-slate-700">
-                  <ListCheck className="h-4 w-4 text-[#EC4899]" /> Total Parcels
+                  <ListCheck className="h-4 w-4 text-[#EC4899]" /> {t('total')}
                 </span>
                 <strong className="font-mono text-sm text-[#EC4899]">3,51,020</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-emerald-50 text-emerald-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <CheckCircle className="h-4 w-4 text-emerald-600" /> Approved Coordinates
+                  <CheckCircle className="h-4 w-4 text-emerald-600" /> {t('approved')}
                 </span>
                 <strong className="font-mono text-sm text-emerald-700">2,83,048</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-rose-50 text-rose-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <XCircle className="h-4 w-4 text-rose-600" /> Rejected Bounds
+                  <XCircle className="h-4 w-4 text-rose-600" /> {t('rejected')}
                 </span>
                 <strong className="font-mono text-sm text-rose-700">63,817</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-amber-50 text-amber-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <Clock className="h-4 w-4 text-amber-600" /> Pending GPS Nodes
+                  <Clock className="h-4 w-4 text-amber-600" /> {t('pending')}
                 </span>
                 <strong className="font-mono text-sm text-amber-700">3,932</strong>
               </div>
@@ -285,34 +285,34 @@ export default function Home({ setActiveTab }) {
           {/* TEAL CARD: ERROR CORRECTION */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden space-y-3">
             <div className="bg-[#0D9488] text-white font-extrabold px-5 py-3 text-center text-sm font-serif">
-              Error Correction / Citizen Objections
+              {t('errorTitle')}
             </div>
 
             <div className="p-4 space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
                 <span className="flex items-center gap-2 font-bold text-slate-700">
-                  <ListCheck className="h-4 w-4 text-[#0D9488]" /> Total Objections
+                  <ListCheck className="h-4 w-4 text-[#0D9488]" /> {t('total')}
                 </span>
                 <strong className="font-mono text-sm text-[#0D9488]">5,208</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-emerald-50 text-emerald-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <CheckCircle className="h-4 w-4 text-emerald-600" /> Resolved Hearings
+                  <CheckCircle className="h-4 w-4 text-emerald-600" /> {t('approved')}
                 </span>
                 <strong className="font-mono text-sm text-emerald-700">4,089</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-rose-50 text-rose-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <XCircle className="h-4 w-4 text-rose-600" /> Rejected Petitions
+                  <XCircle className="h-4 w-4 text-rose-600" /> {t('rejected')}
                 </span>
                 <strong className="font-mono text-sm text-rose-700">276</strong>
               </div>
 
               <div className="flex items-center justify-between p-2.5 bg-amber-50 text-amber-900 rounded-xl">
                 <span className="flex items-center gap-2 font-bold">
-                  <Clock className="h-4 w-4 text-[#0D9488]" /> Pending Review
+                  <Clock className="h-4 w-4 text-[#0D9488]" /> {t('pending')}
                 </span>
                 <strong className="font-mono text-sm text-amber-700">852</strong>
               </div>
@@ -327,7 +327,7 @@ export default function Home({ setActiveTab }) {
         
         <div className="border-b-2 border-emerald-600 pb-2">
           <h2 className="text-2xl font-black text-[#1B5E20] font-serif">
-            About Us
+            {t('aboutUs')}
           </h2>
         </div>
 
@@ -348,31 +348,31 @@ export default function Home({ setActiveTab }) {
             {/* Orange Hexagon */}
             <div className="w-28 h-28 bg-[#EA580C] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
               <FileText className="h-6 w-6" />
-              <span className="text-[10px] font-extrabold leading-tight">Record of Rights</span>
+              <span className="text-[10px] font-extrabold leading-tight">{t('recordRights')}</span>
             </div>
 
             {/* Grey Hexagon */}
             <div className="w-28 h-28 bg-[#374151] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
               <Globe className="h-6 w-6" />
-              <span className="text-[10px] font-extrabold leading-tight">Web Based Modules</span>
+              <span className="text-[10px] font-extrabold leading-tight">{t('webModules')}</span>
             </div>
 
             {/* Blue Hexagon */}
             <div className="w-28 h-28 bg-[#2563EB] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
               <MapPin className="h-6 w-6" />
-              <span className="text-[10px] font-extrabold leading-tight">Cadastral Mapping Tools</span>
+              <span className="text-[10px] font-extrabold leading-tight">{t('cadastralTools')}</span>
             </div>
 
             {/* Green Hexagon */}
             <div className="w-28 h-28 bg-[#16A34A] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
               <Compass className="h-6 w-6" />
-              <span className="text-[10px] font-extrabold leading-tight">Geo-referenced Spatial Data</span>
+              <span className="text-[10px] font-extrabold leading-tight">{t('spatialData')}</span>
             </div>
 
             {/* Teal Hexagon */}
             <div className="w-28 h-28 bg-[#0D9488] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
               <User className="h-6 w-6" />
-              <span className="text-[10px] font-extrabold leading-tight">User Friendly Software</span>
+              <span className="text-[10px] font-extrabold leading-tight">{t('userFriendly')}</span>
             </div>
 
           </div>

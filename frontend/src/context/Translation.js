@@ -1,15 +1,40 @@
 export const translations = {
   en: {
-    // Navbar
+    // Navbar & Header
     govIndia: "Government of India",
-    portalTitle: "National Land Portal (NLAMS)",
+    portalTitle: "NLAMS",
     portalSub: "National Land Acquisition & Management System",
+    surveySettlements: "SURVEY, SETTLEMENTS AND LAND RECORDS",
     executiveDashboard: "Executive Dashboard",
     workflows: "Case Files & Workflows",
     web3Audit: "Web3 Audit & Compensation",
     surveyorNode: "Field Survey Node",
     connectWallet: "Connect Wallet",
     profile: "Profile",
+    citizenLogin: "Citizen Login",
+    officerLogin: "Officer Login",
+    home: "Home",
+    dashboard: "Dashboard",
+    searchPlaceholder: "Enter Plot Number, Survey ID, or Landowner Name...",
+    searchBtn: "Search Land Record",
+    dashboardSummary: "Dashboard Summary",
+    aboutUs: "About Us",
+
+    // Metric Cards
+    subdivisionTitle: "Online Subdivision / Sec 11 Proposals",
+    jpmsTitle: "Joint LPMs Subdivision / Cadastral Survey",
+    errorTitle: "Error Correction / Citizen Objections",
+    total: "Total",
+    approved: "Approved",
+    rejected: "Rejected",
+    pending: "Pending",
+
+    // Hexagon Pillars
+    recordRights: "Record of Rights",
+    webModules: "Web Based Modules",
+    cadastralTools: "Cadastral Mapping Tools",
+    spatialData: "Geo-referenced Spatial Data",
+    userFriendly: "User Friendly Software",
 
     // Home & Citizen Dashboard
     homeTitle: "National Land Acquisition & Management System",
@@ -26,16 +51,41 @@ export const translations = {
     kendraSub: "Visit nearest Jan Seva Kendra for biometric thumb authentication, physical verification, and hard copy printouts."
   },
   hi: {
-    // Navbar
+    // Navbar & Header
     govIndia: "भारत सरकार",
-    portalTitle: "राष्ट्रीय भूमि अर्जन पोर्टल (NLAMS)",
+    portalTitle: "NLAMS",
     portalSub: "राष्ट्रीय भूमि अर्जन एवं प्रबंधन प्रणाली",
+    surveySettlements: "सर्वेक्षण, बंदोबस्त एवं भू-अभिलेख",
     executiveDashboard: "कार्यकारी डैशबोर्ड",
     workflows: "केस फ़ाइलें और कार्यप्रवाह",
     web3Audit: "वेब3 ऑडिट और मुआवजा",
     surveyorNode: "फील्ड सर्वेयर नोड",
     connectWallet: "वॉलेट कनेक्ट करें",
     profile: "प्रोफ़ाइल",
+    citizenLogin: "नागरिक लॉगिन",
+    officerLogin: "अधिकारी लॉगिन",
+    home: "मुख्य पृष्ठ",
+    dashboard: "डैशबोर्ड",
+    searchPlaceholder: "प्लाट संख्या, सर्वेक्षण आईडी या भूस्वामी का नाम दर्ज करें...",
+    searchBtn: "भूमि रिकॉर्ड खोजें",
+    dashboardSummary: "डैशबोर्ड सारांश",
+    aboutUs: "हमारे बारे में",
+
+    // Metric Cards
+    subdivisionTitle: "ऑनलाइन उप-विभाजन / धारा 11 प्रस्ताव",
+    jpmsTitle: "संयुक्त एलपीएम उप-विभाजन / कैडस्ट्रल सर्वेक्षण",
+    errorTitle: "त्रुटि सुधार / नागरिक आपत्तियां",
+    total: "कुल",
+    approved: "स्वीकृत",
+    rejected: "अस्वीकृत",
+    pending: "लंबित",
+
+    // Hexagon Pillars
+    recordRights: "अधिकार अभिलेख (RoR)",
+    webModules: "वेब आधारित मॉड्यूल",
+    cadastralTools: "कैडस्ट्रल मैपिंग उपकरण",
+    spatialData: "जियो-संदर्भित स्थानिक डेटा",
+    userFriendly: "उपयोगकर्ता के अनुकूल सॉफ्टवेयर",
 
     // Home & Citizen Dashboard
     homeTitle: "राष्ट्रीय भूमि अर्जन एवं प्रबंधन प्रणाली",
@@ -54,14 +104,39 @@ export const translations = {
   or: {
     // Odia (ଓଡ଼ିଆ)
     govIndia: "ଭାରତ ସରକାର",
-    portalTitle: "ଜାତୀୟ ଜମି ଅଧିଗ୍ରହଣ ପୋର୍ଟାଲ (NLAMS)",
+    portalTitle: "NLAMS",
     portalSub: "ଜାତୀୟ ଜମି ଅଧିଗ୍ରହଣ ଓ ପରିଚାଳନା ପ୍ରଣାଳୀ",
+    surveySettlements: "ସର୍ଭେ, ବନ୍ଦୋବସ୍ତ ଓ ଭୂଲେଖ",
     executiveDashboard: "କାର୍ଯ୍ୟନିର୍ବାହୀ ଡ୍ୟାସବୋର୍ଡ",
     workflows: "ମାମଲା ଓ କାର୍ଯ୍ୟପ୍ରବାହ",
     web3Audit: "ୱେବ୍୩ ଅଡିଟ୍ ଓ କ୍ଷତିପୂରଣ",
     surveyorNode: "ଫିଲ୍ଡ ସର୍ଭେୟର ନୋଡ୍",
     connectWallet: "ୱାଲେଟ୍ ସଂଯୋଗ କରନ୍ତୁ",
     profile: "ପ୍ରୋଫାଇଲ୍",
+    citizenLogin: "ନାଗରିକ ଲଗଇନ୍",
+    officerLogin: "ଅଧିକାରୀ ଲଗଇନ୍",
+    home: "ମୁଖ୍ୟ ପୃଷ୍ଠା",
+    dashboard: "ଡ୍ୟାସବୋର୍ଡ",
+    searchPlaceholder: "ପ୍ଲଟ୍ ନମ୍ବର, ସର୍ଭେ ଆଇଡି କିମ୍ବା ଜମି ମାଲିକଙ୍କ ନାମ ଦିଅନ୍ତୁ...",
+    searchBtn: "ଜମି ରେକର୍ଡ ଖୋଜନ୍ତୁ",
+    dashboardSummary: "ଡ୍ୟାସବୋର୍ଡ ସାରାଂଶ",
+    aboutUs: "ଆମ ବିଷୟରେ",
+
+    // Metric Cards
+    subdivisionTitle: "ଅନଲାଇନ୍ ଉପ-ବିଭାଜନ / ଧାରା ୧୧ ପ୍ରସ୍ତାବ",
+    jpmsTitle: "ଯୁଗ୍ମ ଏଲପିଏମ୍ ଉପ-ବିଭାଜନ / କ୍ୟାଡାଷ୍ଟ୍ରାଲ୍ ସର୍ଭେ",
+    errorTitle: "ତ୍ରୁଟି ସଂଶୋଧନ / ନାଗରିକ ଆପତ୍ତି",
+    total: "ମୋଟ",
+    approved: "ଅନୁମୋଦିତ",
+    rejected: "ନାକଚ",
+    pending: "ବକେୟା",
+
+    // Hexagon Pillars
+    recordRights: "ଅଧିକାର ଅଭିଲେଖ",
+    webModules: "ୱେବ୍ ଆଧାରିତ ମଡ୍ୟୁଲ୍",
+    cadastralTools: "ମାନଚିତ୍ର ଉପକରଣ",
+    spatialData: "ସ୍ପାସିଆଲ୍ ଡାଟା",
+    userFriendly: "ସହଜ ବ୍ୟବହାରଯୋଗ୍ୟ",
 
     // Home & Citizen Dashboard
     homeTitle: "ଜାତୀୟ ଜମି ଅଧିଗ୍ରହଣ ଓ ପରିଚାଳନା ପ୍ରଣାଳୀ",
@@ -80,14 +155,39 @@ export const translations = {
   mr: {
     // Marathi (मराठी)
     govIndia: "भारत सरकार",
-    portalTitle: "राष्ट्रीय भूसंपादन पोर्टल (NLAMS)",
+    portalTitle: "NLAMS",
     portalSub: "राष्ट्रीय भूसंपादन आणि व्यवस्थापन प्रणाली",
+    surveySettlements: "सर्व्हेक्षण, बंदोबस्त आणि भूमी अभिलेख",
     executiveDashboard: "कार्यकारी डॅशबोर्ड",
     workflows: "प्रकरणे आणि कार्यप्रवाह",
     web3Audit: "वेब३ ऑडिट आणि भरपाई",
     surveyorNode: "फिल्ड सर्व्हेअर नोड",
     connectWallet: "वॉलेट कनेक्ट करा",
     profile: "प्रोफाइल",
+    citizenLogin: "नागरिक लॉगिन",
+    officerLogin: "अधिकारी लॉगिन",
+    home: "मुख्य पृष्ठ",
+    dashboard: "डॅशबोर्ड",
+    searchPlaceholder: "प्लॉट नंबर, सर्व्हे आयडी किंवा जमीन मालकाचे नाव प्रविष्ट करा...",
+    searchBtn: "जमीन नोंद शोधा",
+    dashboardSummary: "डॅशबोर्ड सारांश",
+    aboutUs: "आमच्याबद्दल",
+
+    // Metric Cards
+    subdivisionTitle: "ऑनलाइन उपविभाजन / कलम ११ प्रस्ताव",
+    jpmsTitle: "संयुक्त एलपीएम उपविभाजन / कॅडस्ट्रल सर्व्हे",
+    errorTitle: "त्रुटी दुरुस्ती / नागरिक हरकती",
+    total: "एकूण",
+    approved: "मंजूर",
+    rejected: "नाकारले",
+    pending: "लंबित",
+
+    // Hexagon Pillars
+    recordRights: "हक्क नोंदणी (RoR)",
+    webModules: "वेब आधारित मॉड्यूल्स",
+    cadastralTools: "नकाशा साधने",
+    spatialData: "स्थानिक डेटा",
+    userFriendly: "वापरण्यास सुलभ",
 
     // Home & Citizen Dashboard
     homeTitle: "राष्ट्रीय भूसंपादन आणि व्यवस्थापन प्रणाली",
@@ -106,14 +206,39 @@ export const translations = {
   ta: {
     // Tamil (தமிழ்)
     govIndia: "இந்திய அரசு",
-    portalTitle: "தேசிய நில கையகப்படுத்தல் போர்டல் (NLAMS)",
+    portalTitle: "NLAMS",
     portalSub: "தேசிய நில கையகப்படுத்தல் மற்றும் மேலாண்மை அமைப்பு",
+    surveySettlements: "நில அளவை, குடியேற்றம் மற்றும் நிலப் பதிவேடுகள்",
     executiveDashboard: "நிர்வாக டாஷ்போர்டு",
     workflows: "வழக்குகள் மற்றும் பணிப்பாய்வு",
     web3Audit: "வெப்3 தணிக்கை மற்றும் இழப்பீடு",
     surveyorNode: "புல ஆய்வாளர் முனையம்",
     connectWallet: "வாலட்டை இணைக்கவும்",
     profile: "சுயவிவரம்",
+    citizenLogin: "குடிமகன் உள்நுழைவு",
+    officerLogin: "அதிகாரி உள்நுழைவு",
+    home: "முகப்பு",
+    dashboard: "டாஷ்போர்டு",
+    searchPlaceholder: "நில எண், சர்வே ஐடி அல்லது உரிமையாளர் பெயரை உள்ளிடவும்...",
+    searchBtn: "நில பதிவை தேடுக",
+    dashboardSummary: "டாஷ்போர்டு சுருக்கம்",
+    aboutUs: "எங்களைப் பற்றி",
+
+    // Metric Cards
+    subdivisionTitle: "ஆன்லைன் உட்பிரிவு / பிரிவு 11 முன்மொழிவுகள்",
+    jpmsTitle: "கூட்டு எல்பிஎம் உட்பிரிவு / சர்வே",
+    errorTitle: "பிழை திருத்தம் / ஆட்சேபனைகள்",
+    total: "மொத்தம்",
+    approved: "அங்கீகரிக்கப்பட்டது",
+    rejected: "நிராகரிக்கப்பட்டது",
+    pending: "நிலுவையில் உள்ளது",
+
+    // Hexagon Pillars
+    recordRights: "உரிமை பதிவேடு",
+    webModules: "இணைய அடிப்படையிலான தொகுதிகள்",
+    cadastralTools: "வரைபட கருவிகள்",
+    spatialData: "புவியியல் தரவு",
+    userFriendly: "எளிதான மென்பொருள்",
 
     // Home & Citizen Dashboard
     homeTitle: "தேசிய நில கையகப்படுத்தல் மற்றும் மேலாண்மை அமைப்பு",
@@ -131,15 +256,40 @@ export const translations = {
   },
   bn: {
     // Bengali (বাংলা)
-    govIndia: "ভারত সরকার",
-    portalTitle: "জাতীয় জমি অধিগ্রহণ পোর্টাল (NLAMS)",
+    govIndia: "भारत सरकार",
+    portalTitle: "NLAMS",
     portalSub: "জাতীয় জমি অধিগ্রহণ ও ব্যবস্থাপনা ব্যবস্থা",
+    surveySettlements: "জরিপ, বন্দোবস্ত এবং ভূমি রেকর্ড",
     executiveDashboard: "নির্বাহী ড্যাশবোর্ড",
     workflows: "মামলা ও কাজের ধারা",
     web3Audit: "ওয়েব৩ অডিট ও ক্ষতিপূরণ",
     surveyorNode: "ফিল্ড সার্ভেয়ার নোড",
     connectWallet: "ওয়ালেট সংযোগ করুন",
     profile: "প্রোফাইল",
+    citizenLogin: "নাগরিক লগইন",
+    officerLogin: "আধিকারিক লগইন",
+    home: "প্রধান পৃষ্ঠা",
+    dashboard: "ড্যাশবোর্ড",
+    searchPlaceholder: "প্লট নম্বর, জরিপ আইডি বা জমির মালিকের নাম লিখুন...",
+    searchBtn: "জমি রেকর্ড অনুসন্ধান করুন",
+    dashboardSummary: "ড্যাশবোর্ড সারসংক্ষেপ",
+    aboutUs: "আমাদের কথা",
+
+    // Metric Cards
+    subdivisionTitle: "অনলাইন উপ-বিভাজন / ধারা ১১ প্রস্তাব",
+    jpmsTitle: "যৌথ এলপিএম উপ-বিভাজন / ক্যাডাস্ট্রাল জরিপ",
+    errorTitle: "ত্রুটি সংশোধন / নাগরিক আপত্তি",
+    total: "মোট",
+    approved: "অনুমোদিত",
+    rejected: "বাতিল",
+    pending: "বকেয়া",
+
+    // Hexagon Pillars
+    recordRights: "স্বত্ব রেকর্ড",
+    webModules: "ওয়েব ভিত্তিক মডিউল",
+    cadastralTools: "মানচিত্র সরঞ্জাম",
+    spatialData: "স্প্যাশিয়াল ডেটা",
+    userFriendly: "সহজ ব্যবহারযোগ্য সফটওয়্যার",
 
     // Home & Citizen Dashboard
     homeTitle: "জাতীয় জমি অধিগ্রহণ ও ব্যবস্থাপনা ব্যবস্থা",
