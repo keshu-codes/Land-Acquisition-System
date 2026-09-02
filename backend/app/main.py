@@ -11,11 +11,11 @@ from .routers import projects, parcels, beneficiaries, dashboard, auth, grievanc
 
 app = FastAPI(title="National Land Acquisition System API", version="1.0.0")
 
-# allow local vite dev port and any trycloudflare tunnel
+# Allow all origins including Vercel deployment domains and Cloudflare tunnels
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"https://.*\.trycloudflare\.com|http://localhost:\d+|http://127\.0\.0\.1:\d+",
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
