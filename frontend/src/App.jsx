@@ -38,12 +38,6 @@ function AppContent() {
       }
     };
     window.addEventListener('navigate-tab', handleNav);
-    
-    // Show login page immediately when user first opens the website
-    const savedUser = localStorage.getItem('nlams_user');
-    if (!savedUser && !token) {
-      setShowLoginModal(true);
-    }
 
     return () => window.removeEventListener('navigate-tab', handleNav);
   }, []);
@@ -94,38 +88,12 @@ function AppContent() {
     }
   };
 
-  // ── Unauthenticated Visitors: Render ONLY the Official Government Login Portal ──
+  // If user is unauthenticated, render the official Bhunaksha NLAMS Public Home page
   if (!user && !grievanceToken) {
     return (
-      <div className="min-h-screen bg-[#FAFAF7] flex flex-col justify-between font-sans text-slate-800">
-        {/* Top Government Banner */}
-        <header className="bg-[#12355B] text-white py-3 px-6 shadow-md border-b border-slate-700 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/emblem.jpg" alt="Emblem of India" className="h-10 w-auto object-contain bg-white rounded-lg p-1 shadow-sm" />
-            <div>
-              <span className="text-[10px] text-amber-300 font-bold uppercase tracking-widest block font-serif leading-none">
-                Government of India • Ministry of Rural Development
-              </span>
-              <h1 className="font-extrabold text-white text-base tracking-tight leading-tight mt-0.5">
-                NLAMS — National Land Acquisition & Management System
-              </h1>
-            </div>
-          </div>
-          <span className="hidden sm:inline-flex bg-emerald-900/80 text-emerald-300 text-[10px] font-mono font-extrabold px-3 py-1 rounded-full border border-emerald-500/40">
-            🔒 Secure Official Gateway
-          </span>
-        </header>
-
-        {/* Centered Login Portal Card */}
-        <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
-          <Login isInline={true} />
-        </main>
-
-        {/* Footer */}
-        <footer className="bg-slate-900 text-slate-400 py-3 px-6 text-center text-xs border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
-          <span>© 2026 National Land Acquisition & Management System (NLAMS) • Government of India</span>
-          <span className="font-mono text-[11px] text-amber-400">TLS 1.3 Encrypted • NIC Protected Node</span>
-        </footer>
+      <div className="min-h-screen bg-[#FAFAF7] font-sans text-slate-800">
+        <Home setActiveTab={setActiveTab} />
+        {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}
       </div>
     );
   }

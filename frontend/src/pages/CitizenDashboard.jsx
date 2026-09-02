@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 export default function CitizenDashboard({ setActiveTab }) {
-  const { user } = useContext(AppContext);
+  const { user, t } = useContext(AppContext);
   const [showObjectionModal, setShowObjectionModal] = useState(false);
   const [objectionSubmitted, setObjectionSubmitted] = useState(false);
   const [objectionType, setObjectionType] = useState('VALUATION');
@@ -107,19 +107,19 @@ export default function CitizenDashboard({ setActiveTab }) {
         <div className="p-6 sm:p-8 bg-[#FAF9F6] border-b border-stone-200 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left">
           
           <div className="space-y-1">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Land Area</span>
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{t('totalArea') || 'Total Land Area'}</span>
             <span className="text-3xl font-black text-[#12355B] font-mono block">{citizenLand.totalAreaAcres}</span>
             <span className="text-xs text-slate-500 block">{citizenLand.totalAreaSqM}</span>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Market Circle Rate / Unit</span>
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">{t('marketRate') || 'Est. Market Rate / Unit'}</span>
             <span className="text-xl font-extrabold text-[#7A5C3E] font-mono block">{citizenLand.marketRatePerUnit}</span>
             <span className="text-xs text-slate-500 block">District Collectorate Rate</span>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-bold text-[#2F6B4F] uppercase tracking-wider block">Total Award Payable</span>
+            <span className="text-[11px] font-bold text-[#2F6B4F] uppercase tracking-wider block">{t('totalPayable') || 'Total Award Payable'}</span>
             <span className="text-3xl font-black text-[#2F6B4F] font-mono block">{citizenLand.totalGovtAward}</span>
             <span className="text-xs text-emerald-700 font-bold block">Includes 100% Solatium (Sec 30)</span>
           </div>
@@ -134,7 +134,7 @@ export default function CitizenDashboard({ setActiveTab }) {
               className="bg-[#12355B] hover:bg-[#0b1f42] text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer transition-all shadow-xs flex items-center gap-2"
             >
               <Fingerprint className="h-4 w-4 text-amber-400" />
-              <span>Digital E-Sign / Biometric Verification</span>
+              <span>{t('verificationTitle') || 'Digital E-Sign / Biometric Verification'}</span>
             </button>
 
             <button 
@@ -142,7 +142,7 @@ export default function CitizenDashboard({ setActiveTab }) {
               className="bg-[#C98B2E] hover:bg-amber-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer transition-all shadow-xs flex items-center gap-2"
             >
               <Scale className="h-4 w-4" />
-              <span>Submit Objection / Disagreement Petition</span>
+              <span>{t('objectionTitle') || 'Submit Objection / Disagreement Petition'}</span>
             </button>
           </div>
 

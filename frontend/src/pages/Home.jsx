@@ -1,18 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { 
-  Search, ArrowRight, Sparkles, CheckCircle2, AlertCircle, FileText, Phone, Download, 
-  MapPin, Shield, Gavel, Landmark, Compass, CreditCard, Megaphone, Globe, User, ArrowUpRight
+  Search, ArrowRight, CheckCircle2, FileText, Phone, Download, 
+  MapPin, Shield, Gavel, Landmark, Compass, CreditCard, Megaphone, Globe, User, 
+  ArrowUpRight, ListCheck, CheckCircle, XCircle, Clock, ChevronUp, Layers, Building, Eye
 } from 'lucide-react';
 
 export default function Home({ setActiveTab }) {
-  const { language, setLanguage, user, selectedRole, setSelectedRole, login } = useContext(AppContext);
+  const { language, setLanguage, user, selectedRole, setSelectedRole, login, setShowLoginModal } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedPlot, setSearchedPlot] = useState(null);
 
   const samplePlots = [
     {
-      name: "Anmol",
+      name: "Rameshwar Patel",
       plot: "PLOT-OD-2026-9821",
       survey: "SN-9821",
       project: "Regional Multi-Modal Corridor Expansion",
@@ -25,7 +26,7 @@ export default function Home({ setActiveTab }) {
       tabTarget: "dispatch"
     },
     {
-      name: "Rameshwar Patel",
+      name: "Anmol",
       plot: "PLOT-MH-2026-1044",
       survey: "SN-1044",
       project: "Indore Metro Rail Corridor Line 2",
@@ -36,19 +37,6 @@ export default function Home({ setActiveTab }) {
       totalAward: "₹1,30,00,000",
       status: "Possession Handover Complete",
       tabTarget: "web3"
-    },
-    {
-      name: "M. Selvakumar",
-      plot: "PLOT-TN-2026-2082",
-      survey: "SN-2082",
-      project: "Chennai Industrial Link Corridor",
-      district: "Kanchipuram, Tamil Nadu",
-      area: "3.2 Acres (Commercial)",
-      valuation: "₹78,00,000",
-      solatium: "₹78,00,000 (100% Solatium)",
-      totalAward: "₹1,56,00,000",
-      status: "Award Declared (PFMS Ready)",
-      tabTarget: "dashboard"
     }
   ];
 
@@ -65,309 +53,373 @@ export default function Home({ setActiveTab }) {
     setSearchedPlot(found || "NOT_FOUND");
   };
 
-  const handleRoleClick = async (roleId, targetTab) => {
-    setSelectedRole(roleId);
-    await login(roleId, 'nlams2026');
-    setActiveTab(targetTab);
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="space-y-10 font-sans text-slate-800">
+    <div className="space-y-10 font-sans text-slate-800 bg-[#FAFAF7] pb-12">
       
-      {/* ── STITCH HERO SECTION ── */}
-      <section className="relative bg-[#0F172A] text-white rounded-3xl p-8 sm:p-12 flex flex-col items-center text-center shadow-2xl overflow-hidden min-h-[500px] justify-center border border-slate-700/50">
-        <div className="absolute inset-0 z-0">
-          <img 
-            alt="Aerial view of highway construction" 
-            className="w-full h-full object-cover object-center opacity-40 mix-blend-overlay" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrg45tD5zB0mFufvQxyPx7g6mN_U-GGnEvL1G80vZM7Fzk7FTeIvyQZhr4wAaxlLHVtpA7NfVepZQf3fjyuIXCkgQJyO2U0QtI3Xh-tDkEXN3BM9wQXWwUmOM9PHv3x6J2nky0a9CnvRSFdFI7jjKlFSlPM8z0zmlY6Ouq6X5K0qhUqLqCb-omrh5KMVlz4h8yGv3xxl6DCsbVXlBuNR_Wp7nZoul0zNedk269A45WubraL1opPE9F"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/70 to-transparent"></div>
-        </div>
-
-        <div className="z-10 w-full max-w-4xl flex flex-col gap-5 items-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-400/50 text-amber-300 font-mono text-[11px] uppercase tracking-wider bg-black/40 backdrop-blur-md">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-            Single-Window Public Land Portal • RFCTLARR Act 2013
+      {/* ── 1. OFFICIAL TOP EMBLEM & MINISTERIAL HEADER (IMAGE 1 EXACT) ── */}
+      <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-8 shadow-xs">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          
+          {/* Left Dignitary */}
+          <div className="flex items-center gap-3">
+            <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-emerald-700 shadow-sm flex-shrink-0 bg-slate-100">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/c/c0/Narendra_Modi_official_portrait_July_2024.jpg" 
+                alt="Hon'ble Prime Minister" 
+                className="w-full h-full object-cover"
+                onError={(e) => { e.target.src = '/emblem.jpg'; }}
+              />
+            </div>
+            <div className="text-left hidden sm:block">
+              <strong className="block text-xs font-extrabold text-[#12355B]">Shri Narendra Modi</strong>
+              <span className="text-[10px] text-slate-500 font-semibold block">Hon'ble Prime Minister of India</span>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight drop-shadow-md leading-tight">
-            Search Your Land Record & Compensation Status
-          </h1>
+          {/* Center Official Portal Title */}
+          <div className="text-center space-y-1">
+            <div className="flex items-center justify-center gap-2">
+              <img src="/emblem.jpg" alt="Emblem of India" className="h-12 w-auto object-contain bg-white rounded p-0.5" />
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black text-[#D97706] tracking-tight font-serif">
+                  BHUNAKSHA - NLAMS
+                </h1>
+                <span className="text-[11px] font-extrabold text-[#12355B] uppercase tracking-wider block font-serif">
+                  SURVEY, SETTLEMENTS AND LAND RECORDS
+                </span>
+                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest block">
+                  GOVERNMENT OF INDIA
+                </span>
+              </div>
+            </div>
+          </div>
 
-          <p className="text-sm sm:text-base text-slate-200/90 max-w-2xl leading-relaxed">
-            No complicated steps or tutorials needed. Enter your Name, Plot Number, or Survey Number below to instantly check your official notice, valuation, and bank payment advice.
+          {/* Right Dignitary */}
+          <div className="flex items-center gap-3">
+            <div className="text-right hidden sm:block">
+              <strong className="block text-xs font-extrabold text-[#12355B]">Shri Nitin Gadkari</strong>
+              <span className="text-[10px] text-slate-500 font-semibold block">Hon'ble Minister for Road Transport & Highways</span>
+            </div>
+            <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-emerald-700 shadow-sm flex-shrink-0 bg-slate-100">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Nitin_Gadkari_%28cropped%29.jpg/330px-Nitin_Gadkari_%28cropped%29.jpg" 
+                alt="Hon'ble Minister" 
+                className="w-full h-full object-cover"
+                onError={(e) => { e.target.src = '/emblem.jpg'; }}
+              />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── 2. DARK GREEN NAV BAR WITH LOGIN BUTTONS ── */}
+      <div className="bg-[#1B5E20] text-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-2.5 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-6 text-xs font-bold">
+            <button onClick={() => setActiveTab('home')} className="flex items-center gap-1.5 hover:text-amber-300 transition-colors cursor-pointer">
+              <Landmark className="h-4 w-4" />
+              <span>Home</span>
+            </button>
+            <button onClick={() => setActiveTab('dashboard')} className="flex items-center gap-1.5 hover:text-amber-300 transition-colors cursor-pointer">
+              <Layers className="h-4 w-4" />
+              <span>Dashboard</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setShowLoginModal(true)}
+              className="bg-white hover:bg-slate-100 text-[#1B5E20] px-4 py-1.5 rounded-lg text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <User className="h-3.5 w-3.5" />
+              <span>Citizen Login</span>
+            </button>
+            <button 
+              onClick={() => setShowLoginModal(true)}
+              className="bg-[#FBC02D] hover:bg-amber-400 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Shield className="h-3.5 w-3.5 text-slate-900" />
+              <span>Officer Login</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. HERO BANNER WITH AERIAL CADASTRAL OVERLAY ── */}
+      <div className="relative max-w-7xl mx-auto rounded-3xl overflow-hidden shadow-2xl min-h-[420px] flex items-center p-8 sm:p-12 border border-slate-300">
+        <img 
+          src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop" 
+          alt="Aerial view of green agricultural land" 
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+
+        {/* Cadastral Polygon SVG Overlay Effect */}
+        <div className="absolute right-12 top-12 bottom-12 w-1/2 hidden md:flex items-center justify-center opacity-80 pointer-events-none">
+          <svg className="w-full h-full" viewBox="0 0 400 300">
+            <polygon points="100,50 300,80 350,220 80,240" fill="rgba(255,255,255,0.15)" stroke="#FFFFFF" strokeWidth="3" strokeDasharray="6 4" />
+            <circle cx="100" cy="50" r="10" fill="#2563EB" stroke="#FFFFFF" strokeWidth="3" />
+            <circle cx="300" cy="80" r="10" fill="#2563EB" stroke="#FFFFFF" strokeWidth="3" />
+            <circle cx="350" cy="220" r="10" fill="#2563EB" stroke="#FFFFFF" strokeWidth="3" />
+            <circle cx="80" cy="240" r="10" fill="#2563EB" stroke="#FFFFFF" strokeWidth="3" />
+          </svg>
+        </div>
+
+        <div className="relative z-10 space-y-4 max-w-2xl text-white">
+          <h2 className="text-3xl sm:text-5xl font-black font-serif tracking-tight leading-tight">
+            BHUNAKSHA - NLAMS
+          </h2>
+          <p className="text-lg sm:text-xl font-bold text-amber-300">
+            Survey, Settlements and Land Records
           </p>
+          <span className="text-xs text-slate-300 font-semibold block uppercase tracking-wider">
+            Government of India • National Infrastructure Registry
+          </span>
 
-          {/* Search Form */}
-          <form onSubmit={handleSearch} className="w-full mt-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 p-2 sm:p-3 flex flex-col md:flex-row gap-2 transition-transform duration-300">
-            <div className="flex-grow flex items-center px-3 bg-transparent">
-              <Search className="h-5 w-5 text-slate-400 flex-shrink-0" />
+          {/* Quick Search Input */}
+          <form onSubmit={handleSearch} className="pt-4 flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
               <input 
+                type="text" 
+                placeholder="Enter Plot Number, Survey ID, or Landowner Name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full border-none focus:outline-none focus:ring-0 text-xs sm:text-sm font-semibold text-slate-800 bg-transparent ml-3 py-3" 
-                placeholder="Type Name (e.g. Anmol), Plot No. (e.g. PLOT-OD-2026-9821), or District..." 
-                type="text"
+                className="w-full bg-white text-slate-900 text-xs font-bold pl-10 pr-4 py-3 rounded-xl focus:outline-none shadow-md"
               />
             </div>
             <button 
               type="submit"
-              className="bg-[#ea580c] text-white px-8 py-3.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 hover:bg-[#c2410c] transition-all whitespace-nowrap shadow-lg hover:shadow-xl cursor-pointer"
+              className="bg-[#FBC02D] hover:bg-amber-400 text-slate-900 text-xs font-extrabold px-6 py-3 rounded-xl transition-all shadow-md cursor-pointer whitespace-nowrap"
             >
-              <span>Track My Land</span>
-              <ArrowRight className="h-4 w-4" />
+              Search Land Record
             </button>
           </form>
 
-          {/* Sample Plot Tags */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-2 text-white/90 text-xs">
-            <span className="text-slate-300 font-medium">Try clicking an example:</span>
-            <button 
-              type="button"
-              onClick={() => { setSearchQuery("Anmol"); setSearchedPlot(samplePlots[0]); }}
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-1.5 transition-colors cursor-pointer text-amber-300 font-medium"
-            >
-              <MapPin className="h-3.5 w-3.5 text-rose-400" />
-              Anmol (PLOT-OD-2026-9821, Odisha)
-            </button>
-            <button 
-              type="button"
-              onClick={() => { setSearchQuery("Rameshwar Patel"); setSearchedPlot(samplePlots[1]); }}
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-1.5 transition-colors cursor-pointer text-sky-300 font-medium"
-            >
-              <MapPin className="h-3.5 w-3.5 text-sky-400" />
-              Rameshwar Patel (PLOT-MH-2026-1044)
-            </button>
-          </div>
-
-          {/* Instant Result Display */}
+          {/* Search Result Box */}
           {searchedPlot && (
-            <div className="w-full text-left mt-4 animate-in fade-in duration-200">
+            <div className="mt-4 p-4 bg-white text-slate-800 rounded-2xl shadow-xl space-y-2 border border-amber-300 text-xs animate-fadeIn">
               {searchedPlot === "NOT_FOUND" ? (
-                <div className="p-4 bg-rose-900/80 border border-rose-500/50 text-rose-100 rounded-2xl text-xs font-semibold flex items-center gap-3 backdrop-blur-md">
-                  <AlertCircle className="h-5 w-5 text-rose-400 flex-shrink-0" />
-                  <span>No land parcel matching "{searchQuery}". Please click one of the sample buttons above.</span>
-                </div>
+                <div className="text-rose-600 font-bold">No record found. Please verify Plot/Survey ID.</div>
               ) : (
-                <div className="p-5 bg-white text-slate-800 border-2 border-amber-400 rounded-2xl shadow-2xl space-y-3">
-                  <div className="flex justify-between items-start border-b border-slate-200 pb-3">
-                    <div>
-                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono uppercase">{searchedPlot.status}</span>
-                      <h3 className="font-extrabold text-sm text-[#002366] mt-1">{searchedPlot.project}</h3>
-                      <p className="text-xs text-slate-500">{searchedPlot.district}</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xs text-slate-400 block font-semibold">Total Award</span>
-                      <span className="text-base font-mono font-extrabold text-emerald-600">{searchedPlot.totalAward}</span>
-                    </div>
+                <div className="flex justify-between items-center flex-wrap gap-2">
+                  <div>
+                    <strong className="text-[#12355B] text-sm block">{searchedPlot.name} — {searchedPlot.plot}</strong>
+                    <span className="text-slate-500">{searchedPlot.project} • {searchedPlot.totalAward}</span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                    <div><span className="text-slate-400 block text-[10px]">Landowner</span> <strong>{searchedPlot.name}</strong></div>
-                    <div><span className="text-slate-400 block text-[10px]">Survey Plot</span> <strong className="font-mono text-[#2563eb]">{searchedPlot.plot}</strong></div>
-                    <div><span className="text-slate-400 block text-[10px]">Base Circle Rate</span> <strong>{searchedPlot.valuation}</strong></div>
-                    <div><span className="text-slate-400 block text-[10px]">Mandatory Solatium</span> <strong className="text-amber-700">{searchedPlot.solatium}</strong></div>
-                  </div>
-                  <div className="pt-2 flex justify-end">
-                    <button 
-                      onClick={() => setActiveTab(searchedPlot.tabTarget)}
-                      className="bg-[#2563eb] hover:bg-blue-700 text-white text-xs px-4 py-2 rounded-xl font-bold transition-colors cursor-pointer flex items-center gap-1.5"
-                    >
-                      <span>View Full Case File & DBT Status</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => setActiveTab('citizen-dashboard')}
+                    className="bg-[#12355B] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Inspect Record</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </button>
                 </div>
               )}
             </div>
           )}
-
         </div>
-      </section>
+      </div>
 
-      {/* ── STITCH 3-STEP WALKTHROUGH ── */}
-      <section className="flex flex-col items-center text-center py-6">
-        <h3 className="text-xs font-bold text-[#ea580c] tracking-widest uppercase mb-1 font-mono">Easy Walkthrough</h3>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] mb-2">How to Track & Claim Your Compensation in 3 Steps</h2>
-        <p className="text-xs sm:text-sm text-slate-500 mb-8 max-w-2xl">Zero technical knowledge required. The entire legal acquisition process is fully automated:</p>
+      {/* ── 4. DASHBOARD METRIC CARDS SECTION (IMAGE 2 EXACT) ── */}
+      <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-8">
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="flex items-center justify-between border-b border-slate-300 pb-3">
+          <h2 className="text-2xl font-black text-[#12355B] font-serif">
+            Dashboard Summary
+          </h2>
+          <span className="text-[11px] text-slate-500 font-mono">
+            Last updated on: 29/08/2026, 05:49:47 pm
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Step 1 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs text-left flex flex-col gap-4 hover:shadow-lg transition-shadow">
-            <div className="w-10 h-10 rounded-full bg-[#0F172A] text-white flex items-center justify-center font-bold text-base shadow-md">1</div>
-            <h4 className="font-extrabold text-base text-slate-900">Search Your Land Parcel</h4>
-            <p className="text-xs text-slate-600 leading-relaxed flex-grow">Enter your Name or Plot Survey Number in the search box above to view your officially notified boundary, circle rate, and project details.</p>
+          {/* PURPLE CARD: ONLINE SUBDIVISION */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden space-y-3">
+            <div className="bg-[#6B46C1] text-white font-extrabold px-5 py-3 text-center text-sm font-serif">
+              Online Subdivision / Sec 11 Proposals
+            </div>
+
+            <div className="p-4 space-y-2 text-xs">
+              <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+                <span className="flex items-center gap-2 font-bold text-slate-700">
+                  <ListCheck className="h-4 w-4 text-[#6B46C1]" /> Total Proposals
+                </span>
+                <strong className="font-mono text-sm text-[#6B46C1]">5,94,003</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-emerald-50 text-emerald-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <CheckCircle className="h-4 w-4 text-emerald-600" /> Approved Gazette
+                </span>
+                <strong className="font-mono text-sm text-emerald-700">4,96,023</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-rose-50 text-rose-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <XCircle className="h-4 w-4 text-rose-600" /> Rejected / Closed
+                </span>
+                <strong className="font-mono text-sm text-rose-700">88,564</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-amber-50 text-amber-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <Clock className="h-4 w-4 text-amber-600" /> Pending Scrutiny
+                </span>
+                <strong className="font-mono text-sm text-amber-700">9,179</strong>
+              </div>
+            </div>
           </div>
 
-          {/* Step 2 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs text-left flex flex-col gap-4 hover:shadow-lg transition-shadow">
-            <div className="w-10 h-10 rounded-full bg-[#ea580c] text-white flex items-center justify-center font-bold text-base shadow-md">2</div>
-            <h4 className="font-extrabold text-base text-slate-900">Inspect Section 11 Notice & Award</h4>
-            <p className="text-xs text-slate-600 leading-relaxed flex-grow">Check your fair valuation including the mandatory <strong className="text-slate-900">100% Solatium</strong> bonus under Section 30 of the RFCTLARR Act 2013.</p>
+          {/* PINK CARD: JOINT LPMS SUBDIVISION */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden space-y-3">
+            <div className="bg-[#EC4899] text-white font-extrabold px-5 py-3 text-center text-sm font-serif">
+              Joint LPMs Subdivision / Cadastral Survey
+            </div>
+
+            <div className="p-4 space-y-2 text-xs">
+              <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+                <span className="flex items-center gap-2 font-bold text-slate-700">
+                  <ListCheck className="h-4 w-4 text-[#EC4899]" /> Total Parcls
+                </span>
+                <strong className="font-mono text-sm text-[#EC4899]">3,51,020</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-emerald-50 text-emerald-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <CheckCircle className="h-4 w-4 text-emerald-600" /> Approved Coordinates
+                </span>
+                <strong className="font-mono text-sm text-emerald-700">2,83,048</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-rose-50 text-rose-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <XCircle className="h-4 w-4 text-rose-600" /> Rejected Bounds
+                </span>
+                <strong className="font-mono text-sm text-rose-700">63,817</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-amber-50 text-amber-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <Clock className="h-4 w-4 text-amber-600" /> Pending GPS Nodes
+                </span>
+                <strong className="font-mono text-sm text-amber-700">3,932</strong>
+              </div>
+            </div>
           </div>
 
-          {/* Step 3 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs text-left flex flex-col gap-4 hover:shadow-lg transition-shadow">
-            <div className="w-10 h-10 rounded-full bg-[#16a34a] text-white flex items-center justify-center font-bold text-base shadow-md">3</div>
-            <h4 className="font-extrabold text-base text-slate-900">Receive DBT or File Objection</h4>
-            <p className="text-xs text-slate-600 leading-relaxed flex-grow">If satisfied, compensation is disbursed directly to your bank account via PFMS. If you dispute the area, click 'File Objection' within 60 days.</p>
+          {/* TEAL CARD: ERROR CORRECTION */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden space-y-3">
+            <div className="bg-[#0D9488] text-white font-extrabold px-5 py-3 text-center text-sm font-serif">
+              Error Correction / Citizen Objections
+            </div>
+
+            <div className="p-4 space-y-2 text-xs">
+              <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+                <span className="flex items-center gap-2 font-bold text-slate-700">
+                  <ListCheck className="h-4 w-4 text-[#0D9488]" /> Total Objections
+                </span>
+                <strong className="font-mono text-sm text-[#0D9488]">5,208</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-emerald-50 text-emerald-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <CheckCircle className="h-4 w-4 text-emerald-600" /> Resolved Hearings
+                </span>
+                <strong className="font-mono text-sm text-emerald-700">4,089</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-rose-50 text-rose-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <XCircle className="h-4 w-4 text-rose-600" /> Rejected Petitions
+                </span>
+                <strong className="font-mono text-sm text-rose-700">276</strong>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 bg-amber-50 text-amber-900 rounded-xl">
+                <span className="flex items-center gap-2 font-bold">
+                  <Clock className="h-4 w-4 text-amber-600" /> Pending Review
+                </span>
+                <strong className="font-mono text-sm text-amber-700">852</strong>
+              </div>
+            </div>
           </div>
 
         </div>
-      </section>
+      </div>
 
-      {/* ── COMMUNITY IMPACT SECTION ── */}
-      <section className="w-full rounded-2xl overflow-hidden relative shadow-md bg-white border border-slate-200">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          <div className="p-8 sm:p-10 flex flex-col justify-center gap-4">
-            <h3 className="text-xs font-bold text-emerald-700 tracking-widest uppercase font-mono">Community Impact</h3>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Empowering Communities Together</h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              See how the National Land Portal is bringing transparency to citizens across the nation. Through accessible processes and timely direct benefit transfers, communities are finding a clear voice in local infrastructure development.
-            </p>
-            <button 
-              onClick={() => setActiveTab('journey')}
-              className="inline-flex items-center gap-2 text-[#2563eb] font-bold text-xs hover:underline mt-2 w-fit cursor-pointer"
-            >
-              <span>Read Legal Guide & Gazette Details</span>
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-          <div className="h-64 md:h-full relative min-h-[280px]">
-            <img 
-              alt="Community engagement" 
-              className="w-full h-full object-cover absolute inset-0" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPJzWDUkQpJxvxgkxPlMXlSx72FTW4kjJnNUqhuV_bYe3lE0m_C0eKLDwBEkjdetAvPuEeLtoC7OfusOy-gK0r6MjjXQ1R-j1GhufMJ9V3ivMWkkmudMdDsfjMNOwwqdKa9x4wBAwxRNJAVaByZpIFVWEKlqvVm4Ra2367wJDnkdCYABXtkicJkgetf99haAQ72LeFwLzlValPLA5N70c7wVB-zj93q4A46AwwE2i8gviivRgIAWcQ"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ── BENTO GRID: FAST ACCESS GATEWAYS & ANNOUNCEMENTS ── */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full mb-8">
+      {/* ── 5. ABOUT US & COLORED HEXAGON PILLARS (IMAGE 2 EXACT) ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-6 pt-4">
         
-        {/* Gateways (2 Cols) */}
-        <div className="lg:col-span-2 flex flex-col gap-4">
-          <div>
-            <h3 className="text-xs font-bold text-slate-500 tracking-widest uppercase font-mono">Fast Access Gateways</h3>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] mt-1">Select Your Role for 1-Click Access</h2>
+        <div className="border-b-2 border-emerald-600 pb-2">
+          <h2 className="text-2xl font-black text-[#1B5E20] font-serif">
+            About Us
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div className="lg:col-span-6 space-y-3 text-xs text-slate-600 leading-relaxed font-medium">
+            <p>
+              The <strong>Bhunaksha NLAMS</strong> platform is a state-of-the-art cadastral mapping and land acquisition management software designed by the National Informatics Centre (NIC) and Central Ministry. The primary purpose of Bhunaksha NLAMS is to facilitate the creation and accessibility of land maps for the public and reduce property-related fraud.
+            </p>
+            <p>
+              The platform seamlessly integrates with existing land record systems, PM GatiShakti NMP, and Public Financial Management System (PFMS) portals to enhance transparent access to land records, 100% Solatium awards, and digitized cadastral maps.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* 5 COLORED HEXAGON PILLARS */}
+          <div className="lg:col-span-6 flex flex-wrap items-center justify-center gap-3">
             
-            {/* Citizen Gateway */}
-            <div 
-              onClick={() => handleRoleClick('citizen', 'home')}
-              className="flex flex-col justify-between p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group space-y-4"
-            >
-              <div className="flex justify-between items-start">
-                <div className="p-3 rounded-xl bg-blue-50 text-[#2563eb] group-hover:bg-[#2563eb] group-hover:text-white transition-colors">
-                  <Landmark className="h-6 w-6" />
-                </div>
-                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Public</span>
-              </div>
-              <div>
-                <h4 className="font-extrabold text-base text-slate-900">Citizen / Land Owner</h4>
-                <p className="text-xs text-slate-500 mt-1">View notices, track compensation, file grievances.</p>
-              </div>
+            {/* Orange Hexagon */}
+            <div className="w-28 h-28 bg-[#EA580C] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
+              <FileText className="h-6 w-6" />
+              <span className="text-[10px] font-extrabold leading-tight">Record of Rights</span>
             </div>
 
-            {/* Survey Officer Gateway */}
-            <div 
-              onClick={() => handleRoleClick('surveyor', 'survey')}
-              className="flex flex-col justify-between p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group space-y-4"
-            >
-              <div className="flex justify-between items-start">
-                <div className="p-3 rounded-xl bg-emerald-50 text-emerald-700 group-hover:bg-emerald-700 group-hover:text-white transition-colors">
-                  <MapPin className="h-6 w-6" />
-                </div>
-                <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold font-mono">Field Station</span>
-              </div>
-              <div>
-                <h4 className="font-extrabold text-base text-slate-900">Field Survey Officer</h4>
-                <p className="text-xs text-slate-500 mt-1">GPS satellite node, verify plot boundaries.</p>
-              </div>
+            {/* Grey Hexagon */}
+            <div className="w-28 h-28 bg-[#374151] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
+              <Globe className="h-6 w-6" />
+              <span className="text-[10px] font-extrabold leading-tight">Web Based Modules</span>
             </div>
 
-            {/* Legal & Admin Gateway */}
-            <div 
-              onClick={() => handleRoleClick('ministry', 'workflow')}
-              className="flex flex-col justify-between p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group space-y-4"
-            >
-              <div className="flex justify-between items-start">
-                <div className="p-3 rounded-xl bg-amber-50 text-[#ea580c] group-hover:bg-[#ea580c] group-hover:text-white transition-colors">
-                  <Gavel className="h-6 w-6" />
-                </div>
-                <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold font-mono">HQ Admin</span>
-              </div>
-              <div>
-                <h4 className="font-extrabold text-base text-slate-900">Legal & Admin Secretariat</h4>
-                <p className="text-xs text-slate-500 mt-1">Review objections, process awards, generate reports.</p>
-              </div>
+            {/* Blue Hexagon */}
+            <div className="w-28 h-28 bg-[#2563EB] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
+              <MapPin className="h-6 w-6" />
+              <span className="text-[10px] font-extrabold leading-tight">Cadastral Mapping Tools</span>
             </div>
 
-            {/* Financial Disbursal (PFMS) */}
-            <div 
-              onClick={() => handleRoleClick('ministry', 'web3')}
-              className="flex flex-col justify-between p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group space-y-4"
-            >
-              <div className="flex justify-between items-start">
-                <div className="p-3 rounded-xl bg-purple-50 text-purple-700 group-hover:bg-purple-700 group-hover:text-white transition-colors">
-                  <CreditCard className="h-6 w-6" />
-                </div>
-                <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-bold font-mono">DBT Escrow</span>
-              </div>
-              <div>
-                <h4 className="font-extrabold text-base text-slate-900">Financial Disbursal</h4>
-                <p className="text-xs text-slate-500 mt-1">Process DBT payments, reconcile bank accounts.</p>
-              </div>
+            {/* Green Hexagon */}
+            <div className="w-28 h-28 bg-[#16A34A] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
+              <Compass className="h-6 w-6" />
+              <span className="text-[10px] font-extrabold leading-tight">Geo-referenced Spatial Data</span>
+            </div>
+
+            {/* Teal Hexagon */}
+            <div className="w-28 h-28 bg-[#0D9488] text-white p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-md space-y-1">
+              <User className="h-6 w-6" />
+              <span className="text-[10px] font-extrabold leading-tight">User Friendly Software</span>
             </div>
 
           </div>
+
         </div>
+      </div>
 
-        {/* Announcements Feed (1 Col) */}
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col overflow-hidden h-fit">
-          <div className="bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between">
-            <h3 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
-              <FileText className="h-4 w-4 text-[#ea580c]" />
-              Important Announcements
-            </h3>
-            <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">LIVE FEED</span>
-          </div>
-
-          <div className="divide-y divide-slate-100 text-xs">
-            <div className="p-4 space-y-1 hover:bg-slate-50 transition-colors">
-              <span className="inline-block px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-[10px] font-bold">New Gazette</span>
-              <p className="font-semibold text-slate-800">Notification for Land Acquisition in District Palghar (NH-48 expansion) released.</p>
-              <span className="text-[10px] text-slate-400 font-mono block">01-Sep-2026</span>
-            </div>
-
-            <div className="p-4 space-y-1 hover:bg-slate-50 transition-colors">
-              <span className="inline-block px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">Statutory Update</span>
-              <p className="font-semibold text-slate-800">Updated guidelines for calculating 100% Solatium under Section 30 published.</p>
-              <span className="text-[10px] text-slate-400 font-mono block">28-Aug-2026</span>
-            </div>
-
-            <div className="p-4 space-y-1 hover:bg-slate-50 transition-colors">
-              <span className="inline-block px-2 py-0.5 rounded bg-sky-100 text-sky-800 text-[10px] font-bold">Web3 Escrow</span>
-              <p className="font-semibold text-slate-800">PFMS Direct Benefit Transfer (DBT) Escrow operational for 1,420 affected landowners.</p>
-              <span className="text-[10px] text-slate-400 font-mono block">20-Aug-2026</span>
-            </div>
-          </div>
-
-          <div className="p-3 bg-slate-50 border-t border-slate-100 text-center">
-            <button 
-              onClick={() => setActiveTab('journey')}
-              className="text-xs font-bold text-[#2563eb] hover:underline cursor-pointer"
-            >
-              View All Gazette Publications →
-            </button>
-          </div>
-        </div>
-
-      </section>
+      {/* FLOATING SCROLL TO TOP BUTTON */}
+      <button 
+        onClick={scrollToTop}
+        className="fixed bottom-6 right-6 bg-[#FBC02D] hover:bg-amber-400 text-slate-900 p-3 rounded-full shadow-2xl transition-all cursor-pointer z-50 font-bold border border-amber-300"
+        title="Scroll to top"
+      >
+        <ChevronUp className="h-6 w-6" />
+      </button>
 
     </div>
   );

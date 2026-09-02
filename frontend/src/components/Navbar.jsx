@@ -94,16 +94,25 @@ export default function Navbar({ activeTab, setActiveTab }) {
           </div>
         </div>
 
-        <div className="hidden md:flex items-center gap-4 text-[10px] text-slate-400 font-mono flex-shrink-0 pl-4 border-l border-slate-800">
+        <div className="flex items-center gap-4 text-[10px] text-slate-400 font-mono flex-shrink-0 pl-4 border-l border-slate-800">
           <span className="flex items-center gap-1">
             <Shield className="h-3 w-3 text-emerald-400" /> Web3 Node: Synchronized
           </span>
-          <button 
-            onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-            className="text-amber-400 hover:text-white font-bold cursor-pointer transition-colors"
-          >
-            {language === 'en' ? 'हिन्दी (Hindi)' : 'English'}
-          </button>
+          <div className="flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+            <Globe className="h-3 w-3 text-amber-400" />
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="bg-transparent text-amber-300 text-[10px] font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="en" className="bg-slate-900 text-white">🌐 English</option>
+              <option value="hi" className="bg-slate-900 text-white">🌐 हिंदी (Hindi)</option>
+              <option value="or" className="bg-slate-900 text-white">🌐 ଓଡ଼ିଆ (Odia)</option>
+              <option value="mr" className="bg-slate-900 text-white">🌐 मराठी (Marathi)</option>
+              <option value="ta" className="bg-slate-900 text-white">🌐 தமிழ் (Tamil)</option>
+              <option value="bn" className="bg-slate-900 text-white">🌐 বাংলা (Bengali)</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -121,7 +130,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
             <div className="border-l border-slate-200 pl-3 flex flex-col justify-center">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block font-serif leading-none">
-                  {language === 'en' ? 'Government of India • MoRD' : 'भारत सरकार • ग्रामीण विकास मंत्रालय'}
+                  {t('govIndia') || 'Government of India'}
                 </span>
                 <span className="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold px-1.5 py-0.5 rounded font-mono">RFCTLARR 2013</span>
               </div>
@@ -153,8 +162,26 @@ export default function Navbar({ activeTab, setActiveTab }) {
             })}
           </div>
 
-          {/* Right Tools: Role Quick Switcher, Alerts & Account */}
+          {/* Right Tools: Regional Language Selector & Role Switcher */}
           <div className="flex items-center gap-3">
+            
+            {/* Regional Language Switcher Dropdown */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-xs font-bold text-slate-800">
+              <Globe className="h-4 w-4 text-[#C98B2E]" />
+              <select
+                id="regional-lang-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent font-bold text-[#12355B] focus:outline-none cursor-pointer text-xs"
+              >
+                <option value="en">English (EN)</option>
+                <option value="hi">हिंदी (Hindi)</option>
+                <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                <option value="mr">मराठी (Marathi)</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="bn">বাংলা (Bengali)</option>
+              </select>
+            </div>
             
             {/* Active Persona Quick Switcher Dropdown */}
             <div className="relative">

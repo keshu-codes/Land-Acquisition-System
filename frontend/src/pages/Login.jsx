@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 
 export default function Login({ onClose, isInline = false, onLoginSuccess }) {
-  const { login, language, t, setShowLoginModal } = useContext(AppContext);
+  const { login, language, setLanguage, t, setShowLoginModal } = useContext(AppContext);
 
   // Dual Login Mode: 'authority' vs 'citizen'
   const [loginMode, setLoginMode] = useState('authority');
@@ -145,12 +145,32 @@ export default function Login({ onClose, isInline = false, onLoginSuccess }) {
       <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full border border-slate-300 overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* ── DUAL LOGIN SELECTION TAB BAR ── */}
-        <div className="bg-[#12355B] text-white p-3 sm:p-4 flex items-center justify-between border-b border-slate-700">
+        <div className="bg-[#12355B] text-white p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-700">
           <div className="flex items-center gap-2">
             <img src="/emblem.jpg" alt="Emblem of India" className="h-8 w-auto object-contain bg-white rounded p-0.5" />
             <span className="font-extrabold text-sm sm:text-base font-serif">
               NLAMS Dual Portal Login
             </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Regional Language Selector */}
+            <div className="flex items-center gap-1 bg-slate-900/80 px-2.5 py-1 rounded-lg border border-slate-700">
+              <span className="text-[11px] text-amber-400 font-bold">🌐</span>
+              <select
+                id="login-regional-lang-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent text-amber-300 text-xs font-bold focus:outline-none cursor-pointer"
+              >
+                <option value="en" className="bg-slate-900 text-white">English (EN)</option>
+                <option value="hi" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
+                <option value="or" className="bg-slate-900 text-white">ଓଡ଼ିଆ (Odia)</option>
+                <option value="mr" className="bg-slate-900 text-white">मराठी (Marathi)</option>
+                <option value="ta" className="bg-slate-900 text-white">தமிழ் (Tamil)</option>
+                <option value="bn" className="bg-slate-900 text-white">বাংলা (Bengali)</option>
+              </select>
+            </div>
           </div>
 
           <div className="flex bg-slate-900/60 p-1 rounded-xl border border-slate-700">
