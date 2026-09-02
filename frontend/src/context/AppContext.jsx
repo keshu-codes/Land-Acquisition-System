@@ -3,7 +3,7 @@ import { translations } from './Translation';
 
 export const AppContext = createContext();
 
-const API_BASE = "/api/v1";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://land-acquisition-system.onrender.com/api/v1";
 
 // Helper coordinates map to give projects visual boundaries on the map based on their state/district
 const getFallbackCoordinates = (state, id) => {
