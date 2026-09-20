@@ -3,7 +3,7 @@ import { translations } from './Translation';
 
 export const AppContext = createContext();
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://land-acquisition-system.onrender.com/api/v1";
+const API_BASE = "/api/v1";
 
 // Helper coordinates map to give projects visual boundaries on the map based on their state/district
 const getFallbackCoordinates = (state, id) => {
@@ -110,15 +110,23 @@ export const AppContextProvider = ({ children }) => {
   const [backendError, setBackendError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Authentication State — Enforce Mandatory Official Sign-In on every visit
-  const [currentUser, setCurrentUser] = useState(null);
-  const [authToken, setAuthToken] = useState("");
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('nlams_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [authToken, setAuthToken] = useState(() => {
+    return localStorage.getItem('nlams_token') || "";
+  });
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [loginModalMode, setLoginModalMode] = useState('authority');
+  const [loginModalMode, setLoginModalMode] = useState("officer");
 
-  const openLoginModal = (mode = 'authority') => {
+  const openLoginModal = (mode = "officer") => {
     setLoginModalMode(mode);
-    setShowLoginModal(true);
+    setShowLoginModal(mode || true);
   };
 
   // Synchronize selectedRole with logged-in user role
@@ -158,7 +166,6 @@ export const AppContextProvider = ({ children }) => {
       setAuthToken(token);
       setCurrentUser(user);
       setSelectedRole(user.role);
-      setShowLoginModal(false);
 
       addNotification(`Authenticated successfully as ${user.full_name} (${user.role.toUpperCase()})`, 'success');
 
@@ -167,7 +174,7 @@ export const AppContextProvider = ({ children }) => {
         : user.role === 'state' ? 'workflow' 
         : user.role === 'district' ? 'dispatch' 
         : user.role === 'surveyor' ? 'survey' 
-        : 'web3';
+        : 'objection';
       
       window.dispatchEvent(new CustomEvent('navigate-tab', { detail: defaultTab }));
       return true;
@@ -182,7 +189,7 @@ export const AppContextProvider = ({ children }) => {
     localStorage.removeItem('nlams_user');
     setAuthToken("");
     setCurrentUser(null);
-    setSelectedRole("ministry");
+    setSelectedRole("citizen");
     addNotification("Logged out from system session.", "info");
     window.dispatchEvent(new CustomEvent('navigate-tab', { detail: 'home' }));
   };
@@ -321,7 +328,7 @@ export const AppContextProvider = ({ children }) => {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'X-NLAMS-API-Key': 'sih_nlams_secret_2026'
+          ...authHeader()
         },
         body: JSON.stringify({
           name: newProposal.title,
@@ -335,7 +342,10 @@ export const AppContextProvider = ({ children }) => {
         })
       });
 
-      if (!response.ok) throw new Error("Could not save proposal");
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.detail || "Could not save proposal");
+      }
       
       addNotification(`New project registered successfully in SQLite database.`, "success");
       logBlockchainTx("SUBMIT_PROPOSAL", `Proposal registered on-chain for ${newProposal.title}`);
@@ -349,7 +359,8 @@ export const AppContextProvider = ({ children }) => {
       // Refresh
       await fetchAllData();
     } catch (err) {
-      setBackendError("Database operation failed. Ensure the server is online.");
+      addNotification(err.message || "Database operation failed.", "error");
+      setBackendError(err.message || "Database operation failed. Ensure the server is online.");
     }
   };
 
@@ -374,7 +385,7 @@ export const AppContextProvider = ({ children }) => {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
-          'X-NLAMS-API-Key': 'sih_nlams_secret_2026'
+          ...authHeader()
         },
         body: JSON.stringify({
           name: original.title,
@@ -388,7 +399,10 @@ export const AppContextProvider = ({ children }) => {
         })
       });
 
-      if (!response.ok) throw new Error("Failed to update status");
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.detail || "Failed to update status");
+      }
       
       addNotification(`Project ${id} transitioned to stage: ${newStatus}`, "success");
       logBlockchainTx(newStatus.toUpperCase().replace(" ", "_"), `Status updated on-chain for ${id}`);
@@ -481,7 +495,6 @@ export const AppContextProvider = ({ children }) => {
       showLoginModal,
       setShowLoginModal,
       loginModalMode,
-      setLoginModalMode,
       openLoginModal,
       authHeader,
       addNotification,

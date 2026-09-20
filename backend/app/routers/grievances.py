@@ -1,4 +1,7 @@
-# handles notice email dispatch, single-use JWT grievance tokens, and public objections
+"""
+Grievance & Citizen Objection Router
+Handles secure token generation, email dispatch, public objection submission, and grievance monitoring.
+"""
 
 import os
 import secrets
@@ -8,7 +11,7 @@ from typing import Optional
 
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlmodel import Session, select
+from sqlmodel import Session, select, SQLModel
 
 from ..database import get_session
 from ..dependencies import (
@@ -23,20 +26,21 @@ from ..email_service import send_grievance_notification
 
 router = APIRouter()
 
-# separate secret key for 30-day citizen objection links
+# Dedicated secret for grievance tokens (separate from user auth tokens)
 GRIEVANCE_SECRET_KEY = "nlams_grievance_token_secret_2026_sih"
 GRIEVANCE_TOKEN_EXPIRY_DAYS = 30
 
 
 def _generate_short_token(parcel_number: str) -> str:
-    # generate a clean readable code like GRV-2026-9821-X7K
+    """Generate a human-readable grievance token like GRV-2026-9821-X7K"""
     suffix = secrets.token_hex(2).upper()[:3]
+    # Extract numeric part from parcel number
     num_part = ''.join(filter(str.isdigit, parcel_number))[-4:] or "0000"
     return f"GRV-2026-{num_part}-{suffix}"
 
 
 def _generate_grievance_jwt(parcel_id: int, parcel_number: str, owner_name: str, ref_number: str) -> str:
-    # sign payload into a 30-day JWT
+    """Generate a JWT-signed grievance token with 30-day expiry."""
     payload = {
         "parcel_id": parcel_id,
         "parcel_number": parcel_number,
@@ -49,13 +53,13 @@ def _generate_grievance_jwt(parcel_id: int, parcel_number: str, owner_name: str,
 
 
 def _generate_reference_number() -> str:
-    # official style reference format
+    """Generate an official-looking reference number."""
     seq = secrets.randbelow(9000) + 1000
     return f"LAO/DIST/2026/{seq:04d}"
 
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    # spherical distance formula to find closest surveyor
+    """Calculate distance between two GPS points in kilometers."""
     R = 6371.0
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
@@ -63,13 +67,21 @@ def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
-# endpoint: dispatch section 11 notice and assign closest surveyor
+# ─── Endpoint 1: Dispatch Survey Notice ──────────────────────────────
 @router.post("/grievances/dispatch-notice")
 def dispatch_notice(
     req: models.DispatchNoticeRequest,
     session: Session = Depends(get_session),
     user: models.User = Depends(require_role(["ministry", "district", "surveyor"]))
 ):
+    """
+    Dispatches a formal survey notice to a landowner:
+    1. Looks up parcel details
+    2. Generates a cryptographic grievance token (JWT + short code)
+    3. Sends an email notification with the secure objection link
+    4. Returns dispatch confirmation
+    """
+    # 1. Fetch parcel
     parcel = session.get(models.Parcel, req.parcel_id)
     if not parcel:
         raise HTTPException(status_code=404, detail="Parcel not found in land registry database.")
@@ -328,6 +340,73 @@ def submit_grievance(
         "reference_number": db_token.reference_number,
         "objection_type": grievance.objection_type,
         "message": "Your objection has been officially recorded and will be reviewed by the Land Acquisition Officer (LAO). You will receive updates at your registered email.",
+        "created_at": grievance.created_at.isoformat()
+    }
+
+
+# ─── Endpoint 3B: Citizen Direct Objection Submission ────────────────
+class CitizenDirectSubmission(SQLModel):
+    parcel_number: Optional[str] = "PLOT-OD-2026-9821"
+    objection_type: str = "VALUATION"
+    description: str
+    landowner_name: Optional[str] = "Citizen Landowner"
+    email: Optional[str] = "citizen@gov.in"
+
+@router.post("/grievances/citizen-submit")
+def citizen_direct_submit(
+    req: CitizenDirectSubmission,
+    session: Session = Depends(get_session)
+):
+    """Allows citizens to submit objections directly from their authenticated citizen portal."""
+    parcel = None
+    if req.parcel_number:
+        parcel = session.exec(select(models.Parcel).where(models.Parcel.parcel_number == req.parcel_number)).first()
+    if not parcel:
+        parcel = session.exec(select(models.Parcel)).first()
+    
+    parcel_id = parcel.id if parcel else 1
+    ref_number = _generate_reference_number()
+    p_num = parcel.parcel_number if parcel else "PLOT-OD-2026-9821"
+    short_token = _generate_short_token(p_num)
+    jwt_token = _generate_grievance_jwt(
+        parcel_id=parcel_id,
+        parcel_number=p_num,
+        owner_name=req.landowner_name or (parcel.owner_name if parcel else "Landowner"),
+        ref_number=ref_number
+    )
+    
+    db_token = models.GrievanceToken(
+        token=jwt_token,
+        token_short=short_token,
+        parcel_id=parcel_id,
+        landowner_email=req.email or "citizen@gov.in",
+        reference_number=ref_number,
+        is_used=True,
+        expires_at=datetime.utcnow() + timedelta(days=30)
+    )
+    session.add(db_token)
+    session.commit()
+    session.refresh(db_token)
+    
+    grievance = models.Grievance(
+        token_id=db_token.id,
+        objection_type=req.objection_type.upper(),
+        description=req.description,
+        status="PENDING",
+        landowner_name=req.landowner_name or (parcel.owner_name if parcel else "Citizen Landowner"),
+        parcel_number=p_num
+    )
+    session.add(grievance)
+    session.commit()
+    session.refresh(grievance)
+    
+    return {
+        "status": "submitted",
+        "grievance_id": grievance.id,
+        "reference_number": db_token.reference_number,
+        "token_short": db_token.token_short,
+        "objection_type": grievance.objection_type,
+        "message": "Your objection has been officially recorded and queued for hearing by the Land Acquisition Authority.",
         "created_at": grievance.created_at.isoformat()
     }
 

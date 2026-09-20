@@ -1,34 +1,27 @@
 import React, { useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import NLAMSLogo from '../components/NLAMSLogo';
 import { 
-  Shield, Key, User, Building2, Compass, Landmark, Lock, CheckCircle, 
-  AlertCircle, ArrowRight, RefreshCw, X, Smartphone, MessageSquareCheck, UserCheck
+  Shield, Key, User, Building2, Compass, Landmark, Lock, AlertCircle, ArrowRight, RefreshCw, X
 } from 'lucide-react';
 
-export default function Login({ onClose, isInline = false, onLoginSuccess, initialMode }) {
-  const { login, language, setLanguage, t, setShowLoginModal, loginModalMode } = useContext(AppContext);
+export default function Login({ onClose, isInline = false, onLoginSuccess, initialTab = "officer" }) {
+  const { login } = useContext(AppContext);
 
-  // Dual Login Mode: 'authority' vs 'citizen'
-  const [loginMode, setLoginMode] = useState(initialMode || loginModalMode || 'authority');
-
-  // Authority Login State
+  const [activeLoginTab, setActiveLoginTab] = useState(initialTab || "officer"); // "officer" or "citizen"
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // Citizen Mobile OTP Registration State
-  const [mobileNo, setMobileNo] = useState("9876543210");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
-  const [otpError, setOtpError] = useState("");
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  // Keep activeLoginTab in sync if initialTab changes
+  React.useEffect(() => {
+    if (initialTab) setActiveLoginTab(initialTab);
+  }, [initialTab]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
-      setErrorMsg("Please enter both username and password.");
+      setErrorMsg("Please enter both username/ID and password.");
       return;
     }
 
@@ -38,44 +31,10 @@ export default function Login({ onClose, isInline = false, onLoginSuccess, initi
     const success = await login(username, password);
     setIsSubmitting(false);
     if (success) {
-      setShowLoginModal(false);
       if (onLoginSuccess) onLoginSuccess(username);
       if (onClose) onClose();
     } else {
-      setErrorMsg("Invalid username or password. Please check your credentials.");
-    }
-  };
-
-  const handleSendOtp = (e) => {
-    e.preventDefault();
-    if (mobileNo.length < 10) {
-      setOtpError("Please enter a valid 10-digit mobile number.");
-      return;
-    }
-    setOtpError("");
-    setOtpSent(true);
-  };
-
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    if (!otpCode || otpCode.length < 4) {
-      setOtpError("Please enter the 6-digit OTP code sent to your mobile.");
-      return;
-    }
-
-    setIsVerifyingOtp(true);
-    setOtpError("");
-
-    // Simulate OTP verification and log in as Citizen
-    const success = await login('citizen', 'nlams2026');
-    setIsVerifyingOtp(false);
-
-    if (success) {
-      setShowLoginModal(false);
-      if (onLoginSuccess) onLoginSuccess('citizen');
-      if (onClose) onClose();
-    } else {
-      setOtpError("Verification failed. Please try again.");
+      setErrorMsg("Invalid credentials. Please verify your credentials or use the 1-Click Evaluation Presets.");
     }
   };
 
@@ -88,7 +47,6 @@ export default function Login({ onClose, isInline = false, onLoginSuccess, initi
     const success = await login(presetUser, presetPass);
     setIsSubmitting(false);
     if (success) {
-      setShowLoginModal(false);
       if (onLoginSuccess) onLoginSuccess(presetUser);
       if (onClose) onClose();
     }
@@ -96,365 +54,267 @@ export default function Login({ onClose, isInline = false, onLoginSuccess, initi
 
   const authorityAccounts = [
     {
-      role: 'Central Ministry',
+      level: 'Central Level',
+      role: 'Central Ministry (NHAI/MoRTH)',
       user: 'ministry',
       pass: 'nlams2026',
-      name: 'Dr. Rajesh Verma',
-      dept: 'Ministry of Road Transport & Highways',
-      color: 'border-[#12355B] bg-slate-50',
-      badge: 'bg-[#12355B] text-white',
-      icon: Landmark
+      name: 'Ministry Planning Node',
+      dept: 'Central Infrastructure Approvals & Budget',
+      color: 'border-indigo-200 hover:border-indigo-600 bg-indigo-50/50',
+      badge: 'bg-indigo-100 text-indigo-800',
+      icon: Landmark,
+      note: 'Central Level Approval'
     },
     {
-      role: 'State GIS Officer',
+      level: 'State Level',
+      role: 'State GIS Directorate',
       user: 'state',
       pass: 'nlams2026',
-      name: 'Priya Sundaram',
-      dept: 'State Remote Sensing Centre',
-      color: 'border-emerald-600 bg-emerald-50/50',
-      badge: 'bg-[#2F6B4F] text-white',
-      icon: Compass
+      name: 'State GIS Verification Node',
+      dept: 'Remote Sensing & Cadastral BhuNaksha',
+      color: 'border-amber-200 hover:border-amber-600 bg-amber-50/50',
+      badge: 'bg-amber-100 text-amber-800',
+      icon: Compass,
+      note: 'State Level GIS Audit'
     },
     {
-      role: 'District Magistrate',
+      level: 'District Level',
+      role: 'District Collector / Magistrate',
       user: 'collector',
       pass: 'nlams2026',
-      name: 'Amitabh Choudhury (IAS)',
-      dept: 'Office of District Magistrate',
-      color: 'border-sky-600 bg-sky-50/50',
-      badge: 'bg-sky-700 text-white',
-      icon: Building2
+      name: 'District Magistrate Node',
+      dept: 'District Gazette Notice & Award Issuance',
+      color: 'border-emerald-200 hover:border-[#1b5e20] bg-emerald-50/50',
+      badge: 'bg-emerald-100 text-[#1b5e20]',
+      icon: Building2,
+      note: 'District Level Approval'
     },
     {
-      role: 'Field Surveyor',
+      level: 'Field Level',
+      role: 'Cadastral Field Surveyor',
       user: 'surveyor',
       pass: 'nlams2026',
-      name: 'Suresh Kumar',
-      dept: 'Cadastral Survey Station #04',
-      color: 'border-amber-600 bg-amber-50/50',
-      badge: 'bg-[#C98B2E] text-white',
-      icon: Shield
+      name: 'Field Survey Station',
+      dept: 'GPS Geo-Tagging & Possession Handover',
+      color: 'border-teal-200 hover:border-teal-600 bg-teal-50/50',
+      badge: 'bg-teal-100 text-teal-800',
+      icon: Shield,
+      note: 'Field Level Possession'
     }
   ];
 
+  const citizenAccounts = [
+    {
+      level: 'Public Citizen',
+      role: 'Citizen & Landowner',
+      user: 'citizen',
+      pass: 'nlams2026',
+      name: 'Rameshwar Patel / Anmol',
+      dept: 'Registered Landholder (PLOT-OD-2026-9821)',
+      color: 'border-orange-200 hover:border-[#ea580c] bg-orange-50/50',
+      badge: 'bg-orange-100 text-orange-800',
+      icon: User,
+      note: 'Objections & Escrow DBT'
+    }
+  ];
+
+  const displayedPresets = activeLoginTab === 'citizen' ? citizenAccounts : authorityAccounts;
+
   const wrapperClass = isInline 
-    ? "w-full max-w-4xl mx-auto my-4 select-none animate-fadeIn font-sans"
-    : "fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-[100] p-4 select-none animate-fadeIn font-sans";
+    ? "w-full max-w-4xl mx-auto my-6 select-none animate-fadeIn font-sans"
+    : "fixed inset-0 bg-slate-900/75 backdrop-blur-xs flex items-center justify-center z-[100] p-4 select-none animate-fadeIn font-sans";
 
   return (
     <div className={wrapperClass}>
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full border border-slate-300 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full border border-slate-300 overflow-hidden flex flex-col md:flex-row max-h-[92vh]">
         
-        {/* ── DUAL LOGIN SELECTION TAB BAR ── */}
-        <div className="bg-[#12355B] text-white p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-700">
-          <div className="flex items-center gap-2">
-            <NLAMSLogo className="h-7 w-7" />
-            <span className="font-extrabold text-sm sm:text-base font-serif">
-              NLAMS Dual Portal Login
-            </span>
-          </div>
+        {/* Left Section - Quick 1-Click Evaluation Presets */}
+        <div className="w-full md:w-1/2 bg-slate-50 border-r border-slate-200 p-6 flex flex-col justify-between overflow-y-auto">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-bold text-[#1b5e20] uppercase tracking-wider bg-emerald-100 px-2.5 py-1 rounded-full border border-emerald-200">
+                NLAMS Presets
+              </span>
+              <span className="text-[10px] text-slate-400 font-semibold">1-Click Fast Login</span>
+            </div>
 
-          <div className="flex items-center gap-3">
-            {/* Regional Language Selector */}
-            <div className="flex items-center gap-1 bg-slate-900/80 px-2.5 py-1 rounded-lg border border-slate-700">
-              <span className="text-[11px] text-amber-400 font-bold">🌐</span>
-              <select
-                id="login-regional-lang-select"
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="bg-transparent text-amber-300 text-xs font-bold focus:outline-none cursor-pointer"
-              >
-                <option value="en" className="bg-slate-900 text-white">English (EN)</option>
-                <option value="hi" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
-                <option value="or" className="bg-slate-900 text-white">ଓଡ଼ିଆ (Odia)</option>
-                <option value="mr" className="bg-slate-900 text-white">मराठी (Marathi)</option>
-                <option value="ta" className="bg-slate-900 text-white">தமிழ் (Tamil)</option>
-                <option value="bn" className="bg-slate-900 text-white">বাংলা (Bengali)</option>
-              </select>
+            <h3 className="font-extrabold text-slate-800 text-base font-serif mb-1">
+              Select Stakeholder Role
+            </h3>
+            <p className="text-xs text-slate-500 font-medium mb-3 leading-relaxed">
+              Click any of the pre-configured profiles below to authenticate instantly:
+            </p>
+
+            <div className="space-y-2">
+              {displayedPresets.map((acc) => {
+                const Icon = acc.icon;
+                return (
+                  <button
+                    key={acc.user}
+                    onClick={() => quickLoginPreset(acc.user, acc.pass)}
+                    disabled={isSubmitting}
+                    className={`hover-pop w-full text-left p-2.5 rounded-xl border flex items-center justify-between cursor-pointer ${acc.color} group shadow-2xs`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1.5 rounded-lg bg-white border border-slate-200 shadow-xs group-hover:scale-110 transition-transform">
+                        <Icon className="h-4 w-4 text-[#1b5e20]" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <strong className="text-xs font-bold text-slate-800">{acc.name}</strong>
+                          <span className={`text-[8px] font-extrabold px-1.5 py-0.2 rounded uppercase ${acc.badge}`}>
+                            {acc.level || acc.role.split(' ')[0]}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-slate-400 font-semibold block">{acc.dept}</span>
+                      </div>
+                    </div>
+                    <span className="text-[9px] font-bold text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                      {acc.note}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="flex bg-slate-900/60 p-1 rounded-xl border border-slate-700">
-            <button
-              type="button"
-              onClick={() => setLoginMode('authority')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                loginMode === 'authority' 
-                  ? 'bg-white text-[#12355B] shadow-sm' 
-                  : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              <Landmark className="h-3.5 w-3.5" />
-              <span>Authority Login</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setLoginMode('citizen')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                loginMode === 'citizen' 
-                  ? 'bg-[#2F6B4F] text-white shadow-sm' 
-                  : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              <Smartphone className="h-3.5 w-3.5" />
-              <span>Citizen / Landowner</span>
-            </button>
+          <div className="mt-4 pt-3 border-t border-slate-200 text-[10px] text-slate-500 flex justify-between items-center">
+            <span>Default Password: <strong className="text-slate-700 font-mono">nlams2026</strong></span>
+            <span>Collector Pass: <strong className="text-[#1b5e20] font-mono">SIH@12345</strong></span>
           </div>
+        </div>
 
-          {!isInline && onClose && (
-            <button onClick={onClose} className="text-slate-400 hover:text-white font-bold p-1">
+        {/* Right Section - Official Login Form with Citizen/Officer Tabs */}
+        <div className="w-full md:w-1/2 p-6 flex flex-col justify-between relative bg-white overflow-y-auto">
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="btn-pop absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1.5 hover:bg-slate-100 rounded-lg cursor-pointer"
+            >
               <X className="h-5 w-5" />
             </button>
           )}
-        </div>
 
-        {/* ── MODE 1: AUTHORITY LOGIN CONTENT ── */}
-        {loginMode === 'authority' && (
-          <div className="flex flex-col md:flex-row flex-1 overflow-y-auto">
-            
-            {/* Left Column: Official Presets */}
-            <div className="w-full md:w-1/2 bg-slate-50 border-r border-slate-200 p-6 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-extrabold text-[#12355B] uppercase tracking-wider bg-blue-100 px-2.5 py-1 rounded-full border border-blue-200">
-                    Government Officers & Cadre
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-semibold">1-Click Fast Login</span>
-                </div>
-
-                <h3 className="font-extrabold text-[#12355B] text-base font-serif mb-1">
-                  Select Authority Department
-                </h3>
-                <p className="text-xs text-slate-500 font-semibold mb-4 leading-relaxed">
-                  Authenticate with pre-configured official credentials for Ministry, State Collectorate, or Survey Station:
-                </p>
-
-                <div className="space-y-2.5">
-                  {authorityAccounts.map((acc) => {
-                    const Icon = acc.icon;
-                    return (
-                      <div 
-                        key={acc.user}
-                        onClick={() => quickLoginPreset(acc.user, acc.pass)}
-                        className={`p-3 rounded-xl border ${acc.color} transition-all cursor-pointer flex items-center justify-between group hover:shadow-md`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg bg-white shadow-xs border border-slate-200">
-                            <Icon className="h-4 w-4 text-[#12355B]" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-extrabold text-xs text-slate-900">{acc.role}</span>
-                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${acc.badge}`}>{acc.user}</span>
-                            </div>
-                            <span className="text-[10px] text-slate-500 font-medium block">{acc.name} • {acc.dept}</span>
-                          </div>
-                        </div>
-                        <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#12355B] group-hover:translate-x-1 transition-all" />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Authority Password Sign-In Form */}
-            <div className="w-full md:w-1/2 p-6 flex flex-col justify-between bg-white">
-              <div>
-                <div className="mb-4">
-                  <h2 className="text-lg font-extrabold text-[#12355B] font-serif mb-1">
-                    Official Authority Sign In
-                  </h2>
-                  <p className="text-xs text-slate-500 font-semibold">
-                    Enter assigned government portal credentials to obtain an authorized JWT session token.
-                  </p>
-                </div>
-
-                {errorMsg && (
-                  <div className="mb-4 bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl text-xs font-semibold flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 flex-shrink-0 text-rose-600" />
-                    <span>{errorMsg}</span>
-                  </div>
-                )}
-
-                <form onSubmit={handleFormSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-[10px] uppercase font-extrabold text-slate-500 mb-1">Government ID / Username *</label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. ministry or collector"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full text-xs font-bold border border-slate-300 rounded-xl p-2.5 pl-9 bg-slate-50 focus:outline-none focus:border-[#12355B]"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] uppercase font-extrabold text-slate-500 mb-1">Password *</label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                      <input
-                        type="password"
-                        required
-                        placeholder="Enter password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full text-xs font-bold border border-slate-300 rounded-xl p-2.5 pl-9 bg-slate-50 focus:outline-none focus:border-[#12355B]"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-[#12355B] hover:bg-[#0b1f42] text-white py-3 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    {isSubmitting ? (
-                      <RefreshCw className="h-4 w-4 animate-spin text-white" />
-                    ) : (
-                      <>
-                        <Key className="h-4 w-4" />
-                        <span>Authenticate Authority Session</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* ── MODE 2: CITIZEN MOBILE OTP LOGIN & REGISTRATION ── */}
-        {loginMode === 'citizen' && (
-          <div className="p-6 sm:p-8 flex flex-col md:flex-row gap-8 items-center bg-white flex-1 overflow-y-auto">
-            
-            <div className="w-full md:w-1/2 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-[#2F6B4F] font-mono text-[11px] font-bold">
-                <UserCheck className="h-3.5 w-3.5" />
-                Landowner Registration & Verification
-              </div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-[#12355B] font-serif">
-                Citizen Mobile Number Sign-In
+          <div>
+            {/* Header Branding */}
+            <div className="mb-4">
+              <h2 className="text-2xl font-black text-amber-500 font-serif leading-none">
+                NLAMS
               </h2>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Registered landowners can log in using their Aadhaar-linked mobile number to inspect land survey numbers, estimated market circle rates, statutory 100% Solatium awards (Sec 30), and PFMS direct benefit payments.
-              </p>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mt-0.5">
+                Survey, Settlements and Land Records
+              </span>
+            </div>
 
-              <div className="p-4 bg-[#FAFAF7] border border-[#E8E1D5] rounded-2xl text-xs space-y-2">
-                <strong className="block text-[#7A5C3E]">Why Register via Mobile OTP?</strong>
-                <ul className="space-y-1 text-slate-600 list-disc pl-4 text-[11px]">
-                  <li>Instant access to Form K Award Statements & Gazette Notices</li>
-                  <li>Direct Benefit Transfer (DBT) payment verification</li>
-                  <li>Submit Section 15 land objection petitions online</li>
-                </ul>
+            {/* Login Tabs */}
+            <div className="flex border-b border-slate-200 mb-4 gap-1">
+              <button
+                type="button"
+                onClick={() => setActiveLoginTab("officer")}
+                className={`btn-pop flex-1 py-2 text-xs font-bold text-center border-b-2 cursor-pointer flex items-center justify-center gap-1.5 rounded-t-lg ${
+                  activeLoginTab === "officer" 
+                    ? "border-[#1b5e20] text-[#1b5e20] bg-emerald-50/70" 
+                    : "border-transparent text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <Building2 className="h-3.5 w-3.5" />
+                <span>Officer / Department</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveLoginTab("citizen")}
+                className={`btn-pop flex-1 py-2 text-xs font-bold text-center border-b-2 cursor-pointer flex items-center justify-center gap-1.5 rounded-t-lg ${
+                  activeLoginTab === "citizen" 
+                    ? "border-[#ea580c] text-[#ea580c] bg-orange-50/70" 
+                    : "border-transparent text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <User className="h-3.5 w-3.5" />
+                <span>Citizen / Landowner</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-500 font-medium mb-4">
+              {activeLoginTab === "officer" 
+                ? "Enter your official user ID and password to access the acquisition workbench."
+                : "Enter your registered citizen credentials or select the 1-Click Citizen preset."
+              }
+            </p>
+
+            {errorMsg && (
+              <div className="mb-4 bg-rose-50 border border-rose-200 text-rose-700 p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 flex-shrink-0 text-rose-600" />
+                <span>{errorMsg}</span>
               </div>
-            </div>
+            )}
 
-            <div className="w-full md:w-1/2 bg-slate-50 border border-slate-200 p-6 rounded-2xl space-y-4">
-              
-              {otpError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl text-xs font-semibold flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 text-rose-600 flex-shrink-0" />
-                  <span>{otpError}</span>
+            <form onSubmit={handleFormSubmit} className="space-y-3.5">
+              <div>
+                <label className="block text-[10px] uppercase font-extrabold text-slate-500 mb-1">
+                  {activeLoginTab === "officer" ? "Official User ID *" : "Citizen Username / Landholder ID *"}
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <input
+                    type="text"
+                    required
+                    placeholder={activeLoginTab === "officer" ? "e.g. collector, ministry, state, surveyor" : "e.g. citizen"}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="hover-pop w-full text-xs font-bold border border-slate-300 rounded-xl p-2.5 pl-9 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1b5e20]/20 focus:border-[#1b5e20] shadow-xs"
+                  />
                 </div>
-              )}
+              </div>
 
-              {!otpSent ? (
-                <form onSubmit={handleSendOtp} className="space-y-4 text-xs">
-                  <div>
-                    <label className="block text-[11px] font-extrabold text-slate-700 mb-1">Enter 10-Digit Registered Mobile Number *</label>
-                    <div className="relative">
-                      <Smartphone className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                      <input
-                        type="tel"
-                        maxLength={10}
-                        required
-                        placeholder="e.g. 9876543210"
-                        value={mobileNo}
-                        onChange={(e) => setMobileNo(e.target.value)}
-                        className="w-full font-mono text-sm font-bold border border-slate-300 rounded-xl p-2.5 pl-9 bg-white focus:outline-none focus:border-[#2F6B4F]"
-                      />
-                    </div>
-                  </div>
+              <div>
+                <label className="block text-[10px] uppercase font-extrabold text-slate-500 mb-1">Password *</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <input
+                    type="password"
+                    required
+                    placeholder="Enter password (default: nlams2026)"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="hover-pop w-full text-xs font-bold border border-slate-300 rounded-xl p-2.5 pl-9 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1b5e20]/20 focus:border-[#1b5e20] shadow-xs"
+                  />
+                </div>
+              </div>
 
-                  <button
-                    type="submit"
-                    className="w-full bg-[#2F6B4F] hover:bg-emerald-800 text-white py-3 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <MessageSquareCheck className="h-4 w-4" />
-                    <span>Send Verification OTP</span>
-                  </button>
-
-                  <div className="text-center pt-2">
-                    <span className="text-[11px] text-slate-400">Demo Landowner Preset: </span>
-                    <button 
-                      type="button" 
-                      onClick={() => quickLoginPreset('citizen', 'nlams2026')}
-                      className="text-[#2F6B4F] font-bold underline cursor-pointer hover:text-emerald-900"
-                    >
-                      Login as Rameshwar Patel (1-Click)
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <form onSubmit={handleVerifyOtp} className="space-y-4 text-xs">
-                  <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0" />
-                    <span>OTP sent to +91 {mobileNo}. Demo OTP code is <strong>789530</strong>.</span>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-extrabold text-slate-700 mb-1">Enter 6-Digit Verification OTP *</label>
-                    <input
-                      type="text"
-                      maxLength={6}
-                      required
-                      placeholder="e.g. 789530"
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
-                      className="w-full font-mono text-center text-lg font-bold border border-slate-300 rounded-xl p-2 bg-white focus:outline-none focus:border-[#2F6B4F] tracking-widest"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isVerifyingOtp}
-                    className="w-full bg-[#2F6B4F] hover:bg-emerald-800 text-white py-3 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    {isVerifyingOtp ? (
-                      <RefreshCw className="h-4 w-4 animate-spin text-white" />
-                    ) : (
-                      <>
-                        <Shield className="h-4 w-4" />
-                        <span>Verify OTP & Access Citizen Dashboard</span>
-                      </>
-                    )}
-                  </button>
-
-                  <div className="text-center">
-                    <button 
-                      type="button" 
-                      onClick={() => setOtpSent(false)}
-                      className="text-xs text-slate-500 underline cursor-pointer"
-                    >
-                      Change Mobile Number
-                    </button>
-                  </div>
-                </form>
-              )}
-
-            </div>
-
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`btn-pop w-full text-white py-3 rounded-xl text-xs font-extrabold shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 ${
+                  activeLoginTab === "officer" 
+                    ? "bg-[#1b5e20] hover:bg-[#144a19]" 
+                    : "bg-[#ea580c] hover:bg-[#c2410c]"
+                }`}
+              >
+                {isSubmitting ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin text-amber-300" />
+                    Authenticating...
+                  </>
+                ) : (
+                  <>
+                    <Key className="h-4 w-4" />
+                    <span>{activeLoginTab === "officer" ? "Sign In as Officer" : "Sign In to Citizen Portal"}</span>
+                  </>
+                )}
+              </button>
+            </form>
           </div>
-        )}
+
+          <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-semibold">
+            <span>NLAMS Portal Authentication</span>
+            <span>TLS 1.3 Verified</span>
+          </div>
+        </div>
 
       </div>
     </div>
   );
 }
+
+

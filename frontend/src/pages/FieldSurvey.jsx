@@ -26,46 +26,17 @@ export default function FieldSurvey() {
 
   const detectLocation = () => {
     setIsCapturingGPS(true);
-
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setGpsCoords({
-            lat: parseFloat(position.coords.latitude.toFixed(6)),
-            lng: parseFloat(position.coords.longitude.toFixed(6)),
-            accuracy: Math.round(position.coords.accuracy) || 3
-          });
-          setIsCapturingGPS(false);
-        },
-        (error) => {
-          console.warn("Browser GPS permission denied or timeout, using simulated parcel anchor:", error);
-          // Fallback to active project coordinates or NIST Berhampur anchor
-          const baseLat = activeProj?.coordinates?.[0]?.lat || 19.1843;
-          const baseLng = activeProj?.coordinates?.[0]?.lng || 84.8524;
-          
-          setTimeout(() => {
-            setGpsCoords({
-              lat: parseFloat((baseLat + (Math.random() - 0.5) * 0.003).toFixed(6)),
-              lng: parseFloat((baseLng + (Math.random() - 0.5) * 0.003).toFixed(6)),
-              accuracy: Math.floor(Math.random() * 4) + 2
-            });
-            setIsCapturingGPS(false);
-          }, 800);
-        },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-      );
-    } else {
-      const baseLat = activeProj?.coordinates?.[0]?.lat || 19.1843;
-      const baseLng = activeProj?.coordinates?.[0]?.lng || 84.8524;
-      setTimeout(() => {
-        setGpsCoords({
-          lat: parseFloat((baseLat + (Math.random() - 0.5) * 0.003).toFixed(6)),
-          lng: parseFloat((baseLng + (Math.random() - 0.5) * 0.003).toFixed(6)),
-          accuracy: 3
-        });
-        setIsCapturingGPS(false);
-      }, 1000);
-    }
+    setTimeout(() => {
+      const baseLat = activeProj?.coordinates[0]?.lat || 22.9734;
+      const baseLng = activeProj?.coordinates[0]?.lng || 78.6569;
+      
+      setGpsCoords({
+        lat: parseFloat((baseLat + (Math.random() - 0.5) * 0.005).toFixed(6)),
+        lng: parseFloat((baseLng + (Math.random() - 0.5) * 0.005).toFixed(6)),
+        accuracy: Math.floor(Math.random() * 5) + 2
+      });
+      setIsCapturingGPS(false);
+    }, 1500);
   };
 
   const handleSurveySubmit = (e) => {
@@ -101,7 +72,7 @@ export default function FieldSurvey() {
         
         {/* Intro/Instructions Column */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3 card-interactive">
             <h3 className="font-bold text-[#0f2b5c] text-xs flex items-center gap-1.5 border-b border-slate-100 pb-2.5 uppercase tracking-wider font-serif">
               <Compass className="h-4.5 w-4.5" />
               {t('guidelinesTitle')}
@@ -112,15 +83,15 @@ export default function FieldSurvey() {
             </p>
 
             <ul className="text-xs text-slate-500 space-y-2.5 pt-2 font-bold">
-              <li className="flex gap-2">
+              <li className="flex gap-2 items-center p-1.5 rounded-lg hover:bg-slate-50 transition-colors hover-pop">
                 <span className="bg-indigo-50 border border-indigo-150 text-[#0f2b5c] h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">1</span>
                 <span>{t('step1')}</span>
               </li>
-              <li className="flex gap-2">
+              <li className="flex gap-2 items-center p-1.5 rounded-lg hover:bg-slate-50 transition-colors hover-pop">
                 <span className="bg-indigo-50 border border-indigo-150 text-[#0f2b5c] h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">2</span>
                 <span>{t('step2')}</span>
               </li>
-              <li className="flex gap-2">
+              <li className="flex gap-2 items-center p-1.5 rounded-lg hover:bg-slate-50 transition-colors hover-pop">
                 <span className="bg-indigo-50 border border-indigo-150 text-[#0f2b5c] h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">3</span>
                 <span>{t('step3')}</span>
               </li>
@@ -128,7 +99,7 @@ export default function FieldSurvey() {
           </div>
 
           {/* Interactive Responsive Phone Mode Preview */}
-          <div className="bg-indigo-50/20 border border-indigo-150 text-slate-800 rounded-xl p-4 shadow-sm hidden lg:block">
+          <div className="bg-indigo-50/20 border border-indigo-150 text-slate-800 rounded-xl p-4 shadow-sm hidden lg:block hover-pop">
             <h4 className="font-bold text-xs text-[#0f2b5c] flex items-center gap-1.5 uppercase tracking-wider mb-2.5 font-serif">
               <Smartphone className="h-4 w-4" />
               {t('mobilePreview')}
@@ -141,7 +112,7 @@ export default function FieldSurvey() {
 
         {/* Survey Form - Mobile Optimised Card */}
         <div className="lg:col-span-8">
-          <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden card-interactive">
             <div className="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
               <span className="font-bold text-slate-700 text-xs uppercase tracking-wider flex items-center gap-1.5">
                 <Layers className="h-4.5 w-4.5 text-[#0f2b5c]" />
@@ -172,7 +143,7 @@ export default function FieldSurvey() {
                       setSelectedProjectId(e.target.value);
                       setGpsCoords(null);
                     }}
-                    className="w-full text-xs font-bold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-sm"
+                    className="w-full text-xs font-bold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-sm hover:border-slate-400 transition-colors"
                   >
                     {proposals.map(p => (
                       <option key={p.id} value={p.id}>{p.id} - {(p.title || "").substring(0, 45)}...</option>
@@ -181,7 +152,7 @@ export default function FieldSurvey() {
                 </div>
 
                 {/* GPS Capture Widget */}
-                <div className="border border-slate-200 rounded-lg p-4 bg-slate-50/50 space-y-3">
+                <div className="border border-slate-200 rounded-lg p-4 bg-slate-50/50 space-y-3 hover-pop">
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-bold text-slate-750 flex items-center gap-1.5 font-serif uppercase tracking-wider">
                       <MapPin className="h-4 w-4 text-[#0f2b5c]" />
@@ -191,7 +162,7 @@ export default function FieldSurvey() {
                       type="button"
                       onClick={detectLocation}
                       disabled={isCapturingGPS}
-                      className="bg-[#0f2b5c] hover:bg-[#0c224a] text-white disabled:bg-slate-200 disabled:text-slate-450 px-3.5 py-2 rounded text-[11px] font-bold shadow-sm transition-all flex items-center gap-1 cursor-pointer"
+                      className="bg-[#0f2b5c] hover:bg-[#0c224a] text-white disabled:bg-slate-200 disabled:text-slate-450 px-3.5 py-2 rounded text-[11px] font-bold shadow-sm transition-all flex items-center gap-1 cursor-pointer btn-pop"
                     >
                       {isCapturingGPS ? (
                         <>
@@ -236,7 +207,7 @@ export default function FieldSurvey() {
                     <select
                       value={soilType}
                       onChange={(e) => setSoilType(e.target.value)}
-                      className="w-full text-xs font-bold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-sm"
+                      className="w-full text-xs font-bold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-sm hover:border-slate-400 transition-colors"
                     >
                       <option value="Alluvial">{language === 'en' ? 'Alluvial (Highly Fertile)' : 'जलोढ़ मिट्टी (अत्यंत उपजाऊ)'}</option>
                       <option value="Black Cotton">{language === 'en' ? 'Black Cotton (Medium Fertile)' : 'काली कपास मिट्टी (मध्यम उपजाऊ)'}</option>
@@ -251,7 +222,7 @@ export default function FieldSurvey() {
                     <select
                       value={landStructures}
                       onChange={(e) => setLandStructures(e.target.value)}
-                      className="w-full text-xs font-bold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-sm"
+                      className="w-full text-xs font-bold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-sm hover:border-slate-400 transition-colors"
                     >
                       <option value="None">{language === 'en' ? 'None (Unbuilt Plot)' : 'कोई नहीं (बिना बना प्लॉट)'}</option>
                       <option value="Residential Kutcha">{language === 'en' ? 'Residential Kutcha Houses' : 'आवासीय कच्चा मकान'}</option>
@@ -265,11 +236,11 @@ export default function FieldSurvey() {
                 {/* Site Photo Upload */}
                 <div>
                   <label className="block text-[9px] uppercase font-bold text-slate-400 mb-1">{t('photoUpload')}</label>
-                  <div className="border border-slate-200 bg-slate-50/50 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4">
+                  <div className="border border-slate-200 bg-slate-50/50 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 hover-pop">
                     <button
                       type="button"
                       onClick={() => setPhotoSelected(true)}
-                      className="bg-white border border-slate-250 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                      className="bg-white border border-slate-250 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer btn-pop"
                     >
                       <Camera className="h-4 w-4 text-slate-400" />
                       {t('captureCamera')}
@@ -296,7 +267,7 @@ export default function FieldSurvey() {
                     placeholder={t('notesPlaceholder')}
                     value={surveyNotes}
                     onChange={(e) => setSurveyNotes(e.target.value)}
-                    className="w-full text-xs font-semibold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#0f2b5c]/10 focus:border-[#0f2b5c] shadow-sm"
+                    className="w-full text-xs font-semibold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#0f2b5c]/10 focus:border-[#0f2b5c] shadow-sm transition-all"
                   />
                 </div>
 
@@ -305,7 +276,7 @@ export default function FieldSurvey() {
                   <button
                     type="button"
                     onClick={() => setShowLoginModal(true)}
-                    className="w-full bg-[#ea580c] text-white hover:bg-[#c2410c] py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
+                    className="w-full bg-[#ea580c] text-white hover:bg-[#c2410c] py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer btn-pop"
                   >
                     <Key className="h-4 w-4" />
                     Login to Submit Field Survey
@@ -313,7 +284,7 @@ export default function FieldSurvey() {
                 ) : (
                   <button
                     type="submit"
-                    className="w-full bg-[#0f2b5c] text-white hover:bg-[#0c224a] py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
+                    className="w-full bg-[#0f2b5c] text-white hover:bg-[#0c224a] py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer btn-pop"
                   >
                     <Upload className="h-4 w-4 text-emerald-400" />
                     {t('submitSurvey')}

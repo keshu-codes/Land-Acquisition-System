@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AppProvider, AppContext } from './context/AppContext';
-import SidebarLayout from './components/SidebarLayout';
+import Navbar from './components/Navbar';
+import IndiaGovFooter from './components/IndiaGovFooter';
 import SMSSimulator from './components/SMSSimulator';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
@@ -9,11 +10,7 @@ import CompensationPortal from './pages/CompensationPortal';
 import FieldSurvey from './pages/FieldSurvey';
 import SurveyDispatch from './pages/SurveyDispatch';
 import CitizenObjection from './pages/CitizenObjection';
-import CompensationCalculatorPage from './pages/CompensationCalculatorPage';
-import GISExplorerPage from './pages/GISExplorerPage';
-import LegalJourneyPage from './pages/LegalJourneyPage';
-import CitizenDashboard from './pages/CitizenDashboard';
-import AgencyDashboard from './pages/AgencyDashboard';
+import ParcelsDirectory from './pages/ParcelsDirectory';
 import Login from './pages/Login';
 import { RefreshCw } from 'lucide-react';
 
@@ -38,7 +35,6 @@ function AppContent() {
       }
     };
     window.addEventListener('navigate-tab', handleNav);
-
     return () => window.removeEventListener('navigate-tab', handleNav);
   }, []);
 
@@ -49,30 +45,29 @@ function AppContent() {
         : user.role === 'state' ? 'workflow' 
         : user.role === 'district' ? 'dispatch' 
         : user.role === 'surveyor' ? 'survey' 
-        : user.role === 'citizen' ? 'citizen-dashboard'
-        : user.role === 'agency' ? 'agency-dashboard'
-        : 'home';
+        : 'web3';
       setActiveTab(defaultTab);
     }
   }, [user]);
 
   const renderActivePage = () => {
-    if (grievanceToken || activeTab === 'objection') {
-      return <CitizenObjection token={grievanceToken} />;
+    // Before login, ONLY the 1st interface (Home) is accessible, unless direct citizen token link is provided
+    if (!user && !(grievanceToken && activeTab === 'objection')) {
+      return <Home setActiveTab={setActiveTab} />;
     }
+
+    // Role-based route containment for Citizen
+    if (user && user.role === 'citizen') {
+      if (['dashboard', 'dispatch', 'survey'].includes(activeTab)) {
+        return <CitizenObjection token={grievanceToken} />;
+      }
+    }
+
     switch (activeTab) {
       case 'home':
         return <Home setActiveTab={setActiveTab} />;
-      case 'citizen-dashboard':
-        return <CitizenDashboard setActiveTab={setActiveTab} />;
-      case 'agency-dashboard':
-        return <AgencyDashboard setActiveTab={setActiveTab} />;
-      case 'calc':
-        return <CompensationCalculatorPage setActiveTab={setActiveTab} />;
       case 'gis':
-        return <GISExplorerPage setActiveTab={setActiveTab} />;
-      case 'journey':
-        return <LegalJourneyPage setActiveTab={setActiveTab} />;
+        return <ParcelsDirectory setActiveTab={setActiveTab} />;
       case 'dashboard':
         return <Dashboard />;
       case 'workflow':
@@ -83,34 +78,44 @@ function AppContent() {
         return <FieldSurvey />;
       case 'dispatch':
         return <SurveyDispatch />;
+      case 'objection':
+        return <CitizenObjection token={grievanceToken} />;
       default:
         return <Home setActiveTab={setActiveTab} />;
     }
   };
 
-  // If user is unauthenticated, render the official Bhunaksha NLAMS Public Home page
-  if (!user && !grievanceToken) {
-    return (
-      <div className="min-h-screen bg-[#FAFAF7] font-sans text-slate-800">
-        <Home setActiveTab={setActiveTab} />
-        {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}
-      </div>
-    );
-  }
-
   return (
-    <SidebarLayout activeTab={activeTab} setActiveTab={setActiveTab}>
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center h-96 text-slate-400 gap-2">
-          <RefreshCw className="h-8 w-8 animate-spin text-[#ea580c]" />
-          <span className="text-xs font-semibold">Synchronizing with registry server...</span>
-        </div>
-      ) : (
-        renderActivePage()
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      {/* Bhunaksha AP Header & Navigation */}
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      
+      {/* Main Content Area */}
+      <main className="flex-1">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center h-96 text-slate-400 gap-2">
+            <RefreshCw className="h-8 w-8 animate-spin text-[#006653]" />
+            <span className="text-xs font-semibold text-slate-600">Connecting to Bhunaksha AP Registry Server...</span>
+          </div>
+        ) : (
+          renderActivePage()
+        )}
+      </main>
+
+      {/* Footer on inner pages */}
+      {(user || activeTab !== 'home') && <IndiaGovFooter />}
+      
+      {/* SMS Alert Simulator for Notice Notifications */}
+      {user && <SMSSimulator />}
+
+      {/* Official Officer & Citizen Login Modal */}
+      {showLoginModal && (
+        <Login 
+          initialTab={typeof showLoginModal === 'string' ? showLoginModal : 'officer'} 
+          onClose={() => setShowLoginModal(false)} 
+        />
       )}
-      <SMSSimulator />
-      {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}
-    </SidebarLayout>
+    </div>
   );
 }
 
@@ -121,3 +126,5 @@ export default function App() {
     </AppProvider>
   );
 }
+
+

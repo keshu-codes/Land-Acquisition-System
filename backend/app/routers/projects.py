@@ -1,8 +1,9 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 
 from ..database import get_session
-from ..dependencies import verify_api_key
+from ..dependencies import verify_api_key, get_current_user
 from .. import models, schemas
 
 router = APIRouter()
@@ -11,8 +12,14 @@ router = APIRouter()
 def create_project(
     project: schemas.ProjectCreate, 
     session: Session = Depends(get_session),
-    _auth: str = Depends(verify_api_key)
+    _auth: str = Depends(verify_api_key),
+    current_user: Optional[models.User] = Depends(get_current_user)
 ):
+    if current_user and current_user.role != "ministry":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Project registration restricted to Central Ministry. Your role is '{current_user.role}'."
+        )
     db_project = models.Project.from_orm(project)
     session.add(db_project)
     session.commit()
@@ -36,11 +43,42 @@ def update_project(
     project_id: int, 
     project_update: schemas.ProjectCreate, 
     session: Session = Depends(get_session),
-    _auth: str = Depends(verify_api_key)
+    _auth: str = Depends(verify_api_key),
+    current_user: Optional[models.User] = Depends(get_current_user)
 ):
     project = session.get(models.Project, project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+
+    # Enforce role-based approval: Citizens CANNOT approve or update projects
+    if current_user:
+        if current_user.role == "citizen":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access Denied: Citizens cannot approve or advance acquisition projects. You may submit objections via the Citizen Portal."
+            )
+
+        new_status = project_update.status
+        if new_status and new_status != project.status:
+            # Stage 1: GIS Verification -> State Authority ONLY
+            if new_status == "GIS Verification" and current_user.role != "state":
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Jurisdiction Restriction: GIS Verification can only be approved by the State GIS Directorate at State Level."
+                )
+            # Stage 2: Section 11 Notification -> District Collector ONLY
+            elif new_status == "Section 11 Notification" and current_user.role != "district":
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Jurisdiction Restriction: Section 11 Gazette Notification can only be issued by the District Magistrate/Collector at District Level."
+                )
+            # Stage 4: Possession Handover -> Field Surveyor ONLY
+            elif new_status == "Possession Handover" and current_user.role != "surveyor":
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Jurisdiction Restriction: Possession Handover can only be certified by a Cadastral Field Surveyor at Field Level."
+                )
+
     project_data = project_update.dict(exclude_unset=True)
     for key, value in project_data.items():
         setattr(project, key, value)

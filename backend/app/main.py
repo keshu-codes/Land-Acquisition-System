@@ -9,20 +9,22 @@ from starlette.responses import Response
 
 from .routers import projects, parcels, beneficiaries, dashboard, auth, grievances
 
+# Application instance
 app = FastAPI(title="National Land Acquisition System API", version="1.0.0")
 
-# Allow all origins including Vercel deployment domains and Cloudflare tunnels
+# Strict CORS configuration using Origin Regex validation
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origin_regex=r"https://.*\.trycloudflare\.com|http://localhost:\d+|http://127\.0\.0\.1:\d+",
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# strip out any raw html or script tags from input strings
+# Helper function to sanitize string parameters recursively (Stored XSS mitigation)
 def sanitize_value(val):
     if isinstance(val, str):
+        # Strips HTML/Script tags to prevent execution in database
         clean = re.sub(r'<[^>]*>', '', val)
         return clean
     elif isinstance(val, dict):
@@ -31,9 +33,10 @@ def sanitize_value(val):
         return [sanitize_value(i) for i in val]
     return val
 
-# sanitize incoming json bodies on write operations (POST, PUT, PATCH)
+# Custom XSS Sanitization Middleware
 class XSSSanitizationMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
+        # Only sanitize write payloads with JSON bodies
         if request.method in ["POST", "PUT", "PATCH"] and "application/json" in request.headers.get("content-type", ""):
             body_bytes = await request.body()
             if body_bytes:
@@ -42,6 +45,7 @@ class XSSSanitizationMiddleware(BaseHTTPMiddleware):
                     sanitized_data = sanitize_value(data)
                     sanitized_body = json.dumps(sanitized_data).encode('utf-8')
                     
+                    # Override request receiver with sanitized payload
                     async def receive():
                         return {"type": "http.request", "body": sanitized_body, "more_body": False}
                     
@@ -54,7 +58,7 @@ class XSSSanitizationMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(XSSSanitizationMiddleware)
 
-# all rest endpoints grouped under /api/v1
+# Include routers under /api/v1
 app.include_router(auth.router, prefix="/api/v1", tags=["auth"])
 app.include_router(projects.router, prefix="/api/v1", tags=["projects"])
 app.include_router(parcels.router, prefix="/api/v1", tags=["parcels"])
@@ -62,13 +66,13 @@ app.include_router(beneficiaries.router, prefix="/api/v1", tags=["beneficiaries"
 app.include_router(dashboard.router, prefix="/api/v1", tags=["dashboard"])
 app.include_router(grievances.router, prefix="/api/v1", tags=["grievances"])
 
-# seed sqlite tables on server startup
+# Initialize database on startup
 @app.on_event("startup")
 def on_startup():
     from .database import init_db
     init_db()
 
-# serve built react frontend directly from frontend/dist
+# Mount Frontend SPA for Unified Single-Link Deployment
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
@@ -86,4 +90,4 @@ async def serve_spa(full_path: str):
     index_path = os.path.join(frontend_dist, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    return {"message": "NLAMS API running. Build frontend with 'npm run build' to see UI."}
+    return {"message": "NLAMS Unified Node Operational."}

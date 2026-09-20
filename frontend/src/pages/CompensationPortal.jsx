@@ -123,7 +123,7 @@ export default function CompensationPortal() {
         {/* Connect Button */}
         <button
           onClick={connectWallet}
-          className={`flex items-center gap-2 px-4.5 py-2.5 rounded-lg text-xs font-bold transition-all border shadow-sm cursor-pointer ${
+          className={`btn-pop flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold border shadow-xs cursor-pointer ${
             walletConnected 
               ? 'bg-emerald-50 border-emerald-350 text-emerald-700 hover:bg-emerald-100' 
               : 'bg-[#0f2b5c] border-[#0f2b5c] text-white hover:bg-[#0c224a]'
@@ -143,9 +143,9 @@ export default function CompensationPortal() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Compensation Disbursals Section */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
-            <h3 className="font-bold text-[#0f2b5c] text-sm flex items-center gap-1.5 border-b border-slate-100 pb-3 font-serif">
-              <Lock className="h-4.5 w-4.5" />
+          <div className="card-interactive bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-5">
+            <h3 className="font-extrabold text-[#0f2b5c] text-sm flex items-center gap-1.5 border-b border-slate-100 pb-3 font-serif">
+              <Lock className="h-4.5 w-4.5 text-[#ea580c]" />
               {t('payoutConsole')}
             </h3>
             
@@ -156,7 +156,7 @@ export default function CompensationPortal() {
                 <select
                   value={selectedProjectId}
                   onChange={(e) => setSelectedProjectId(e.target.value)}
-                  className="w-full text-xs font-bold border border-slate-250 rounded-lg p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-sm"
+                  className="hover-pop w-full text-xs font-bold border border-slate-250 rounded-xl p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-xs"
                 >
                   {proposals.map(p => (
                     <option key={p.id} value={p.id}>{p.id} - {(p.title || "").substring(0, 35)}...</option>
@@ -166,7 +166,7 @@ export default function CompensationPortal() {
 
               {/* Status Info */}
               {activeProj && (
-                <div className="bg-slate-50 border border-slate-150 p-3 rounded-lg text-xs grid grid-cols-2 gap-2.5">
+                <div className="hover-pop bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-xs grid grid-cols-2 gap-2.5 cursor-pointer">
                   <div>
                     <span className="text-slate-400 block text-[8px] uppercase font-bold mb-0.5">{t('assessedBudget')}</span>
                     <strong className="text-slate-700 font-extrabold">₹{activeProj.budgetAssessed} Cr</strong>
@@ -197,7 +197,7 @@ export default function CompensationPortal() {
                       placeholder={walletConnected ? `Max: ${(activeProj.budgetAssessed - activeProj.budgetDisbursed).toFixed(1)} Cr` : "Connect wallet to authorize disbursement"}
                       value={claimAmount}
                       onChange={(e) => setClaimAmount(e.target.value)}
-                      className="w-full text-xs font-semibold border border-slate-250 rounded-lg p-2.5 pr-14 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#0f2b5c]/10 focus:border-[#0f2b5c] disabled:opacity-60 shadow-sm"
+                      className="hover-pop w-full text-xs font-semibold border border-slate-250 rounded-xl p-2.5 pr-14 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#0f2b5c]/10 focus:border-[#0f2b5c] disabled:opacity-60 shadow-xs"
                     />
                     <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-bold">Cr INR</span>
                   </div>
@@ -206,7 +206,7 @@ export default function CompensationPortal() {
                 <button
                   type="submit"
                   disabled={!walletConnected || (activeProj.budgetAssessed - activeProj.budgetDisbursed) <= 0}
-                  className="w-full bg-[#0f2b5c] text-white hover:bg-[#0c224a] disabled:bg-slate-100 disabled:text-slate-400 py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
+                  className="btn-pop w-full bg-[#0f2b5c] text-white hover:bg-[#0c224a] disabled:bg-slate-100 disabled:text-slate-400 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-md cursor-pointer"
                 >
                   <ArrowUpRight className="h-4.5 w-4.5 text-emerald-400" />
                   {t('signRelease')}
@@ -216,9 +216,9 @@ export default function CompensationPortal() {
           </div>
 
           {/* Land Deed Verification Tool */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
-            <h3 className="font-bold text-[#0f2b5c] text-sm flex items-center gap-1.5 border-b border-slate-100 pb-3 font-serif">
-              <FileText className="h-4.5 w-4.5" />
+          <div className="card-interactive bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+            <h3 className="font-extrabold text-[#0f2b5c] text-sm flex items-center gap-1.5 border-b border-slate-100 pb-3 font-serif">
+              <FileText className="h-4.5 w-4.5 text-[#ea580c]" />
               {t('documentRegistryTitle')}
             </h3>
             
@@ -226,7 +226,7 @@ export default function CompensationPortal() {
               {t('documentRegistrySub')}
             </p>
 
-            <div className="border-2 border-dashed border-slate-200 hover:border-[#0f2b5c] rounded-xl p-6 text-center transition-colors cursor-pointer relative bg-slate-50/50">
+            <div className="hover-pop border-2 border-dashed border-slate-250 hover:border-[#0f2b5c] rounded-2xl p-6 text-center cursor-pointer relative bg-slate-50/50">
               <input 
                 type="file" 
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

@@ -7,7 +7,7 @@ import {
 import { AppContext } from '../context/AppContext';
 
 const SurveyDispatch = () => {
-  const { apiBase, user, authHeader, setShowLoginModal, addNotification, t } = useContext(AppContext);
+  const { apiBase, user, authHeader, setShowLoginModal, addNotification } = useContext(AppContext);
   
   const [email, setEmail] = useState('anmol7895303@gmail.com');
   const [officers, setOfficers] = useState([]);
@@ -68,43 +68,22 @@ const SurveyDispatch = () => {
   useEffect(() => {
     // Fetch Nearest Officers
     const fetchOfficers = async () => {
-      const defaultOfficers = [
-        { id: 101, name: "Priya Sharma", designation: "Lead Revenue Surveyor", phone: "+91 98765 43210", distance_km: 1.2, status: "Available", badge: "Station Head" },
-        { id: 102, name: "Rajesh Kumar", designation: "District Cadastral Officer", phone: "+91 98765 12345", distance_km: 3.5, status: "On Duty", badge: "Field Node" },
-        { id: 103, name: "Amit Patel", designation: "Junior Revenue Inspector", phone: "+91 98765 67890", distance_km: 5.8, status: "Available", badge: "GPS Station" }
-      ];
-      if (!user) {
-        setOfficers(defaultOfficers);
-        setSelectedOfficer(defaultOfficers[0]);
-        return;
-      }
       try {
         const res = await fetch(`${apiBase}/grievances/officers/nearest?lat=${mapCenter[0]}&lng=${mapCenter[1]}`, {
           headers: authHeader()
         });
-        const defaultOfficers = [
-          { id: 101, name: "Priya Sharma", designation: "Lead Revenue Surveyor", phone: "+91 98765 43210", distance_km: 1.2, status: "Available", badge: "Station Head" },
-          { id: 102, name: "Rajesh Kumar", designation: "District Cadastral Officer", phone: "+91 98765 12345", distance_km: 3.5, status: "On Duty", badge: "Field Node" },
-          { id: 103, name: "Amit Patel", designation: "Junior Revenue Inspector", phone: "+91 98765 67890", distance_km: 5.8, status: "Available", badge: "GPS Station" }
-        ];
         if (res.ok) {
           const data = await res.json();
-          const list = Array.isArray(data) && data.length > 0 ? data : defaultOfficers;
-          setOfficers(list);
-          const available = list.find(o => o.status === 'Available' || o.status === 'AVAILABLE' || !o.status?.toLowerCase().includes('duty'));
-          setSelectedOfficer(available || list[0]);
-        } else {
-          setOfficers(defaultOfficers);
-          setSelectedOfficer(defaultOfficers[0]);
+          setOfficers(data);
+          const available = data.find(o => o.status === 'Available' || o.status === 'AVAILABLE' || !o.status?.toLowerCase().includes('duty'));
+          if (available) {
+            setSelectedOfficer(available);
+          } else if (data.length > 0) {
+            setSelectedOfficer(data[0]);
+          }
         }
       } catch (err) {
         console.error("Error fetching officers:", err);
-        const defaultOfficers = [
-          { id: 101, name: "Priya Sharma", designation: "Lead Revenue Surveyor", phone: "+91 98765 43210", distance_km: 1.2, status: "Available", badge: "Station Head" },
-          { id: 102, name: "Rajesh Kumar", designation: "District Cadastral Officer", phone: "+91 98765 12345", distance_km: 3.5, status: "On Duty", badge: "Field Node" }
-        ];
-        setOfficers(defaultOfficers);
-        setSelectedOfficer(defaultOfficers[0]);
       }
     };
 
@@ -188,10 +167,10 @@ const SurveyDispatch = () => {
         <div className="mb-6">
           <h1 className="text-2xl font-serif text-[#0f2b5c] font-bold flex items-center gap-2">
             <Shield className="w-6 h-6 text-[#ea580c]" />
-            {t('surveyDispatchTitle') || 'Survey & Notice Dispatch'}
+            Survey & Notice Dispatch
           </h1>
           <p className="text-slate-600 text-xs mt-1">
-            {t('surveyDispatchSub') || 'Assign land survey officers and dispatch formal acquisition notices.'}
+            Assign land survey officers and dispatch formal acquisition notices.
           </p>
         </div>
 
@@ -204,7 +183,7 @@ const SurveyDispatch = () => {
             <div className="bg-[#0f2b5c] text-white px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[#ea580c]" />
-                <h2 className="font-serif font-semibold text-sm">{t('gisMapViewer') || 'GIS Map Viewer'}</h2>
+                <h2 className="font-serif font-semibold text-sm">GIS Map Viewer</h2>
               </div>
               <button
                 onClick={() => setIsMapFullscreen(!isMapFullscreen)}
@@ -257,36 +236,36 @@ const SurveyDispatch = () => {
             {/* Card A: Land & Parcel Details */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="bg-slate-100 border-b border-slate-200 px-4 py-3">
-                <h2 className="font-serif font-semibold text-[#0f2b5c] text-sm">{t('landParcelDetails') || 'Land & Parcel Details'}</h2>
+                <h2 className="font-serif font-semibold text-[#0f2b5c] text-sm">Land & Parcel Details</h2>
               </div>
               <div className="p-4 space-y-3 text-xs">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <span className="text-slate-500 block mb-1">{t('landowner') || 'Landowner'}</span>
+                    <span className="text-slate-500 block mb-1">Landowner</span>
                     <span className="font-medium text-slate-800 flex items-center gap-1">
                       <User className="w-3 h-3 text-slate-400" /> Anmol
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block mb-1">{t('plotSurveyNo') || 'Plot / Survey No'}</span>
+                    <span className="text-slate-500 block mb-1">Plot / Survey No</span>
                     <span className="font-medium text-slate-800">PLOT-OD-2026-9821 / SN-9821</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block mb-1">{t('areaDetails') || 'Area Details'}</span>
+                    <span className="text-slate-500 block mb-1">Area Details</span>
                     <span className="font-medium text-slate-800">1.45 Acres (Semi-Urban / Agricultural)</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block mb-1">{t('valuation') || 'Valuation'}</span>
+                    <span className="text-slate-500 block mb-1">Valuation</span>
                     <span className="font-medium text-slate-800">₹42,50,000 (Base Circle Rate)</span>
                   </div>
                   <div className="col-span-2">
-                    <span className="text-slate-500 block mb-1">{t('project') || 'Project'}</span>
+                    <span className="text-slate-500 block mb-1">Project</span>
                     <span className="font-medium text-slate-800">Regional Multi-Modal Corridor Expansion</span>
                   </div>
                 </div>
                 
                 <div className="pt-2">
-                  <label className="text-slate-500 block mb-1">{t('noticeEmailDest') || 'Notice Email Destination'}</label>
+                  <label className="text-slate-500 block mb-1">Notice Email Destination</label>
                   <div className="flex items-center border border-slate-300 rounded-md bg-slate-50 px-3 py-2">
                     <Mail className="w-4 h-4 text-slate-400 mr-2" />
                     <input 
@@ -303,8 +282,8 @@ const SurveyDispatch = () => {
             {/* Card B: Nearest Survey Officer */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="bg-slate-100 border-b border-slate-200 px-4 py-3 flex justify-between items-center">
-                <h2 className="font-serif font-semibold text-[#0f2b5c] text-sm">{t('nearestOfficers') || 'Nearest Survey Officers'}</h2>
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">{t('autoDetected') || 'Auto-detected'}</span>
+                <h2 className="font-serif font-semibold text-[#0f2b5c] text-sm">Nearest Survey Officers</h2>
+                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">Auto-detected</span>
               </div>
               <div className="p-4">
                 {officers.length === 0 ? (
@@ -322,8 +301,8 @@ const SurveyDispatch = () => {
                         <div 
                           key={idx}
                           onClick={() => setSelectedOfficer(officer)}
-                          className={`p-3 rounded-lg border text-xs cursor-pointer transition-colors ${
-                            isSelected ? 'border-[#ea580c] bg-orange-50' : 'border-slate-200 hover:border-slate-300'
+                          className={`hover-pop p-3 rounded-xl border text-xs cursor-pointer ${
+                            isSelected ? 'border-[#ea580c] bg-orange-50/80 shadow-xs ring-1 ring-[#ea580c]/30' : 'border-slate-200 hover:border-slate-300 bg-white'
                           } flex items-center justify-between`}
                         >
                           <div className="flex items-center gap-3">
@@ -331,15 +310,15 @@ const SurveyDispatch = () => {
                               {officer.name ? officer.name.charAt(0) : <User className="w-4 h-4" />}
                             </div>
                             <div>
-                              <div className="font-medium text-slate-800">{officer.name || 'Survey Officer'}</div>
-                              <div className="text-slate-500">{officer.distance ? `${officer.distance} km away` : 'Nearby'}</div>
+                              <div className="font-bold text-slate-800">{officer.name || 'Survey Officer'}</div>
+                              <div className="text-[10px] text-slate-400 font-semibold">{officer.distance ? `${officer.distance} km away` : 'Nearby'}</div>
                             </div>
                           </div>
                           <div>
-                            <span className={`px-2 py-1 rounded-md font-medium ${
-                              isAvailable ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              isAvailable ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                             }`}>
-                              {isAvailable ? (t('available') || 'Available') : (t('onDuty') || 'On Duty')}
+                              {officer.status || (isAvailable ? 'Available' : 'On Duty')}
                             </span>
                           </div>
                         </div>
@@ -351,13 +330,13 @@ const SurveyDispatch = () => {
             </div>
 
             {/* Card C: Dispatch Action & Result */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="card-interactive bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
               {!dispatchResult ? (
                 <div className="p-5 flex flex-col items-center justify-center min-h-[160px]">
                   {!user ? (
                     <button 
                       onClick={() => setShowLoginModal(true)}
-                      className="w-full bg-[#ea580c] hover:bg-orange-700 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
+                      className="btn-pop w-full bg-[#ea580c] hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm cursor-pointer"
                     >
                       <Key className="w-5 h-5" />
                       Login to Dispatch
@@ -366,17 +345,17 @@ const SurveyDispatch = () => {
                     <>
                       <div className="text-xs text-slate-500 mb-4 text-center">
                         <AlertTriangle className="w-4 h-4 text-amber-500 inline mr-1 -mt-0.5" />
-                        {t('dispatchWarning') || 'This action will issue a formal legal notice and assign the selected officer.'}
+                        This action will issue a formal legal notice and assign the selected officer.
                       </div>
                       <button 
                         onClick={handleStartDispatch}
                         disabled={dispatching || !selectedOfficer}
-                        className="w-full bg-[#0f2b5c] hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm cursor-pointer"
+                        className="btn-pop w-full bg-[#0f2b5c] hover:bg-[#0c224a] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer"
                       >
                         {dispatching ? (
                           <><Clock className="w-5 h-5 animate-spin" /> Processing...</>
                         ) : (
-                          <><Send className="w-5 h-5 text-[#ea580c]" /> 📧 {t('dispatchNoticeBtn') || 'Dispatch Survey Notice & Assign Officer'}</>
+                          <><Send className="w-5 h-5 text-[#ea580c]" /> 📧 Dispatch Survey Notice & Assign Officer</>
                         )}
                       </button>
                     </>

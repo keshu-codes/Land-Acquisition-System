@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Blueprint Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e3a8a" stroke-width="0.8" opacity="0.6"/>
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#2563eb" stroke-width="1.2" opacity="0.8"/>
+    </pattern>
+    <style>
+      .title { font-family: 'Courier New', monospace; font-weight: bold; fill: #ffffff; }
+      .label { font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; fill: #38bdf8; letter-spacing: 1px; }
+      .sublabel { font-family: 'Courier New', monospace; font-size: 11px; fill: #93c5fd; }
+      .wall { stroke: #ffffff; stroke-width: 4; fill: none; stroke-linecap: square; }
+      .inner-wall { stroke: #38bdf8; stroke-width: 2.5; fill: none; }
+      .dim { stroke: #fbbf24; stroke-width: 1.2; stroke-dasharray: 4,4; }
+      .dim-text { font-family: 'Courier New', monospace; font-size: 12px; fill: #fbbf24; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Background Blueprint Paper -->
+  <rect width="1200" height="800" fill="#0f2b5c"/>
+  <rect width="1200" height="800" fill="url(#grid)"/>
+
+  <!-- Outer Border Frame -->
+  <rect x="20" y="20" width="1160" height="760" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+  <rect x="25" y="25" width="1150" height="750" fill="none" stroke="#38bdf8" stroke-width="1"/>
+
+  <!-- Architectural Building Outer Boundary (24m x 16m Scale) -->
+  <!-- Main Footprint -->
+  <rect x="150" y="120" width="900" height="500" class="wall" />
+  
+  <!-- Internal Structural Divisions -->
+  <!-- Main Entrance / Concourse Corridor -->
+  <line x1="150" y1="280" x2="1050" y2="280" class="inner-wall" />
+  <line x1="450" y1="280" x2="450" y2="620" class="inner-wall" />
+  <line x1="750" y1="280" x2="750" y2="620" class="inner-wall" />
+  
+  <!-- Security & Administrative Rooms -->
+  <line x1="150" y1="450" x2="450" y2="450" class="inner-wall" />
+  <line x1="750" y1="450" x2="1050" y2="450" class="inner-wall" />
+
+  <!-- Structural Pillar Columns (2D Grid) -->
+  <rect x="170" y="140" width="16" height="16" fill="#ffffff" />
+  <rect x="592" y="140" width="16" height="16" fill="#ffffff" />
+  <rect x="1014" y="140" width="16" height="16" fill="#ffffff" />
+
+  <rect x="170" y="360" width="16" height="16" fill="#ffffff" />
+  <rect x="592" y="360" width="16" height="16" fill="#ffffff" />
+  <rect x="1014" y="360" width="16" height="16" fill="#ffffff" />
+
+  <rect x="170" y="584" width="16" height="16" fill="#ffffff" />
+  <rect x="592" y="584" width="16" height="16" fill="#ffffff" />
+  <rect x="1014" y="584" width="16" height="16" fill="#ffffff" />
+
+  <!-- Door Swings & Openings -->
+  <path d="M 570 280 A 40 40 0 0 1 610 320" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3" />
+  <line x1="570" y1="280" x2="610" y2="280" stroke="#0f2b5c" stroke-width="6" />
+
+  <path d="M 280 450 A 40 40 0 0 1 320 490" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3" />
+  <line x1="280" y1="450" x2="320" y2="450" stroke="#0f2b5c" stroke-width="6" />
+
+  <!-- Room Labels -->
+  <!-- Zone 1: Main Concourse -->
+  <text x="600" y="200" text-anchor="middle" class="label">ZONE 01: MAIN PASSENGER CONCOURSE</text>
+  <text x="600" y="220" text-anchor="middle" class="sublabel">AREA: 360.0 SQ.M | CLEAR HEIGHT: 4.5M</text>
+
+  <!-- Zone 2: Ticket Counters -->
+  <text x="300" y="360" text-anchor="middle" class="label">TICKET COUNTERS & SCAN</text>
+  <text x="300" y="380" text-anchor="middle" class="sublabel">AUTOMATED AFC GATES</text>
+
+  <!-- Zone 3: Security & Screening -->
+  <text x="600" y="440" text-anchor="middle" class="label">SECURITY & BAGGAGE CHECK</text>
+  <text x="600" y="460" text-anchor="middle" class="sublabel">X-RAY & METAL DETECTOR BAY</text>
+
+  <!-- Zone 4: Station Operations -->
+  <text x="900" y="360" text-anchor="middle" class="label">STATION MASTER OFFICE</text>
+  <text x="900" y="380" text-anchor="middle" class="sublabel">CONTROL ROOM & SCADA</text>
+
+  <!-- Zone 5: VIP Lounge -->
+  <text x="300" y="530" text-anchor="middle" class="label">EXECUTIVE LOUNGE</text>
+  <text x="300" y="550" text-anchor="middle" class="sublabel">AIR-CONDITIONED</text>
+
+  <!-- Zone 6: Electrical & HVAC -->
+  <text x="900" y="530" text-anchor="middle" class="label">HVAC & SUBSTATION</text>
+  <text x="900" y="550" text-anchor="middle" class="sublabel">TRANSFORMER BAY</text>
+
+  <!-- Dimension Lines & Annotations -->
+  <!-- Top Horizontal Dimension -->
+  <line x1="150" y1="80" x2="1050" y2="80" class="dim" />
+  <line x1="150" y1="70" x2="150" y2="90" stroke="#fbbf24" stroke-width="1.5" />
+  <line x1="1050" y1="70" x2="1050" y2="90" stroke="#fbbf24" stroke-width="1.5" />
+  <text x="600" y="75" text-anchor="middle" class="dim-text">TOTAL LENGTH: 24.00 METERS</text>
+
+  <!-- Left Vertical Dimension -->
+  <line x1="100" y1="120" x2="100" y2="620" class="dim" />
+  <line x1="90" y1="120" x2="110" y2="120" stroke="#fbbf24" stroke-width="1.5" />
+  <line x1="90" y1="620" x2="110" y2="620" stroke="#fbbf24" stroke-width="1.5" />
+  <text x="90" y="370" text-anchor="middle" class="dim-text" transform="rotate(-90 90 370)">TOTAL DEPTH: 16.00 METERS</text>
+
+  <!-- Official Title Block (Bottom Right) -->
+  <rect x="740" y="650" x2="1150" y2="760" fill="#0c224a" stroke="#ffffff" stroke-width="2" />
+  <line x1="740" y1="685" x2="1150" y2="685" stroke="#38bdf8" stroke-width="1" />
+  <line x1="740" y1="720" x2="1150" y2="720" stroke="#38bdf8" stroke-width="1" />
+  <line x1="945" y1="685" x2="945" y2="760" stroke="#38bdf8" stroke-width="1" />
+
+  <text x="750" y="672" class="title" font-size="14">GOVERNMENT OF INDIA — NLAMS SPATIAL ENGINE</text>
+  <text x="750" y="705" class="sublabel">PROJECT: MULTI-MODAL TERMINAL</text>
+  <text x="955" y="705" class="sublabel">SCALE: 1:100 @ A2</text>
+  <text x="750" y="745" class="sublabel">PARCEL: PLOT-OD-2026-9821</text>
+  <text x="955" y="745" class="sublabel">DATE: 01 SEPT 2026</text>
+</svg>

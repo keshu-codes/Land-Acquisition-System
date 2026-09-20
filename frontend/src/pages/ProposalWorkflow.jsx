@@ -391,13 +391,15 @@ export default function ProposalWorkflow() {
           <p className="text-xs text-slate-500 font-semibold">{language === 'en' ? 'Automated Stakeholder Workflow Routing & Status Verification' : 'स्वचालित हितधारक कार्यप्रवाह मार्गनिर्देशन और स्थिति सत्यापन'}</p>
         </div>
         
-        <button
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center gap-1.5 bg-[#0f2b5c] hover:bg-[#0c224a] text-white px-4 py-2 rounded-lg text-xs font-bold shadow transition-all cursor-pointer"
-        >
-          <Plus className="h-4 w-4" />
-          {showAddForm ? t('hideForm') : t('newAcquisition')}
-        </button>
+        {user && user.role === 'ministry' && (
+          <button
+            onClick={() => setShowAddForm(!showAddForm)}
+            className="flex items-center gap-1.5 bg-[#0f2b5c] hover:bg-[#0c224a] text-white px-4 py-2 rounded-lg text-xs font-bold shadow transition-all cursor-pointer"
+          >
+            <Plus className="h-4 w-4" />
+            {showAddForm ? t('hideForm') : `${t('newAcquisition')} (Central Level)`}
+          </button>
+        )}
       </div>
 
       {/* New Proposal Form */}
@@ -546,22 +548,23 @@ export default function ProposalWorkflow() {
       </div>
 
       {/* Proposals list & Workflows */}
-      <div className="space-y-4">
+      <div className="space-y-5">
         {proposals.map((proj) => {
           const next = getNextStageInfo(proj.status);
-          const isEligibleRole = next && (selectedRole === next.roleRequired || selectedRole === 'ministry');
+          // Strict level-based approval: each authority can ONLY approve their designated part; citizens CANNOT approve
+          const isEligibleRole = Boolean(next && user && user.role !== 'citizen' && user.role === next.roleRequired);
 
           return (
-            <div key={proj.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 hover:shadow-md transition-all">
+            <div key={proj.id} className="card-interactive bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-5">
               
               {/* Proposal Header */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-3.5">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-[#0f2b5c] bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full">{proj.id}</span>
+                    <span className="text-[10px] font-black text-[#0f2b5c] bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full">{proj.id}</span>
                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{proj.agency}</span>
                   </div>
-                  <h3 className="font-bold text-slate-850 text-base mt-2 font-serif">{proj.title}</h3>
+                  <h3 className="font-extrabold text-slate-900 text-base mt-2 font-serif">{proj.title}</h3>
                   <div className="text-xs text-slate-500 font-semibold mt-1">
                     {language === 'en' ? 'Locality' : 'स्थान'}: <span className="text-slate-700 font-bold">{proj.district}, {proj.state}</span>
                   </div>
@@ -569,7 +572,7 @@ export default function ProposalWorkflow() {
 
                 <div className="flex flex-col items-end gap-1">
                   <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{t('currentStage')}</span>
-                  <span className="bg-slate-100 text-slate-800 border border-slate-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                  <span className="hover-pop bg-slate-100 text-slate-800 border border-slate-250 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide cursor-pointer">
                     {language === 'en' ? proj.status : t(proj.status)}
                   </span>
                 </div>
@@ -582,31 +585,31 @@ export default function ProposalWorkflow() {
                   const isActive = proj.status === step.stage;
 
                   return (
-                    <div key={idx} className="relative flex flex-col items-center">
+                    <div key={idx} className="relative flex flex-col items-center group">
                       
                       {/* Document Viewer Icon overlays for completed steps */}
                       {isCompleted && (
                         <button 
                           onClick={() => openDocument(proj, step.stage)}
                           title={`View ${step.stage} Document`}
-                          className="absolute -top-3 right-[calc(50%-18px)] bg-white border border-slate-250 p-1 rounded-full shadow hover:bg-slate-50 text-[#0f2b5c] z-20 cursor-pointer"
+                          className="btn-pop absolute -top-3 right-[calc(50%-18px)] bg-white border border-slate-300 p-1 rounded-full shadow-sm hover:bg-slate-50 text-[#0f2b5c] z-20 cursor-pointer"
                         >
-                          <Eye className="h-3 w-3" />
+                          <Eye className="h-3 w-3 text-[#ea580c]" />
                         </button>
                       )}
 
-                      <div className={`h-8 w-8 rounded-full border-2 flex items-center justify-center mb-1.5 z-10 font-bold text-xs ${
+                      <div className={`hover-pop h-9 w-9 rounded-full border-2 flex items-center justify-center mb-1.5 z-10 font-black text-xs cursor-pointer ${
                         isCompleted 
-                          ? 'bg-emerald-50 border-emerald-600 text-emerald-600' 
+                          ? 'bg-emerald-50 border-emerald-600 text-emerald-700 shadow-xs' 
                           : isActive 
-                            ? 'bg-[#0f2b5c] border-[#0f2b5c] text-white shadow' 
-                            : 'bg-white border-slate-200 text-slate-350'
+                            ? 'bg-[#0f2b5c] border-[#0f2b5c] text-white shadow-md ring-2 ring-[#0f2b5c]/20 scale-105' 
+                            : 'bg-white border-slate-250 text-slate-400'
                       }`}>
                         {idx + 1}
                       </div>
                       
-                      <span className={`block font-bold line-clamp-1 max-w-[90px] ${
-                        isCompleted ? 'text-emerald-700' : isActive ? 'text-[#0f2b5c] font-extrabold' : 'text-slate-400'
+                      <span className={`block font-bold line-clamp-1 max-w-[95px] ${
+                        isCompleted ? 'text-emerald-700 font-extrabold' : isActive ? 'text-[#0f2b5c] font-black' : 'text-slate-400'
                       }`}>
                         {language === 'en' ? step.stage.replace(' Notification', '').replace(' Handover', '') : t(step.stage).replace(' अधिसूचना', '').replace(' सौंपना', '')}
                       </span>
@@ -617,10 +620,10 @@ export default function ProposalWorkflow() {
 
                       {/* Connector Line */}
                       {idx < proj.timeline.length - 1 && (
-                        <div className={`absolute top-4 left-[calc(50%+16px)] w-[calc(100%-32px)] h-0.5 -z-0 ${
+                        <div className={`absolute top-4.5 left-[calc(50%+18px)] w-[calc(100%-36px)] h-0.5 -z-0 ${
                           proj.timeline[idx + 1].status === "completed" 
                             ? 'bg-emerald-500' 
-                            : 'bg-slate-100'
+                            : 'bg-slate-200'
                         }`} />
                       )}
                     </div>
@@ -630,15 +633,15 @@ export default function ProposalWorkflow() {
 
               {/* Action area */}
               {next ? (
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 border border-slate-200/50 p-4 rounded-xl gap-4">
+                <div className="hover-pop flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 border border-slate-200 rounded-xl p-4 gap-4">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <div className="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                      <div className="font-bold text-slate-800 text-xs flex items-center gap-1.5">
                         {t('nextMilestone')}: {next.label}
                       </div>
-                      <p className="text-[11px] text-slate-550 mt-0.5 font-semibold leading-relaxed">
-                        {t('pendingVerification')} <strong className="text-slate-700 uppercase">{next.roleRequired === 'state' ? (language === 'en' ? 'State' : 'राज्य') : (language === 'en' ? 'Collector' : 'कलेक्टर')}</strong> ({next.executor}).
+                      <p className="text-[11px] text-slate-500 mt-0.5 font-semibold leading-relaxed">
+                        {t('pendingVerification')} <strong className="text-slate-700 uppercase">{next.roleRequired === 'state' ? 'State GIS Authority' : next.roleRequired === 'district' ? 'District Collector' : 'Field Surveyor'}</strong> ({next.executor}).
                       </p>
                     </div>
                   </div>
@@ -646,36 +649,41 @@ export default function ProposalWorkflow() {
                   <div className="w-full sm:w-auto flex items-center justify-end gap-2.5">
                     {!user ? (
                       <button
-                        onClick={() => setShowLoginModal(true)}
-                        className="w-full sm:w-auto bg-[#ea580c] hover:bg-[#c2410c] text-white px-4 py-2.5 rounded-lg text-xs font-bold shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                        onClick={() => setShowLoginModal('officer')}
+                        className="btn-pop w-full sm:w-auto bg-[#ea580c] hover:bg-[#c2410c] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <Key className="h-3.5 w-3.5" />
                         Login to Verify & Sign
                       </button>
+                    ) : user.role === 'citizen' ? (
+                      <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-300 px-3.5 py-2 rounded-xl font-bold flex items-center gap-2">
+                        <ShieldAlert className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                        <span>Citizens cannot approve projects. Objections can be submitted via the Citizen Objection Portal.</span>
+                      </div>
                     ) : isEligibleRole ? (
                       <button
-                        onClick={() => advanceWorkflow(proj.id, next.index, `${user.full_name} (${selectedRole.toUpperCase()})`)}
-                        className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-4.5 py-2.5 rounded-lg text-xs font-bold shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                        onClick={() => advanceWorkflow(proj.id, next.index, `${user.full_name} (${user.role.toUpperCase()})`)}
+                        className="btn-pop w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-black shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        {t('verifySign')}
+                        {t('verifySign')} ({user.role === 'state' ? 'State Level' : user.role === 'district' ? 'District Level' : 'Field Level'})
                         <ArrowRight className="h-3.5 w-3.5" />
                       </button>
                     ) : (
-                      <div className="text-[10px] text-slate-400 bg-slate-100 border border-slate-200 px-3 py-2.5 rounded-lg font-bold flex items-center gap-1.5 shadow-inner">
+                      <div className="text-[10px] text-slate-500 bg-slate-100 border border-slate-300 px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-inner">
                         <ShieldAlert className="h-3.5 w-3.5 text-slate-400" />
-                        {t('roleRestricted')}
+                        <span>Approval Restricted: Requires {next.executor} ({next.roleRequired.toUpperCase()} LEVEL)</span>
                       </div>
                     )}
                   </div>
                 </div>
               ) : (
-                <div className="bg-emerald-50 border border-emerald-150 text-emerald-800 p-4 rounded-xl flex items-center gap-3">
+                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
                   <div className="text-xs font-bold leading-relaxed">
                     <strong className="font-extrabold">{t('cycleCompleted')}</strong> {t('cycleCompletedSub')} {proj.agency}. 
                     <button 
                       onClick={() => openDocument(proj, "Possession Handover")}
-                      className="text-emerald-700 hover:underline inline-flex items-center gap-1 ml-2 font-bold cursor-pointer font-serif"
+                      className="btn-pop text-emerald-700 hover:underline inline-flex items-center gap-1 ml-2 font-black cursor-pointer font-serif"
                     >
                       <File className="h-3.5 w-3.5" />
                       {t('viewTitleDeed')}
