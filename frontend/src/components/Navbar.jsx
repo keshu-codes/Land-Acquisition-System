@@ -11,7 +11,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
     logout, 
     setShowLoginModal,
     language,
-    setLanguage
+    setLanguage,
+    t
   } = useContext(AppContext);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -83,9 +84,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
       <div className="bg-[#0f2415] text-emerald-200 text-[11px] py-1.5 px-4 sm:px-8 border-b border-emerald-900/50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2 font-semibold">
-            <span className="text-amber-400 font-serif">🇮🇳 भारत सरकार</span>
+            <span className="text-amber-400 font-serif">🇮🇳 {t('govIndia')}</span>
             <span className="text-emerald-400/60 hidden sm:inline">•</span>
-            <span className="hidden sm:inline text-emerald-100/90">Ministry of Rural Development & Land Resources</span>
+            <span className="hidden sm:inline text-emerald-100/90">{t('ministryDept')}</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -95,15 +96,24 @@ export default function Navbar({ activeTab, setActiveTab }) {
               <span>Registry Node Online</span>
             </div>
 
-            {/* Language Switcher */}
-            <button
-              onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-              className="btn-pop text-[10px] font-bold bg-emerald-900/60 hover:bg-emerald-800 text-emerald-100 border border-emerald-700/60 px-2.5 py-0.5 rounded-md flex items-center gap-1 cursor-pointer transition-all"
-              title="Toggle Language (English / हिन्दी)"
-            >
-              <Globe className="h-3 w-3 text-amber-300" />
-              <span>{language === 'en' ? 'हिन्दी' : 'English'}</span>
-            </button>
+            {/* 6-Regional Language Selector Dropdown */}
+            <div className="flex items-center gap-1.5 text-[11px] font-bold bg-emerald-950/80 text-amber-300 border border-emerald-700/80 px-2.5 py-0.5 rounded-md shadow-xs">
+              <Globe className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+              <select
+                id="regional-lang-header-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent text-amber-300 font-bold focus:outline-none cursor-pointer text-[11px] py-0.5 border-none outline-none"
+                title="Select Official Language"
+              >
+                <option value="en" className="bg-[#0f2415] text-white">English (EN)</option>
+                <option value="hi" className="bg-[#0f2415] text-white">हिंदी (Hindi)</option>
+                <option value="or" className="bg-[#0f2415] text-white">ଓଡ଼ିଆ (Odia)</option>
+                <option value="mr" className="bg-[#0f2415] text-white">मराठी (Marathi)</option>
+                <option value="ta" className="bg-[#0f2415] text-white">தமிழ் (Tamil)</option>
+                <option value="bn" className="bg-[#0f2415] text-white">বাংলা (Bengali)</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -174,7 +184,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                     className="btn-pop bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer shadow-sm"
                   >
                     <LogOut className="h-3.5 w-3.5" />
-                    <span>Logout</span>
+                    <span>{t('logout')}</span>
                   </button>
                 </div>
               ) : (
@@ -184,7 +194,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                     className="btn-pop bg-orange-600 hover:bg-orange-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer"
                   >
                     <User className="h-3.5 w-3.5 text-orange-200" />
-                    <span>Citizen Login</span>
+                    <span>{t('citizenLogin')}</span>
                   </button>
 
                   <button
@@ -192,7 +202,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                     className="btn-pop bg-amber-400 hover:bg-amber-300 text-slate-950 px-3.5 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 shadow-sm cursor-pointer"
                   >
                     <Shield className="h-3.5 w-3.5 text-slate-900" />
-                    <span>Authority Login</span>
+                    <span>{t('authorityLogin')}</span>
                   </button>
                 </div>
               )}
@@ -222,47 +232,47 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   <button
                     key={item.id}
                     onClick={() => { 
-                      setActiveTab(item.id); 
-                      setMobileMenuOpen(false); 
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className={`btn-pop w-full text-left p-2 rounded-lg font-bold flex items-center gap-2 cursor-pointer ${
-                      isActive ? 'bg-[#1b5e20] text-amber-300 border border-emerald-600' : 'text-emerald-100 hover:bg-[#23702a]'
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="truncate">{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+                    setActiveTab(item.id); 
+                    setMobileMenuOpen(false); 
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`btn-pop w-full text-left p-2 rounded-lg font-bold flex items-center gap-2 cursor-pointer ${
+                    isActive ? 'bg-[#1b5e20] text-amber-300 border border-emerald-600' : 'text-emerald-100 hover:bg-[#23702a]'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="truncate">{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-            {!user ? (
-              <div className="pt-2 border-t border-emerald-800 flex gap-2">
-                <button
-                  onClick={() => { setShowLoginModal('citizen'); setMobileMenuOpen(false); }}
-                  className="btn-pop flex-1 bg-orange-600 text-white py-2 rounded-lg font-bold text-center"
-                >
-                  Citizen Login
-                </button>
-                <button
-                  onClick={() => { setShowLoginModal('officer'); setMobileMenuOpen(false); }}
-                  className="btn-pop flex-1 bg-amber-400 text-slate-950 py-2 rounded-lg font-black text-center"
-                >
-                  Authority Login
-                </button>
-              </div>
-            ) : (
-              <div className="pt-2 border-t border-emerald-800 flex items-center justify-between">
-                <span className="text-emerald-200 font-bold">{user.full_name || user.username} ({getRoleLabel(user.role)})</span>
-                <button
-                  onClick={() => { logout(); setMobileMenuOpen(false); }}
-                  className="btn-pop bg-rose-600 text-white px-3 py-1 rounded font-bold"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+          {!user ? (
+            <div className="pt-2 border-t border-emerald-800 flex gap-2">
+              <button
+                onClick={() => { setShowLoginModal('citizen'); setMobileMenuOpen(false); }}
+                className="btn-pop flex-1 bg-orange-600 text-white py-2 rounded-lg font-bold text-center"
+              >
+                {t('citizenLogin')}
+              </button>
+              <button
+                onClick={() => { setShowLoginModal('officer'); setMobileMenuOpen(false); }}
+                className="btn-pop flex-1 bg-amber-400 text-slate-950 py-2 rounded-lg font-black text-center"
+              >
+                {t('authorityLogin')}
+              </button>
+            </div>
+          ) : (
+            <div className="pt-2 border-t border-emerald-800 flex items-center justify-between">
+              <span className="text-emerald-200 font-bold">{user.full_name || user.username} ({getRoleLabel(user.role)})</span>
+              <button
+                onClick={() => { logout(); setMobileMenuOpen(false); }}
+                className="btn-pop bg-rose-600 text-white px-3 py-1 rounded font-bold"
+              >
+                {t('logout')}
+              </button>
+            </div>
+          )}
           </div>
         )}
       </nav>
