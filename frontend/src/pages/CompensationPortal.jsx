@@ -25,7 +25,7 @@ export default function CompensationPortal() {
       state: "Maharashtra",
       district: "Thane",
       budgetAssessed: 120.0,
-      budgetDisbursed: 15.0
+      budgetDisbursed: 85.0
     },
     {
       id: "PRJ-002",
@@ -221,7 +221,7 @@ export default function CompensationPortal() {
                 <select
                   value={selectedProjectId}
                   onChange={(e) => setSelectedProjectId(e.target.value)}
-                  className="hover-pop w-full text-xs font-bold border border-slate-250 rounded-xl p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-xs"
+                  className="w-full text-xs font-bold border border-slate-300 rounded-xl p-2.5 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0f2b5c]/20 focus:border-[#0f2b5c] cursor-pointer shadow-xs transition-colors"
                 >
                   {projectList.map(p => (
                     <option key={p.id} value={p.id}>{p.id} - {(p.title || "").substring(0, 35)}...</option>

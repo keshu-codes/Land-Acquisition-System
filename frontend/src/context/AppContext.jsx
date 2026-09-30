@@ -95,7 +95,7 @@ const FALLBACK_PROJECTS = [
     areaRequired: 145.5,
     areaAcquired: 145.5,
     budgetAssessed: 120.0,
-    budgetDisbursed: 120.0,
+    budgetDisbursed: 85.0,
     affectedFamilies: 420,
     displacedFamilies: 110,
     rrProgress: 100,
