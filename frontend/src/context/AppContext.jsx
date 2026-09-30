@@ -83,6 +83,8 @@ const generateTimeline = (currentStatus, dbDate) => {
     title: s.stage,
     date: idx <= statusIndex ? (s.date || dateStr) : ""
   }));
+};
+
 const FALLBACK_PROJECTS = [
   {
     id: "PRJ-001",

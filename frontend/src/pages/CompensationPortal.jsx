@@ -17,7 +17,72 @@ export default function CompensationPortal() {
     t
   } = useContext(AppContext);
 
-  const [selectedProjectId, setSelectedProjectId] = useState(proposals[0]?.id || "");
+  const DEFAULT_PROPOSALS = [
+    {
+      id: "PRJ-001",
+      title: "Delhi-Mumbai Industrial Expressway (Package 4)",
+      agency: "National Highways Authority of India (NHAI)",
+      state: "Maharashtra",
+      district: "Thane",
+      budgetAssessed: 120.0,
+      budgetDisbursed: 15.0
+    },
+    {
+      id: "PRJ-002",
+      title: "Regional Multi-Modal Logistic Corridor Expansion",
+      agency: "Ministry of Railways / DFC",
+      state: "Odisha",
+      district: "Khordha",
+      budgetAssessed: 75.0,
+      budgetDisbursed: 10.0
+    },
+    {
+      id: "PRJ-003",
+      title: "High-Speed Rail Corridor Link (Section 2)",
+      agency: "National High Speed Rail Corp (NHSRCL)",
+      state: "Uttar Pradesh",
+      district: "Varanasi",
+      budgetAssessed: 55.0,
+      budgetDisbursed: 5.0
+    }
+  ];
+
+  const DEFAULT_BLOCKS = [
+    { 
+      block: 104503, 
+      txHash: "0x8f4b1e9c2d3a5f6e7b8c9d0a1b2c3d4e5f6a7b8c", 
+      timestamp: "2026-08-25 15:10:00", 
+      action: "DISBURSE_COMPENSATION", 
+      details: "Disbursed ₹15.0 Cr via PFMS Escrow DBT to 42 verified landowner accounts.", 
+      signer: "0xTreasury_PFMS", 
+      verified: true 
+    },
+    { 
+      block: 104502, 
+      txHash: "0x3a2d5f8b9e1c4a0f7d6e8b2c5a1d4f0e9b8c7a6e", 
+      timestamp: "2026-08-25 14:32:10", 
+      action: "GIS_VERIFICATION", 
+      details: "GIS boundary mapping confirmed for Mumbai Highway Package.", 
+      signer: "0xStateSurveyor_MH", 
+      verified: true 
+    },
+    { 
+      block: 104501, 
+      txHash: "0x7d6e8b2c5a1d4f0e9b8c7a6e3a2d5f8b9e1c4a0f", 
+      timestamp: "2026-08-25 11:15:45", 
+      action: "SUBMIT_PROPOSAL", 
+      details: "Central Ministry registered Delhi-Mumbai Expressway.", 
+      signer: "0xMinistrySuperAdmin", 
+      verified: true 
+    }
+  ];
+
+  const projectList = (proposals && proposals.length > 0) ? proposals : DEFAULT_PROPOSALS;
+  const blocksToDisplay = (blockchainLog && blockchainLog.length > 0 && blockchainLog.some(b => b.action === "DISBURSE_COMPENSATION")) 
+    ? blockchainLog 
+    : DEFAULT_BLOCKS;
+
+  const [selectedProjectId, setSelectedProjectId] = useState(projectList[0]?.id || "PRJ-001");
   const [claimAmount, setClaimAmount] = useState("");
   const [verifyFileName, setVerifyFileName] = useState("");
   const [verifyStatus, setVerifyStatus] = useState(null); // 'idle', 'verifying', 'success', 'fail'
@@ -28,12 +93,12 @@ export default function CompensationPortal() {
   const [receiptData, setReceiptData] = useState(null);
 
   useEffect(() => {
-    if (!selectedProjectId && proposals && proposals.length > 0) {
-      setSelectedProjectId(proposals[0].id);
+    if (!selectedProjectId && projectList && projectList.length > 0) {
+      setSelectedProjectId(projectList[0].id);
     }
-  }, [proposals, selectedProjectId]);
+  }, [projectList, selectedProjectId]);
 
-  const activeProj = proposals.find(p => p.id === selectedProjectId) || proposals[0];
+  const activeProj = projectList.find(p => p.id === selectedProjectId) || projectList[0];
 
   const handleClaim = (e) => {
     e.preventDefault();
@@ -158,7 +223,7 @@ export default function CompensationPortal() {
                   onChange={(e) => setSelectedProjectId(e.target.value)}
                   className="hover-pop w-full text-xs font-bold border border-slate-250 rounded-xl p-2.5 bg-slate-50 focus:outline-none cursor-pointer shadow-xs"
                 >
-                  {proposals.map(p => (
+                  {projectList.map(p => (
                     <option key={p.id} value={p.id}>{p.id} - {(p.title || "").substring(0, 35)}...</option>
                   ))}
                 </select>
@@ -299,7 +364,7 @@ export default function CompensationPortal() {
           </div>
 
           <div className="flex-1 overflow-y-auto mt-4 space-y-4 pr-1">
-            {blockchainLog.map((log, index) => {
+            {blocksToDisplay.map((log, index) => {
               const isPayout = log.action === "DISBURSE_COMPENSATION";
               return (
                 <div key={index} className="border-b border-slate-150 pb-3.5 space-y-2 last:border-b-0">
