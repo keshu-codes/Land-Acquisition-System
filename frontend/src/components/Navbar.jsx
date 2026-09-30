@@ -44,7 +44,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
         { id: 'calc', label: calcLabel, icon: Scale },
         { id: 'workflow', label: language === 'en' ? 'Central Workflows' : 'केंद्रीय कार्यप्रवाह', icon: Shield },
         { id: 'gis', label: language === 'en' ? 'Cadastral Registry' : 'कैडस्ट्राल रजिस्टर', icon: Layers },
-        { id: 'web3', label: language === 'en' ? 'Web3 Escrow Ledger' : 'वेब3 एस्क्रो लेजर', icon: Sparkles },
+        { id: 'web3', label: language === 'en' ? 'Web3 Audit & DBT' : 'वेब3 ऑडिट एवं डीबीटी', icon: Sparkles },
       ];
     } else if (role === 'state') {
       return [
@@ -52,6 +52,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
         { id: 'calc', label: calcLabel, icon: Scale },
         { id: 'gis', label: language === 'en' ? 'BhuNaksha Cadastre' : 'भू-नक्शा कैडस्ट्रे', icon: Layers },
         { id: 'dashboard', label: language === 'en' ? 'State MIS Overview' : 'राज्य एमआईएस', icon: LayoutDashboard },
+        { id: 'web3', label: language === 'en' ? 'Web3 Audit & DBT' : 'वेब3 ऑडिट एवं डीबीटी', icon: Sparkles },
       ];
     } else if (role === 'district') {
       return [
@@ -60,6 +61,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
         { id: 'dispatch', label: language === 'en' ? 'Notice Dispatch' : 'नोटिस प्रेषण', icon: Send },
         { id: 'objection', label: language === 'en' ? 'Grievance Review' : 'नागरिक आपत्ति समीक्षा', icon: Shield },
         { id: 'gis', label: language === 'en' ? 'District Parcels' : 'जिला पार्सल', icon: Layers },
+        { id: 'web3', label: language === 'en' ? 'Web3 Audit & DBT' : 'वेब3 ऑडिट एवं डीबीटी', icon: Sparkles },
       ];
     } else if (role === 'surveyor') {
       return [
