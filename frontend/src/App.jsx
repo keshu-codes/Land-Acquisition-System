@@ -11,6 +11,7 @@ import FieldSurvey from './pages/FieldSurvey';
 import SurveyDispatch from './pages/SurveyDispatch';
 import CitizenObjection from './pages/CitizenObjection';
 import ParcelsDirectory from './pages/ParcelsDirectory';
+import CompensationCalculatorPage from './pages/CompensationCalculatorPage';
 import Login from './pages/Login';
 import { RefreshCw } from 'lucide-react';
 
@@ -72,6 +73,8 @@ function AppContent() {
         return <Dashboard />;
       case 'workflow':
         return <ProposalWorkflow />;
+      case 'calc':
+        return <CompensationCalculatorPage setActiveTab={setActiveTab} />;
       case 'web3':
         return <CompensationPortal />;
       case 'survey':

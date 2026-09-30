@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { 
   Home as HomeIcon, LayoutDashboard, User, Lock, LogOut, Menu, X, 
-  Layers, MapPin, Send, Compass, Shield, Globe, Sparkles
+  Layers, MapPin, Send, Compass, Shield, Globe, Sparkles, Scale, Calculator
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
@@ -23,9 +23,17 @@ export default function Navbar({ activeTab, setActiveTab }) {
       return []; // No protected features available before login
     }
 
+    const calcLabel = language === 'hi' ? 'सॉलेशियम कैलकुलेटर'
+      : language === 'or' ? 'ସୋଲାସିୟମ କାଲକୁଲେଟର'
+      : language === 'mr' ? 'सोलेशियम कॅल्क्युलेटर'
+      : language === 'ta' ? 'சோலேடியம் கால்குலேட்டர்'
+      : language === 'bn' ? 'সোলেশিয়াম ক্যালকুলেটর'
+      : 'Solatium Calculator';
+
     const role = user.role;
     if (role === 'citizen') {
       return [
+        { id: 'calc', label: calcLabel, icon: Scale },
         { id: 'objection', label: language === 'en' ? 'Submit Objection' : 'आपत्ति दर्ज करें', icon: Shield },
         { id: 'web3', label: language === 'en' ? 'My Compensation & DBT' : 'मुआवजा एवं डीबीटी', icon: Sparkles },
         { id: 'gis', label: language === 'en' ? 'Land Parcels Search' : 'भूमि पार्सल खोजें', icon: Layers },
@@ -33,6 +41,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
     } else if (role === 'ministry') {
       return [
         { id: 'dashboard', label: language === 'en' ? 'National MIS Dashboard' : 'राष्ट्रीय एमआईएस डैशबोर्ड', icon: LayoutDashboard },
+        { id: 'calc', label: calcLabel, icon: Scale },
         { id: 'workflow', label: language === 'en' ? 'Central Workflows' : 'केंद्रीय कार्यप्रवाह', icon: Shield },
         { id: 'gis', label: language === 'en' ? 'Cadastral Registry' : 'कैडस्ट्राल रजिस्टर', icon: Layers },
         { id: 'web3', label: language === 'en' ? 'Web3 Escrow Ledger' : 'वेब3 एस्क्रो लेजर', icon: Sparkles },
@@ -40,11 +49,13 @@ export default function Navbar({ activeTab, setActiveTab }) {
     } else if (role === 'state') {
       return [
         { id: 'workflow', label: language === 'en' ? 'Spatial GIS Audits' : 'स्थानिक जीआईएस ऑडिट', icon: Shield },
+        { id: 'calc', label: calcLabel, icon: Scale },
         { id: 'gis', label: language === 'en' ? 'BhuNaksha Cadastre' : 'भू-नक्शा कैडस्ट्रे', icon: Layers },
         { id: 'dashboard', label: language === 'en' ? 'State MIS Overview' : 'राज्य एमआईएस', icon: LayoutDashboard },
       ];
     } else if (role === 'district') {
       return [
+        { id: 'calc', label: calcLabel, icon: Scale },
         { id: 'workflow', label: language === 'en' ? 'District Gazette & Awards' : 'जिला राजपत्र एवं पंचाट', icon: Shield },
         { id: 'dispatch', label: language === 'en' ? 'Notice Dispatch' : 'नोटिस प्रेषण', icon: Send },
         { id: 'objection', label: language === 'en' ? 'Grievance Review' : 'नागरिक आपत्ति समीक्षा', icon: Shield },
@@ -53,12 +64,14 @@ export default function Navbar({ activeTab, setActiveTab }) {
     } else if (role === 'surveyor') {
       return [
         { id: 'survey', label: language === 'en' ? 'Field Station' : 'फील्ड स्टेशन', icon: Compass },
+        { id: 'calc', label: calcLabel, icon: Scale },
         { id: 'workflow', label: language === 'en' ? 'Possession Handover' : 'कब्जा सौंपना', icon: Shield },
         { id: 'gis', label: language === 'en' ? 'Survey Parcels' : 'सर्वेक्षण पार्सल', icon: Layers },
       ];
     }
 
     return [
+      { id: 'calc', label: calcLabel, icon: Scale },
       { id: 'gis', label: language === 'en' ? 'Parcels Registry' : 'भूमि पार्सल रजिस्टर', icon: Layers },
       { id: 'dashboard', label: language === 'en' ? 'MIS Dashboard' : 'एमआईएस डैशबोर्ड', icon: LayoutDashboard },
     ];
